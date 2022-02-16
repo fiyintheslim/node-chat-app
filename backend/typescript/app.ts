@@ -1,9 +1,15 @@
 //const path = require("path")
-import express from "express";
-import dotenv from "dotenv";
-import path from "path";
+import express = require("express");
+import dotenv = require("dotenv");
+import path = require("path");
+import user from "./routes/userRoutes"
+
+const app = express();
 
 dotenv.config({path:path.join(__dirname, "/config/var.env")})
-const app = express();
+
+
+
+app.use("/api/v1", user)
 
 module.exports = app
