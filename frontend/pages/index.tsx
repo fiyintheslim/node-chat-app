@@ -19,14 +19,15 @@ const Home: NextPage = () => {
     <>
     <Container>
       <div>
-        <div className="flex flex-col lg:flex-row bg-white lg:px-40 lg:items-center">
+        <div className="c-container-sm c-container-lg u-dark">
           <p className={`flex flex-wrap py-10`}>
             <span className={`text-4xl lg:text-6xl font-extrabold flex flex-wrap`}>Connect, Correspond and Grow.</span> <span>Build connections with other interesting cacophoners.</span>
           </p>
           <div className={`h-full`}>
-            <Image layout="intrinsic" height={500} width={500} src="/img/cacophone5.jpg" />
+            <Image className="rounded" layout="intrinsic" height={500} width={500} src="/img/cacophone5.jpg" />
           </div>
         </div>
+        <div className={`ill-bg ${style.ill_bg} h-96`}></div>
       </div>
     </Container>
     </>
