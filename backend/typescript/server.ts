@@ -7,12 +7,12 @@ const server = app.listen(process.env.PORT, ()=>{
 
 process.on("unhandledRejection", function(err){
     console.log(`Server stopped due to unhandledRejection: ${err}`);
-    server.stop();
+    server.close();
     process.exit(0)
 })
 
 process.on("uncaughtException", function(err){
     console.log(`Server stopped due to uncaughtException: ${err}`);
-    server.stop();
+    server.close();
     process.exit(0)
 })

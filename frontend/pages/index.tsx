@@ -32,7 +32,7 @@ const Home: NextPage = () => {
             <span className={`text-4xl lg:text-6xl font-extrabold flex flex-wrap`}>Connect, Correspond and Grow.</span> <span>Build connections with other interesting cacophoners.</span>
           </p>
           <div className={`h-full flex items-center`}>
-            <Image className="rounded" layout="intrinsic" height={500} width={500} src="/img/cacophone5.jpg" />
+            <Image className="rounded" layout="intrinsic" height={500} width={500} src="/img/cacophone5-bg.png" />
           </div>
         </div>
         <div className={`ill-bg ${style.ill_bg} h-96`}>

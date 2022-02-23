@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc -w typescript backend",
-    "dev": "ts-node-dev --respawn ./backend/typescript/server.ts"
+    "dev": "ts-node-dev --respawn ./backend/typescript/server.ts",
+    "setTables": "cd backend && cd typescript && cd config && ts-node setTables.ts"
   },
   "author": "Fiyin",
   "license": "ISC",
@@ -21,9 +22,11 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "cloudinary": "^1.28.1",
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
     "express-fileupload": "^1.3.1",
-    "pg": "^8.7.3"
+    "pg": "^8.7.3",
+    "ts-node-dev": "^1.1.8"
   }
 }
