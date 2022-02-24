@@ -12,7 +12,9 @@ const setTables = async () =>{
         username VARCHAR(255) NOT NULL UNIQUE,
         email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NUll,
-        created_at TIMESTAMP default current_timestamp
+        created_at TIMESTAMP default current_timestamp,
+        password_reset_token VARCHAR(255),
+        password_reset_token_expires VARCHAR(255)
     )`)
         console.log("tables set")
     await client.release();

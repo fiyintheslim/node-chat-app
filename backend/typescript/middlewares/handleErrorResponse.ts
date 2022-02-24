@@ -7,7 +7,7 @@ interface error extends Error{
 }
 
 const errorHandler = (err:error, req:Request, res:Response, next:NextFunction) =>{
-    console.log("error", err.stack)
+    
     const errMessage = err.message || "Internal server error.";
     const errCode  = err.statusCode || 500;
 

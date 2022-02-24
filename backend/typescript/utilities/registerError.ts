@@ -6,7 +6,6 @@ class ErrorHandler extends Error {
         this.statusCode = statusCode
         this.message = message
 
-        console.log(this.message, this.statusCode)
         Error.captureStackTrace(this, this.constructor);
     }
 }

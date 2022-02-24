@@ -1,9 +1,11 @@
 import jwt = require("jsonwebtoken");
 
 export const send = async (id:number)=>{
-    return jwt.sign({id}, process.env.TOKEN_SECRET!, {expiresIn:process.env.TOKEN_EXPIRES})
+    const signed = await jwt.sign({id}, process.env.TOKEN_SECRET!, {expiresIn:process.env.TOKEN_EXPIRES});
+    return signed;
 }
 
 export const verify = async (token:string)=>{
-    return jwt.verify(token, process.env.TOKEN_SECRET!)
+    const verified = await jwt.verify(token, process.env.TOKEN_SECRET!);
+    return verified
 }
