@@ -39,6 +39,7 @@ export const signUp = async (req:Request, res:Response, next:NextFunction)=>{
 }
 
 export const login = async (req:Request, res:Response, next:NextFunction) =>{
+    console.log("Login link clicked")
     const user = req.body;
     
     if(!user.password || !user.detail){
@@ -127,3 +128,7 @@ export const passwordReset = async (req:Request, res:Response, next:NextFunction
 
     return res.status(200).json({success:true, message:"password reset successful"})
 }
+
+export const trial =async (req:Request, res:Response, next:NextFunction) =>{
+    return res.status(200).json({success:true, message:"endpoint working"})
+} 

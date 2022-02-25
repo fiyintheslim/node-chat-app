@@ -18,8 +18,7 @@ const Home: NextPage = () => {
   }, [])
   return (
     <>
-    <Container>
-      <div>
+      <div className="dark:bg-slate-900 bg-slate-100 h-screen">
         <div className={`h-screen ${style.landing_bg}`}>
         <Header />
         <div className={`m-2 p-2 ${style.glass} flex justify-evenly lg:justify-center shadow c-container-sm lg:flex-row lg:items-center mx-40 py-20 rounded`}>
@@ -42,7 +41,6 @@ const Home: NextPage = () => {
           <p></p>
         </div>
       </div>
-    </Container>
     </>
   )
 }

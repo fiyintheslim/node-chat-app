@@ -20,6 +20,7 @@ a {
 }
 /*colors rose-700 indigo-700 fuchsia-700*/
 /*colors mode slate-100 slate-900*/
+/*text slate-900 dark:slate-200*/
 @layer components{
   .c-container-sm{
     @apply flex flex-col p-4;
@@ -30,10 +31,18 @@ a {
   .c-btn{
     @apply shadow-slate-600 dark:shadow-slate-600 p-3 cursor-pointer shadow rounded-full active:shadow-none dark:text-slate-400;
   }
+  .form-btn{
+    @apply bg-indigo-700 text-slate-200 py-2 dark:bg-slate-400 dark:text-slate-900;
+  }
   .u-dark{
     @apply dark:bg-slate-800 dark:text-slate-400;
   }
-  
+  .c-inp{
+    @apply outline-0 my-3 bg-inherit border-b border-slate-900 dark:text-slate-300 dark:border-b-slate-300;
+  }
+  .c-form-cont{
+    @apply w-full mx-2 px-2;
+  }
 }
 
 

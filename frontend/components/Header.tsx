@@ -5,10 +5,12 @@ import Image from "next/image"
 const Header = () => {
   return (
     <div className={` flex justify-between items-center py-2 lg:px-40`}>
-      <div className={`font-extrabold text-4xl`} style={{fontFamily:"'Epilogue'", fontWeight:"900"}}><Link href="/" ><Image src="/img/LOGO.png" layout="intrinsic" width={150} height={150} /></Link></div>
+      <Link href="/" >
+        <Image src="/img/LOGO.png" layout="intrinsic" className="p-0 m-0" width={80} height={80} />
+      </Link>
       <div className={`text-slate-800 font-extrabold flex justify-evenly`} >
-        <div className={`border border-white mr-5 c-btn`} ><Link href="/signup">Login</Link></div>
-        <div className={`c-btn bg-rose-700 `}><Link href="/login">Sign Up</Link></div>
+        <div className={`border border-white mr-5 c-btn`} ><Link href="/login">Login</Link></div>
+        <div className={`c-btn bg-indigo-700 `}><Link href="/signup">Sign Up</Link></div>
       </div>
     </div>
   )

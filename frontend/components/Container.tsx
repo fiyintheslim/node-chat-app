@@ -9,7 +9,6 @@ const Container: React.FC = ({children}) => {
   useEffect(()=>{console.log("dark", dark)}, [dark])
   return (
     <div onClick={() => {setDark(!dark)}} className={`dark:bg-slate-900 bg-slate-100 h-screen`}>
-        
         {children}
         <div></div>
     </div>
