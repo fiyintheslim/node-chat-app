@@ -1,12 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Epilogue&family=Lobster&family=Sora&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Heebo&family=Josefin+Sans&family=Lobster&family=Sora&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+*{
+  transition:all 0.5s linear;
+}
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Sora','Epilogue', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+  font-family: 'Heebo', 'Josefin Sans', 'Sora', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
@@ -29,19 +32,22 @@ a {
     @apply lg:flex-row lg:px-40 lg:items-center;
   }
   .c-btn{
-    @apply shadow-slate-600 dark:shadow-slate-600 p-3 cursor-pointer shadow rounded-full active:shadow-none dark:text-slate-400;
+    @apply shadow-slate-600 dark:shadow-slate-600 py-3 px-5 cursor-pointer shadow rounded-full active:shadow-none dark:text-slate-400;
   }
   .form-btn{
-    @apply bg-indigo-700 text-slate-200 py-2 dark:bg-slate-400 dark:text-slate-900;
+    @apply transition-none bg-indigo-700 border border-indigo-700 text-slate-200 py-2 active:bg-inherit active:text-indigo-700 dark:bg-slate-800 dark:text-slate-400 dark:active:bg-inherit dark:border-slate-800;
   }
   .u-dark{
     @apply dark:bg-slate-800 dark:text-slate-400;
   }
+  .c-inp-cont{
+    @appy flex flex-col relative;
+  }
   .c-inp{
-    @apply outline-0 my-3 bg-inherit border-b border-slate-900 dark:text-slate-300 dark:border-b-slate-300;
+    @apply w-full outline-0 p-3 my-3 bg-inherit border-b border-slate-500 focus:border-slate-900 dark:text-slate-200 dark:border-b-slate-300;
   }
   .c-form-cont{
-    @apply w-full mx-2 px-2;
+    @apply basis-1/3 w-11/12 my-6 px-4 py-5 rounded md:mx-3 md:w-8/12 lg:w-full lg:w-96 bg-slate-300 dark:bg-slate-500 dark:text-slate-200;
   }
 }
 

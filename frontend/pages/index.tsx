@@ -2,29 +2,34 @@ import {useEffect} from "react"
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from "next/link"
+import {useRouter} from "next/router"
 import styles from '../styles/Home.module.css'
 import axios from "axios"
 import style from "../styles/scss/home.module.scss"
 import Container from "../components/Container"
-import Header from "../components/Header"; 
+
 
 const Home: NextPage = () => {
-  const test = async ()=>{
-    // const res = await axios.get("/login");
-    // console.log(res.data)
-  }
+  
   useEffect(()=>{
-    test()
+    
   }, [])
   return (
     <>
-      <div className="dark:bg-slate-900 bg-slate-100 h-screen">
+      <div >
         <div className={`h-screen ${style.landing_bg}`}>
-        <Header />
-        <div className={`m-2 p-2 ${style.glass} flex justify-evenly lg:justify-center shadow c-container-sm lg:flex-row lg:items-center mx-40 py-20 rounded`}>
-          <Image src="/img/cacophone1.gif" layout="intrinsic" width={300} height={300} className="rounded z-10" />
-          <p className="z-10">Hello</p>
-        </div>
+          <div className={` flex justify-between items-center mr-2 py-2 lg:px-40`}>
+              <Image  src="/img/LOGO.png" layout="intrinsic" className="p-0 m-0" width={80} height={80} />
+              <div className={`text-slate-800 font-extrabold flex justify-evenly`} >
+              <Link href="/login"><a className={`border border-white mr-5 c-btn`} >Login</a></Link>
+              <Link href="/register"><a className={`c-btn bg-indigo-700 `}>Sign Up</a></Link>
+              </div>
+          </div>
+          <div className={`m-2 p-2 ${style.glass} flex justify-evenly lg:justify-center shadow c-container-sm lg:flex-row lg:items-center mx-40 py-20 rounded`}>
+            <Image src="/img/cacophone1.gif" layout="intrinsic" width={300} height={300} className="rounded z-10" />
+            <p className="z-10">Hello</p>
+          </div>
         </div>
         <div className="c-container-sm c-container-lg u-dark h-screen bg-white">
           <p className={`flex flex-wrap py-10`}>

@@ -37,7 +37,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [])
   return(
     <Context>
-      <div style={{padding:"0px", margin:"0px"}} className="dark:bg-slate-900 bg-slate-100 h-screen u-dark">
+      <div style={{padding:"0px", margin:"0px"}} className="dark:bg-slate-900 bg-slate-100 min-h-screen u-dark">
         <Component {...pageProps} />
         <div className="fixed bottom-2 right-2">
         <input checked={darkMode} type="checkbox" id="mode-switch" onChange={(e)=>{
