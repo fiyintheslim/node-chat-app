@@ -11,7 +11,7 @@ import See from "../components/see"
 
 const loginSchema = Yup.object().shape({
   detail:Yup.string().min(3).required("Please enter your username or email"),
-  passowrd:Yup.string().required("Please enter your password")
+  password:Yup.string().min(6, "Password is at least 6 charcters long").required("Please enter your password")
 })
 
 interface form{ detail:string, password:string}
@@ -39,17 +39,17 @@ const Login = () => {
               <div className="flex flex-col">
                 <label htmlFor="detail">Enter Email or Username</label>
                 <Field id="detail" type="text" name="detail" autoComplete="off" className="c-inp" placeholder="Enter your email or username"/>
-                {touched.detail && errors.detail &&<div className="text-rose-200">{errors.detail}</div>}
+                {touched.detail && errors.detail &&<div className="error-msg">{errors.detail}</div>}
               </div>
               <div className="c-inp-cont">
                 <label htmlFor="password"> Enter password</label>
                 <div className="relative">
-                <Field id="password" type={pVisible?"text":"password"} name="password" autoComplete="off" className="c-inp" placeholder="Enter your password"/>
-                <div onClick={()=>setPVisible(!pVisible)} className="absolute right-2 top-7 cursor-pointer">
-                  <See visible={pVisible}  />
+                  <Field id="password" type={pVisible?"text":"password"} name="password" autoComplete="off" className="c-inp" placeholder="Enter your password"/>
+                  <div onClick={()=>setPVisible(!pVisible)} className="absolute right-2 top-7 cursor-pointer">
+                    <See visible={pVisible}  />
+                  </div>
                 </div>
-                </div>
-                {touched.password && errors.password &&<div className="text-rose-200">{errors.password}</div>}
+                {touched.password && errors.password &&<div className="error-msg">{errors.password}</div>}
               </div>
               <p className="italic text-slate-500 text-right pb-3 dark:text-slate-300"><Link href="/password/forgot">Forgot password?</Link></p>
               <button type="submit" className="form-btn outline-0">Login</button>

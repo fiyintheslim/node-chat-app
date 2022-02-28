@@ -3,7 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 *{
-  transition:all 0.5s linear;
+  transition:background 0.5s linear;
 }
 html,
 body {
@@ -51,4 +51,8 @@ a {
   }
 }
 
-
+@layer utilities{
+  .error-msg{
+    @apply inline text-rose-500 text-sm;
+  }
+}
