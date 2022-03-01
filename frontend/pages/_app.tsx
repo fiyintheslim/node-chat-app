@@ -1,8 +1,11 @@
 import '../styles/globals.css';
+import {GetServerSideProps} from "next"
 import type { AppProps } from 'next/app';
 import React, {useEffect, useState, useRef} from "react"
 import Context from '../components/Context'
 import style from "../styles/scss/general.module.scss"
+
+
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [darkMode, setDarkMode] = useState<boolean | undefined>(false)
@@ -56,5 +59,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     </Context>
   )
 }
+
 
 export default MyApp

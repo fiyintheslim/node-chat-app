@@ -7,6 +7,7 @@ import style from "../styles/scss/forms.module.scss"
 import {login} from "../utilities/requests";
 import Header from "../components/Header"
 import See from "../components/see"
+import {signup} from "../utilities/requests"
 
 
 const registerSchema = Yup.object().shape({
@@ -56,6 +57,7 @@ const Register = () => {
         initialValues={{username:"", email:"", password:"", confirmPassword:"", gender:""}}
         onSubmit={(values)=>{
           console.log("Submitted", values)
+          signup(values)
         }}
         validationSchema={registerSchema}
         >

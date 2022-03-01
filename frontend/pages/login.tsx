@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react'
+import {NextApiRequest, NextApiResponse, GetServerSideProps} from "next"
 import Image from "next/image";
 import Link from "next/link"
 import {useFormik, Formik, ErrorMessage, Field, Form, FormikErrors, FormikProps} from "formik"
@@ -8,6 +9,17 @@ import {login} from "../utilities/requests";
 import Header from "../components/Header"
 import See from "../components/see"
 
+export const getServerSideProps:GetServerSideProps = async (ctx) => {
+  
+  console.log("context", ctx)
+  console.log(ctx.req)
+  console.log(ctx.res)
+  return {
+    props:{
+      success:true
+    }
+  }
+}
 
 const loginSchema = Yup.object().shape({
   detail:Yup.string().min(3).required("Please enter your username or email"),

@@ -4,6 +4,7 @@ import dotenv = require("dotenv");
 import path = require("path");
 import cookieParser = require("cookie-parser")
 import cloudinary = require("cloudinary");
+import cors = require("cors")
 import user from "./routes/userRoutes"
 import errors from "./middlewares/handleErrorResponse"
 
@@ -13,6 +14,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended:false}))
 app.use(cookieParser())
+app.use(cors())
 
 dotenv.config({path:path.join(__dirname, "/config/var.env")})
 

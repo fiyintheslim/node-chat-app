@@ -1,4 +1,4 @@
-const {Pool, Client} = require("pg");
+const {Pool} = require("pg");
 
 const dbConnection = async ()=>{
     const pool =await new Pool({

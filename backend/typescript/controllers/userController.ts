@@ -11,7 +11,7 @@ import os = require("os");
 
 export const signUp = async (req:Request, res:Response, next:NextFunction)=>{
     const user = req.body;
-
+    console.log("register", user)
     if(!user.password || !user.email || !user.password){
         return next(new ErrorHandler("Incomplete data", 400))
     }
@@ -127,6 +127,10 @@ export const passwordReset = async (req:Request, res:Response, next:NextFunction
     await client.query("UPDATE users SET password=$1 WHERE id=$2", [hashedPassword, id]);
 
     return res.status(200).json({success:true, message:"password reset successful"})
+}
+
+export const me = async (req:Request, res:Response, next:NextFunction) => {
+    return res.status(200).json({success:true, user:res.locals.user})
 }
 
 export const trial =async (req:Request, res:Response, next:NextFunction) =>{

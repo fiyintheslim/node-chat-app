@@ -20,6 +20,15 @@ module.exports = {
         source: "/api/trial",
         destination: "http://localhost:5000/api/v1/trial",
       },
+      {
+        source: "/api/me",
+        destination: "http://localhost:5000/api/v1/me",
+      },
     ];
+  },
+};
+module.exports = {
+  async redirects() {
+    return [];
   },
 };
