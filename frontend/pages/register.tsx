@@ -56,8 +56,14 @@ const Register = () => {
         <Formik
         initialValues={{username:"", email:"", password:"", confirmPassword:"", gender:""}}
         onSubmit={(values)=>{
-          console.log("Submitted", values)
-          signup(values)
+          
+          const form = new FormData();
+          form.set("username", values.username);
+          form.set("password", values.password);
+          form.set("email", values.email);
+          form.set("avatar", avatar as string);
+          
+          signup(form)
         }}
         validationSchema={registerSchema}
         >

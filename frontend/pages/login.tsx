@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useContext} from 'react'
 import {NextApiRequest, NextApiResponse, GetServerSideProps} from "next"
 import Image from "next/image";
 import Link from "next/link"
@@ -8,6 +8,7 @@ import style from "../styles/scss/forms.module.scss"
 import {login} from "../utilities/requests";
 import Header from "../components/Header"
 import See from "../components/see"
+import {MyContext} from "../components/Context"
 
 export const getServerSideProps:GetServerSideProps = async (ctx) => {
   
@@ -30,6 +31,8 @@ interface form{ detail:string, password:string}
 
 const Login = () => {
   const [pVisible, setPVisible] = useState(false)
+  const context = useContext(MyContext);
+  console.log("context", context)
   return (
     <div className="h-full flex align-center justify-around flex-col">
       <Header />

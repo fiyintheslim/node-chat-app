@@ -5,16 +5,19 @@ import path = require("path");
 import cookieParser = require("cookie-parser")
 import cloudinary = require("cloudinary");
 import cors = require("cors")
+import fileUpload = require("express-fileupload")
 import user from "./routes/userRoutes"
 import errors from "./middlewares/handleErrorResponse"
 
 import postgres from "./config/postgresSetup"
 
 const app = express();
+app.use(fileUpload())
 app.use(express.json());
 app.use(express.urlencoded({extended:false}))
 app.use(cookieParser())
 app.use(cors())
+
 
 dotenv.config({path:path.join(__dirname, "/config/var.env")})
 

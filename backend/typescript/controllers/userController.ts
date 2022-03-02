@@ -5,13 +5,13 @@ import {postgresPool} from "../app";
 import {send, verify} from "../utilities/tokens"
 import sendResetMail from "../utilities/mailer"
 import crypto = require("crypto");
-import os = require("os");
+import cloudinary = require("cloudinary")
 
 
 
 export const signUp = async (req:Request, res:Response, next:NextFunction)=>{
     const user = req.body;
-    console.log("register", user)
+    
     if(!user.password || !user.email || !user.password){
         return next(new ErrorHandler("Incomplete data", 400))
     }
@@ -26,15 +26,23 @@ export const signUp = async (req:Request, res:Response, next:NextFunction)=>{
     if(usernameExists.rows[0]){
         return next(new ErrorHandler("Username already exists", 422))
     }
-    //hashing password before save
+    const upload = await cloudinary.v2.uploader.upload(user.avatar, {
+        folder:"chat/avatars",
+        width:100,
+        heigth:100,
+        crop:"fill"
+    })
+    
+    
    const hashed = await bcrypt.hash(user.password, 10)
-    const saved = await client.query("INSERT INTO users (username, email, password) VALUES($1, $2, $3) RETURNING id, username, email", [user.username, user.email, hashed]);
+    const saved = await client.query("INSERT INTO users (username, email, password, avatar, avatar_public_id) VALUES($1, $2, $3, $4, $5) RETURNING id, username, email, avatar, avatar_public_id", [user.username, user.email, hashed, upload.secure_url, upload.public_id]);
+    console.log(saved.rows[0])
     //send token
-    await client.release()
+    
     const token = await send(saved.rows[0].id);
     console.log(token)
 
-    return res.status(200).cookie("token", token, {maxAge: parseInt(process.env.COOKIES_EXPIRES!) * 24 * 60 * 60 *1000, httpOnly: true}).json({success:true, message:"Registered successfully."})
+    return res.status(200).cookie("token", token, {maxAge: parseInt(process.env.COOKIES_EXPIRES!) * 24 * 60 * 60 *1000, httpOnly: true}).json({success:true, message:"Registered successfully.", user:saved.rows[0], token})
     
 }
 
@@ -58,7 +66,11 @@ export const login = async (req:Request, res:Response, next:NextFunction) =>{
         return next(new ErrorHandler("Wrong password", 403))
     }
     const token = await send(gottenUser.rows[0].id);
-    return res.status(200).cookie("token", token, {maxAge:parseInt(process.env.COOKIES_EXPIRES!) * 24 * 60 * 60 * 1000, httpOnly:true}).json({success:true, message:"Login successful.", user})
+    delete gottenUser.password
+    delete gottenUser.created_at
+    delete gottenUser.password_reset_token
+    delete gottenUser.password_reset_token_expires
+    return res.status(200).cookie("token", token, {maxAge:parseInt(process.env.COOKIES_EXPIRES!) * 24 * 60 * 60 * 1000, httpOnly:true}).json({success:true, message:"Login successful.", user:gottenUser, token})
 }
 
 export const logout = async (req:Request, res:Response, next:NextFunction) =>{

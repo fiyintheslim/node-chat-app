@@ -9,8 +9,8 @@ export const getServerSideProps:GetServerSideProps = async (ctx)=>{
   // console.log(ctx)
   // console.log("Request", ctx.req.cookies);
   // console.log("Response", ctx.res);
-  //const user = await trial()
-  //console.log(user)
+  const user = await trial().catch(err=>console.log("server side error", err))
+  console.log(user)
 
   return {
    props:{}

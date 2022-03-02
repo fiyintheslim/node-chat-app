@@ -1,21 +1,20 @@
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 
-export const signup = async (data:{username:string, email:string, password:string, avatar?:string}, avatar:string |null)=>{
+export const signup = async (data:FormData)=>{
     const config = {
         headers:{
             "Content-Type":"multipart/form-data"
         }
     }
-    if(avatar){
-        data.avatar=avatar
-    }
-    try{
-        const res = await axios.post("/backend/signup", data, config)
+    axios.post("http://localhost:5000/api/v1/register", data, config).then(res=>{
+            console.log(res.data)
+            //localStorage.setItem("user", res.data.user);
+            localStorage.setItem("token", res.data.token)
         return res.data
-    } catch (err) {
-        console.log(err)
-        return err
-    }
+        }).catch((err:AxiosError)=>{
+            console.log(err.response)
+        })
+    
    
 }
 
@@ -40,7 +39,7 @@ export const me = async () => {
 }
 
 export const trial = async ()=> {
-    const res = await axios.get("/api/trial")
+    const res = await axios.get("http://localhost:5000/api/v1/trial")
 
     console.log(res.data)
 }
