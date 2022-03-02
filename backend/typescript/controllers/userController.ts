@@ -65,12 +65,14 @@ export const login = async (req:Request, res:Response, next:NextFunction) =>{
     if(!verifyPassword){
         return next(new ErrorHandler("Wrong password", 403))
     }
+    const trimmed = gottenUser.rows[0]
     const token = await send(gottenUser.rows[0].id);
-    delete gottenUser.password
-    delete gottenUser.created_at
-    delete gottenUser.password_reset_token
-    delete gottenUser.password_reset_token_expires
-    return res.status(200).cookie("token", token, {maxAge:parseInt(process.env.COOKIES_EXPIRES!) * 24 * 60 * 60 * 1000, httpOnly:true}).json({success:true, message:"Login successful.", user:gottenUser, token})
+    delete trimmed.password
+    delete trimmed.created_at
+    delete trimmed.password_reset_token
+    delete trimmed.password_reset_token_expires
+    console.log
+    return res.status(200).cookie("token", token, {maxAge:parseInt(process.env.COOKIES_EXPIRES!) * 24 * 60 * 60 * 1000, httpOnly:true}).json({success:true, message:"Login successful.", user:trimmed, token})
 }
 
 export const logout = async (req:Request, res:Response, next:NextFunction) =>{
@@ -142,6 +144,7 @@ export const passwordReset = async (req:Request, res:Response, next:NextFunction
 }
 
 export const me = async (req:Request, res:Response, next:NextFunction) => {
+    console.log("Getting me")
     return res.status(200).json({success:true, user:res.locals.user})
 }
 

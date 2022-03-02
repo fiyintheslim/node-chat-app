@@ -19,7 +19,7 @@ export const getServerSideProps:GetServerSideProps = async (ctx)=>{
 
 const Home = () => {
   useEffect(()=>{
-    trial().then(res=>console.log(res)).catch(err=>console.log("Error in trail", err))
+    me()
   }, [])
   console.log("something")
   return (

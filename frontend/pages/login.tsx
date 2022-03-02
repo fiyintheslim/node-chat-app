@@ -1,14 +1,15 @@
 import React, {useEffect, useState, useContext} from 'react'
-import {NextApiRequest, NextApiResponse, GetServerSideProps} from "next"
+import {GetServerSideProps} from "next"
 import Image from "next/image";
 import Link from "next/link"
-import {useFormik, Formik, ErrorMessage, Field, Form, FormikErrors, FormikProps} from "formik"
+import {Formik, Field, Form, FormikProps} from "formik"
 import * as Yup from "yup";
 import style from "../styles/scss/forms.module.scss"
 import {login} from "../utilities/requests";
 import Header from "../components/Header"
 import See from "../components/see"
 import {MyContext} from "../components/Context"
+import {user} from "../utilities/types"
 
 export const getServerSideProps:GetServerSideProps = async (ctx) => {
   
@@ -30,9 +31,13 @@ const loginSchema = Yup.object().shape({
 interface form{ detail:string, password:string}
 
 const Login = () => {
+
   const [pVisible, setPVisible] = useState(false)
-  const context = useContext(MyContext);
-  console.log("context", context)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const context  = useContext(MyContext) as [{} | user, React.Dispatch<React.SetStateAction<{} | user>>];
+  
   return (
     <div className="h-full flex align-center justify-around flex-col">
       <Header />
@@ -42,6 +47,13 @@ const Login = () => {
         initialValues={{detail:"", password:""}}
         onSubmit={(values)=>{
           console.log(values)
+
+          const form = new FormData()
+          form.set("detail", values.detail);
+          form.set("password", values.password);
+          
+          setLoading(true);
+          login(form, setLoading, context[1], setError);
         }}
         validationSchema={loginSchema}
         >
@@ -67,7 +79,7 @@ const Login = () => {
                 {touched.password && errors.password &&<div className="error-msg">{errors.password}</div>}
               </div>
               <p className="italic text-slate-500 text-right pb-3 dark:text-slate-300"><Link href="/password/forgot">Forgot password?</Link></p>
-              <button type="submit" className="form-btn outline-0">Login</button>
+              <button type="submit" disabled={loading} className="form-btn outline-0">Login</button>
             </Form>
             
           </div>

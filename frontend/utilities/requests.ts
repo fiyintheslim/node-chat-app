@@ -1,4 +1,6 @@
-import axios, {AxiosError} from "axios";
+import axios, {AxiosError, AxiosResponse} from "axios";
+import {loginResponse} from "../utilities/types"
+import {user, error} from "./types"
 
 export const signup = async (data:FormData)=>{
     const config = {
@@ -18,24 +20,43 @@ export const signup = async (data:FormData)=>{
    
 }
 
-export const login = async ()=>{
-    try{
-        const res = await axios.get("/api/trial")
-    console.log(res)
-    }catch (err){
-        console.log(err)
-    }
+export const login = async (
+    data:FormData,
+    setLoading:React.Dispatch<React.SetStateAction<boolean>>,
+    setUser:React.Dispatch<React.SetStateAction<user | {}>>,
+    setError:React.Dispatch<React.SetStateAction<string | null>>
+    )=>{
     
+    const config={
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }
+
+    axios.post("http://localhost:5000/api/v1/login", data, config)
+    .then((res:AxiosResponse<loginResponse>)=>{
+        console.log(res.data.user)
+        setUser(res.data.user)
+        setLoading(false);
+
+    })
+    .catch((err:AxiosError<error>)=>{
+        console.log(err.response!.data.error)
+        setError(err.response!.data.error)
+        setUser({});
+        setLoading(false)
+    })
 }
 
 export const me = async () => {
-    try{
-        const me = await axios.get("/api/me")
-        console.log(me)
-        return JSON.parse(me.data)
-    } catch (err) {
-        console.log(err)
-    }
+    axios.get("http://localhost:5000/api/v1/me")
+    .then((res:AxiosResponse)=>{
+        console.log(res)
+        return JSON.parse(res.data.user)
+    })
+    .catch ((err:AxiosError<error>)=> {
+        console.log(err.response!.data.error)
+    })
 }
 
 export const trial = async ()=> {
