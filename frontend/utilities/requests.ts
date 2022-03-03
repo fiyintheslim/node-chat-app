@@ -1,8 +1,15 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
+import {NextRouter} from "next/router"
 import {loginResponse} from "../utilities/types"
 import {user, error} from "./types"
 
-export const signup = async (data:FormData)=>{
+export const signup = async (
+    data:FormData, 
+    setLoading:React.Dispatch<React.SetStateAction<boolean>>,
+    setUser:React.Dispatch<React.SetStateAction<user | {}>>,
+    setError:React.Dispatch<React.SetStateAction<string | undefined>>,
+    router:NextRouter
+    )=>{
     const config = {
         headers:{
             "Content-Type":"multipart/form-data"
@@ -10,11 +17,15 @@ export const signup = async (data:FormData)=>{
     }
     axios.post("http://localhost:5000/api/v1/register", data, config).then(res=>{
             console.log(res.data)
-            //localStorage.setItem("user", res.data.user);
+            setLoading(false)
+            setUser(res.data.user)
+            setError(undefined)
+            router.push("/app")
             localStorage.setItem("token", res.data.token)
         return res.data
         }).catch((err:AxiosError)=>{
             console.log(err.response)
+            setError(err.response?.data.error)
         })
     
    
@@ -24,7 +35,8 @@ export const login = async (
     data:FormData,
     setLoading:React.Dispatch<React.SetStateAction<boolean>>,
     setUser:React.Dispatch<React.SetStateAction<user | {}>>,
-    setError:React.Dispatch<React.SetStateAction<string | null>>
+    setError:React.Dispatch<React.SetStateAction<string | null>>,
+    router: NextRouter
     )=>{
     
     const config={
@@ -35,28 +47,45 @@ export const login = async (
 
     axios.post("http://localhost:5000/api/v1/login", data, config)
     .then((res:AxiosResponse<loginResponse>)=>{
-        console.log(res.data.user)
-        setUser(res.data.user)
+        const data = res.data
+        console.log(data.user)
+        setUser(data.user)
         setLoading(false);
-
+        localStorage.setItem("token", data.token);
+        router.push("/app")
     })
     .catch((err:AxiosError<error>)=>{
-        console.log(err.response!.data.error)
+        console.log("login error", err.response!.data.error)
         setError(err.response!.data.error)
         setUser({});
         setLoading(false)
     })
 }
 
-export const me = async () => {
-    axios.get("http://localhost:5000/api/v1/me")
-    .then((res:AxiosResponse)=>{
-        console.log(res)
-        return JSON.parse(res.data.user)
-    })
-    .catch ((err:AxiosError<error>)=> {
-        console.log(err.response!.data.error)
-    })
+export const me = async (
+    me:[{} | user, React.Dispatch<React.SetStateAction<{} | user>>],
+    router: NextRouter
+    ) => {
+    const token = localStorage.getItem("token")
+    if(token){
+        axios.get(`http://localhost:5000/api/v1/me/${token}`)
+        .then((res:AxiosResponse<loginResponse>)=>{
+            const user = res.data.user;
+            const meContext = me[0]
+
+            if(Object.keys(meContext).length === 0){
+                me[1](user)
+            }
+            
+        })
+        .catch ((err:AxiosError<error>)=> {
+            router.push("/")
+            me[1]({})
+        })
+    }else{
+        me[1]({})
+        router.push("/")
+    }
 }
 
 export const trial = async ()=> {

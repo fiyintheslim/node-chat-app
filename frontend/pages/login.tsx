@@ -1,5 +1,6 @@
 import React, {useEffect, useState, useContext} from 'react'
 import {GetServerSideProps} from "next"
+import {useRouter} from "next/router"
 import Image from "next/image";
 import Link from "next/link"
 import {Formik, Field, Form, FormikProps} from "formik"
@@ -31,6 +32,7 @@ const loginSchema = Yup.object().shape({
 interface form{ detail:string, password:string}
 
 const Login = () => {
+  const router = useRouter();
 
   const [pVisible, setPVisible] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -53,7 +55,7 @@ const Login = () => {
           form.set("password", values.password);
           
           setLoading(true);
-          login(form, setLoading, context[1], setError);
+          login(form, setLoading, context[1], setError, router);
         }}
         validationSchema={loginSchema}
         >
@@ -79,7 +81,7 @@ const Login = () => {
                 {touched.password && errors.password &&<div className="error-msg">{errors.password}</div>}
               </div>
               <p className="italic text-slate-500 text-right pb-3 dark:text-slate-300"><Link href="/password/forgot">Forgot password?</Link></p>
-              <button type="submit" disabled={loading} className="form-btn outline-0">Login</button>
+              <button type="submit" disabled={loading} className={`form-btn outline-0 ${loading ? "cursor-no-drop" : ""}`}>Login</button>
             </Form>
             
           </div>

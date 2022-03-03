@@ -18,9 +18,7 @@ export const getServerSideProps:GetServerSideProps = async (ctx)=>{
 }
 
 const Home = () => {
-  useEffect(()=>{
-    me()
-  }, [])
+  
   console.log("something")
   return (
       <Container>

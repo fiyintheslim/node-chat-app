@@ -1,11 +1,21 @@
 import React, {useEffect, useContext, Context} from 'react';
+import {useRouter} from "next/router";
 import Header from "./Header";
 import {MyContext} from "./Context"
 import Navigation from "./Navigation"
+import {me} from "../utilities/requests"
+import {user} from "../utilities/types"
 
 
 
 const Container: React.FC = ({children}) => {
+  const router = useRouter()
+  const context = useContext(MyContext) as [{} | user, React.Dispatch<React.SetStateAction<{} | user>>]
+  const meContext = context[0] !== {} ? context[0] as user : {avatar:""};
+
+  useEffect(()=>{
+    me(context, router)
+  }, [])
 
   return (
     <>
@@ -14,7 +24,7 @@ const Container: React.FC = ({children}) => {
         <div className="h-full  grow md:oveflow-y-auto md:ml-24">
         {children}
         </div>
-        <Navigation />
+        <Navigation avatar={meContext.avatar} />
       </div>
     </>
   )

@@ -1,13 +1,15 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useContext} from 'react'
 import Image from "next/image"
+import {useRouter} from "next/router"
 import Link from "next/link"
 import {Formik, Field, Form, FormikProps} from "formik"
 import * as Yup from "yup";
 import style from "../styles/scss/forms.module.scss"
-import {login} from "../utilities/requests";
 import Header from "../components/Header"
 import See from "../components/see"
 import {signup} from "../utilities/requests"
+import {MyContext} from "../components/Context"
+import {user} from "../utilities/types"
 
 
 const registerSchema = Yup.object().shape({
@@ -21,9 +23,15 @@ const registerSchema = Yup.object().shape({
 })
 
 const Register = () => {
+  const router = useRouter()
+  const context = useContext(MyContext) as [{} | user, React.Dispatch<React.SetStateAction<{} | user>>]
+
   const [avatar, setAvatar] = useState<string | null>(null);
   const [pVisible, setPVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
+
+  const [error, setError] = useState<string | undefined>(undefined);
+  const [loading, setLoading] = useState(false)
 
   interface form{ 
     username:string,
@@ -63,7 +71,7 @@ const Register = () => {
           form.set("email", values.email);
           form.set("avatar", avatar as string);
           
-          signup(form)
+          signup(form, setLoading, context[1], setError, router)
         }}
         validationSchema={registerSchema}
         >
@@ -127,7 +135,7 @@ const Register = () => {
                 {touched.gender && errors.gender && <div className="error-msg">{errors.gender}</div>}
               </div>
               <p className="italic text-slate-500 text-right pb-3 dark:text-slate-300"><Link href="/login">Already have an account?</Link></p>
-              <button type="submit" className="form-btn outline-0">Join Cacophone</button>
+              <button type="submit" className={`form-btn outline-0 ${loading ? "cursor-no-drop" : ""}`}>Join Cacophone</button>
             </Form>
           </div>
           )}

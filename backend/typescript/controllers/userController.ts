@@ -145,6 +145,7 @@ export const passwordReset = async (req:Request, res:Response, next:NextFunction
 
 export const me = async (req:Request, res:Response, next:NextFunction) => {
     console.log("Getting me")
+    console.log(res.locals.user)
     return res.status(200).json({success:true, user:res.locals.user})
 }
 

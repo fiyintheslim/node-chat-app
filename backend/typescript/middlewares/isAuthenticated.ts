@@ -4,7 +4,7 @@ import {verify} from "../utilities/tokens"
 import {postgresPool} from "../app"
 
 const isAuthenticated = async (req:Request, res:Response, next:NextFunction)=>{
-    const token = req.cookies.token;
+    const token = req.params.token?.toString();
     console.log(token)
     const client = await postgresPool; 
     if(!token){
@@ -16,6 +16,7 @@ const isAuthenticated = async (req:Request, res:Response, next:NextFunction)=>{
     res.locals.user = user.rows[0]
     
     return next()
+    
 }
 
 export default isAuthenticated

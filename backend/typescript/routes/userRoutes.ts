@@ -10,7 +10,7 @@ router.route("/login").post(login);
 router.route("/logout").get(logout);
 router.route("/password/reset").post(requestPasswordReset);
 router.route("/password/reset/:id/:token").post(passwordReset);
-router.route("/me").get(isAuthenticated, me)
+router.route("/me/:token").get(isAuthenticated, me)
 router.route("/trial").get(trial, me);
 
 export default router
