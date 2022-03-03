@@ -3,6 +3,7 @@ import ErrorHandler from "../utilities/registerError"
 import {verify} from "../utilities/tokens"
 import {postgresPool} from "../app"
 
+
 const isAuthenticated = async (req:Request, res:Response, next:NextFunction)=>{
     const token = req.params.token?.toString();
     console.log(token)

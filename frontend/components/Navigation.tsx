@@ -11,7 +11,6 @@ type Props = {
 const Navigation = (props:Props) => {
     const {avatar} = props
     const context = useContext(MyContext)
-    console.log("context", context)
     const router = useRouter();
     const current =router.pathname
     

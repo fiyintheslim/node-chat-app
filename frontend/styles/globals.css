@@ -32,13 +32,13 @@ a {
     @apply lg:flex-row lg:px-40 lg:items-center;
   }
   .c-btn{
-    @apply shadow-slate-600 dark:shadow-slate-600 py-3 px-5 cursor-pointer shadow rounded-full active:shadow-none dark:text-slate-400;
+    @apply shadow-slate-600 dark:shadow-slate-600 py-3 px-5 cursor-pointer shadow rounded-full active:shadow-none dark:text-slate-300;
   }
   .form-btn{
     @apply transition-none bg-indigo-700 border border-indigo-700 text-slate-200 py-2 active:bg-inherit active:text-indigo-700 dark:bg-slate-800 dark:text-slate-400 dark:active:bg-inherit dark:border-slate-800;
   }
   .u-dark{
-    @apply dark:bg-slate-800 dark:text-slate-400;
+    @apply dark:bg-slate-800 dark:text-slate-300;
   }
   .c-inp-cont{
     @appy flex flex-col relative;

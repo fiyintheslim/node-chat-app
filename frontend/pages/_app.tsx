@@ -1,6 +1,7 @@
 import '../styles/globals.css';
 import {GetServerSideProps} from "next"
 import type { AppProps } from 'next/app';
+import socketClient from "socket.io-client"
 import React, {useEffect, useState, useRef} from "react"
 import Context from '../components/Context'
 import style from "../styles/scss/general.module.scss"
@@ -8,6 +9,7 @@ import style from "../styles/scss/general.module.scss"
 
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const socket = socketClient(process.env.NEXT_PUBLIC_SOCKET_SERVER as string)
   const [darkMode, setDarkMode] = useState<boolean | undefined>(false)
   const inp = useRef<null | HTMLInputElement>(null)
   const setDark = (e:React.ChangeEvent<HTMLInputElement>)=>{

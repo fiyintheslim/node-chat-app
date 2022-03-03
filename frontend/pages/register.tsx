@@ -44,11 +44,17 @@ const Register = () => {
   const handleAvatar = (e:React.ChangeEvent<HTMLInputElement>, av:string|null)=>{
     const avatar = e.target.files
     console.log(e.target.files);
-    if(avatar && !av){
+    
+    if(avatar && !av &&  avatar['length'] > 0){
+
       const fileReader = new FileReader();
       fileReader.readAsDataURL(avatar[0]);
       fileReader.onload = (e)=>{
-        
+
+        if(e.loaded > 2097152){
+          return setError("Image has to be less than 2mb")
+        }
+
         const img = e.target!.result as string
         setAvatar(img)
       }
