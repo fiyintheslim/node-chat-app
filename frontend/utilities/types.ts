@@ -3,7 +3,8 @@ export interface user {
     email:string,
     avatar:string,
     avata_public_id:string,
-    gender:string
+    gender:string,
+    role:string
 }
 
 export interface loginResponse {

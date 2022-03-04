@@ -3,7 +3,7 @@ import {NextApiRequest, NextApiResponse, GetServerSideProps} from "next"
 import Navigation from "../../components/Navigation"
 import Header from "../../components/Header"
 import Container from "../../components/Container"
-import {me, trial} from "../../utilities/requests"
+import {trial, getUsers} from "../../utilities/requests"
 
 export const getServerSideProps:GetServerSideProps = async (ctx)=>{
   // console.log(ctx)
@@ -17,7 +17,9 @@ export const getServerSideProps:GetServerSideProps = async (ctx)=>{
 }
 
 const Home = () => {
-  
+  useEffect(()=>{
+    getUsers()
+  }, [])
   
   return (
       <Container>

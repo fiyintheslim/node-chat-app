@@ -1,4 +1,6 @@
-const {Server, ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData} = require("socket.io");
+const {Server, Socket} = require("socket.io");
+const {enterChat} = require("./utilities/socketHandler");
+import {message} from "./utilities/types"
 const app = require("./app");
 
 
@@ -8,8 +10,9 @@ const server = app.listen(process.env.PORT, ()=>{
 
 const socketServer = new Server(server);
 
-socketServer.on("connection", function(socket: any){
-    console.log("user connected", socket)
+socketServer.on("connection", function(client: typeof Socket){
+    console.log("user connected", typeof Socket, client.id)
+    client.on("enterChat", enterChat)
 })
 
 process.on("unhandledRejection", function(err){

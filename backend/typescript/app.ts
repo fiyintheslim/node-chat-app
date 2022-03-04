@@ -7,6 +7,7 @@ import cloudinary = require("cloudinary");
 import cors = require("cors")
 import fileUpload = require("express-fileupload")
 import user from "./routes/userRoutes"
+import chatApp from "./routes/appRoutes";
 import errors from "./middlewares/handleErrorResponse"
 
 import postgres from "./config/postgresSetup"
@@ -31,6 +32,7 @@ cloudinary.v2.config({
 })
 
 app.use("/api/v1", user)
+app.use("/api/v1", chatApp)
 app.use(errors);
 
 module.exports = app

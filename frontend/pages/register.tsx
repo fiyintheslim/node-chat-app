@@ -43,7 +43,6 @@ const Register = () => {
 
   const handleAvatar = (e:React.ChangeEvent<HTMLInputElement>, av:string|null)=>{
     const avatar = e.target.files
-    console.log(e.target.files);
     
     if(avatar && !av &&  avatar['length'] > 0){
 

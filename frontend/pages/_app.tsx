@@ -9,7 +9,7 @@ import style from "../styles/scss/general.module.scss"
 
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const socket = socketClient(process.env.NEXT_PUBLIC_SOCKET_SERVER as string)
+  
   const [darkMode, setDarkMode] = useState<boolean | undefined>(false)
   const inp = useRef<null | HTMLInputElement>(null)
   const setDark = (e:React.ChangeEvent<HTMLInputElement>)=>{
@@ -38,6 +38,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(()=>{
    getDark()
+   const socket = socketClient(process.env.NEXT_PUBLIC_SOCKET_SERVER as string)
 
   }, [])
   return(

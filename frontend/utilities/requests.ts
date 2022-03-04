@@ -3,6 +3,8 @@ import {NextRouter} from "next/router"
 import {loginResponse} from "../utilities/types"
 import {user, error} from "./types"
 
+
+
 export const signup = async (
     data:FormData, 
     setLoading:React.Dispatch<React.SetStateAction<boolean>>,
@@ -68,7 +70,12 @@ export const me = async (
     ) => {
     const token = localStorage.getItem("token")
     if(token){
-        axios.get(`http://localhost:5000/api/v1/me/${token}`)
+        const headers = {
+            headers:{
+            "Token":token
+            }
+        }
+        axios.get(`http://localhost:5000/api/v1/me`, headers)
         .then((res:AxiosResponse<loginResponse>)=>{
             const user = res.data.user;
             const meContext = me[0]
@@ -86,6 +93,19 @@ export const me = async (
         me[1]({})
         router.push("/")
     }
+}
+
+export const getUsers = async ()=>{
+    const token = localStorage.getItem("token")
+    if(token){
+        axios.get("http://localhost:5000/api/v1/users", {
+            headers:{"Token":token}
+        })
+        .then((res:AxiosResponse<{success:boolean, users:user[]}>) => {
+            console.log(res.data.users)
+        })
+    }
+    
 }
 
 export const trial = async ()=> {
