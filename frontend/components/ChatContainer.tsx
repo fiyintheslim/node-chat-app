@@ -22,7 +22,7 @@ const Container: React.FC = ({children}) => {
   return (
     <>
       <Header />
-      <div className="min-h-screen mx-20 md:pb-0 relative flex flex-col">
+      <div className="min-h-screen m-1 md:mx-10 md:pb-0 relative flex flex-col">
         <div className="min-h-full grow p-2">
         {children}
         </div>

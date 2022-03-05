@@ -1,5 +1,5 @@
 const {Server, Socket} = require("socket.io");
-const {enterChat} = require("./utilities/socketHandler");
+const enterChat = require("./utilities/socketHandler");
 import {message} from "./utilities/types"
 const app = require("./app");
 
@@ -10,9 +10,10 @@ const server = app.listen(process.env.PORT, ()=>{
 
 const socketServer = new Server(server);
 
-socketServer.on("connection", function(client: typeof Socket){
-    console.log("user connected", typeof Socket, client.id)
-    client.on("enterChat", enterChat)
+socketServer.on("connection", function(socket: typeof Socket){
+    socket.on("online", function(){
+        
+    })
 })
 
 process.on("unhandledRejection", function(err){
