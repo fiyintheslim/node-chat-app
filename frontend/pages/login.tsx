@@ -12,17 +12,6 @@ import See from "../components/see"
 import {MyContext} from "../components/Context"
 import {user} from "../utilities/types"
 
-export const getServerSideProps:GetServerSideProps = async (ctx) => {
-  
-  console.log("context", ctx)
-  console.log(ctx.req)
-  console.log(ctx.res)
-  return {
-    props:{
-      success:true
-    }
-  }
-}
 
 const loginSchema = Yup.object().shape({
   detail:Yup.string().min(3).required("Please enter your username or email"),

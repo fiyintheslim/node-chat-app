@@ -28,8 +28,8 @@ export const signUp = async (req:Request, res:Response, next:NextFunction)=>{
     }
     const upload = await cloudinary.v2.uploader.upload(user.avatar, {
         folder:"chat/avatars",
-        width:100,
-        heigth:100,
+        width:500,
+        heigth:500,
         crop:"fill"
     })
     

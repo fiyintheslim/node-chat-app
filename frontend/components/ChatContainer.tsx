@@ -13,20 +13,20 @@ const Container: React.FC = ({children}) => {
   const router = useRouter()
   const context = useContext(MyContext) as [{} | user, React.Dispatch<React.SetStateAction<{} | user>>]
   const meContext = context[0] !== {} ? context[0] as user : {avatar:""};
-
+  const chatRGX = /\/chat\//
   useEffect(()=>{
-    console.log("context in container", context)
+    console.log("context in chat container", context)
     me(context, router)
   }, [])
 
   return (
     <>
       <Header />
-      <div className="min-h-screen pb-20 md:pb-0 relative md:flex md:flex-row-reverse">
-        <div className="min-h-full grow md: md:ml-24 p-2">
+      <div className="min-h-screen mx-20 md:pb-0 relative flex flex-col">
+        <div className="min-h-full grow p-2">
         {children}
         </div>
-        <Navigation avatar={meContext.avatar} />
+        <Messenger /> 
       </div>
     </>
   )

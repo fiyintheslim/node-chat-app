@@ -13,7 +13,7 @@ import Container from "../components/Container"
 const Home: NextPage = () => {
   
   useEffect(()=>{
-    console.log(process.env.NEXT_PUBLIC_SOCKET_SERVER)
+    console.log(process.env.NEXT_PUBLIC_SERVER)
   }, [])
   return (
     <>

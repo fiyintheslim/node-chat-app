@@ -1,15 +1,15 @@
 import '../styles/globals.css';
-import {GetServerSideProps} from "next"
 import type { AppProps } from 'next/app';
 import socketClient from "socket.io-client"
-import React, {useEffect, useState, useRef} from "react"
+import React, {useEffect, useState, useRef, useContext} from "react"
 import Context from '../components/Context'
 import style from "../styles/scss/general.module.scss"
 
 
 
+
 function MyApp({ Component, pageProps }: AppProps) {
-  
+
   const [darkMode, setDarkMode] = useState<boolean | undefined>(false)
   const inp = useRef<null | HTMLInputElement>(null)
   const setDark = (e:React.ChangeEvent<HTMLInputElement>)=>{
@@ -38,15 +38,16 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(()=>{
    getDark()
-   const socket = socketClient(process.env.NEXT_PUBLIC_SOCKET_SERVER as string)
-
+   const socket = socketClient(process.env.NEXT_PUBLIC_SERVER as string)
   }, [])
+
+  
   return(
     <Context>
       <div style={{padding:"0px", margin:"0px"}} className="dark:bg-slate-900 bg-slate-100 min-h-screen u-dark">
         <Component {...pageProps} />
-        <div className="fixed bottom-1 right-2">
-        <input checked={darkMode} type="checkbox" id="mode-switch" onChange={(e)=>{
+        <div style={{right:"-14px"}} className="fixed z-50 bottom-80  rotate-90">
+          <input checked={darkMode} type="checkbox" id="mode-switch" onChange={(e)=>{
           setDark(e)
           }} ref={inp} className={`${style.mode_switch}`} />
           <label htmlFor="mode-switch" className={`${style.mode_label}`}>

@@ -1,29 +1,29 @@
-import React, {useEffect} from 'react'
-import {NextApiRequest, NextApiResponse, GetServerSideProps} from "next"
-import Navigation from "../../components/Navigation"
-import Header from "../../components/Header"
+import React, {useEffect, useState} from 'react'
+import Link from "next/link"
+import Image from "next/image"
 import Container from "../../components/Container"
-import {trial, getUsers} from "../../utilities/requests"
+import {getUsers} from "../../utilities/requests"
+import {user} from "../../utilities/types"
+import Card from "../../components/Card"
 
-export const getServerSideProps:GetServerSideProps = async (ctx)=>{
-  // console.log(ctx)
-  // console.log("Request", ctx.req.cookies);
-  // console.log("Response", ctx.res);
-  
-
-  return {
-   props:{}
-  }
-}
 
 const Home = () => {
+  const [users, setUsers] = useState<undefined | user[]>(undefined)
+
   useEffect(()=>{
-    getUsers()
-  }, [])
+    getUsers(setUsers)
+  }, [users])
   
   return (
       <Container>
-        <h1>Home</h1>
+        <ul className="flex flex-col justify-evenly">
+        {users && users.map(user=>(
+          <li key={user.id} className="">
+            <Card user={user} />
+          </li>
+          )
+          )}
+        </ul>
       </Container>
   )
 }

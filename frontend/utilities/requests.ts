@@ -69,13 +69,14 @@ export const me = async (
     router: NextRouter
     ) => {
     const token = localStorage.getItem("token")
+    console.log("Server", process.env.NEXT_PUBLIC_SERVER)
     if(token){
         const headers = {
             headers:{
             "Token":token
             }
         }
-        axios.get(`http://localhost:5000/api/v1/me`, headers)
+        axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/me`, headers)
         .then((res:AxiosResponse<loginResponse>)=>{
             const user = res.data.user;
             const meContext = me[0]
@@ -95,21 +96,22 @@ export const me = async (
     }
 }
 
-export const getUsers = async ()=>{
+export const getUsers = async (setUsers:React.Dispatch<React.SetStateAction<user[] | undefined>>)=>{
     const token = localStorage.getItem("token")
     if(token){
-        axios.get("http://localhost:5000/api/v1/users", {
+        axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/users`, {
             headers:{"Token":token}
         })
         .then((res:AxiosResponse<{success:boolean, users:user[]}>) => {
-            console.log(res.data.users)
+            console.log()
+            setUsers(res.data.users)
         })
     }
     
 }
 
 export const trial = async ()=> {
-    const res = await axios.get("http://localhost:5000/api/v1/trial")
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/trial`)
 
     console.log(res.data)
 }
