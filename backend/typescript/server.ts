@@ -1,5 +1,6 @@
 const {Server, Socket} = require("socket.io");
-const enterChat = require("./utilities/socketHandler");
+//const https = require("https");
+const {ioServer, connection} = require("./utilities/socketHandler");
 import {message} from "./utilities/types"
 const app = require("./app");
 
@@ -8,13 +9,9 @@ const server = app.listen(process.env.PORT, ()=>{
     console.log(`App started on port ${process.env.PORT}`)
 })
 
-const socketServer = new Server(server);
+const io = ioServer(server);
+connection(io)
 
-socketServer.on("connection", function(socket: typeof Socket){
-    socket.on("online", function(){
-        
-    })
-})
 
 process.on("unhandledRejection", function(err){
     console.log(`Server stopped due to unhandledRejection: ${err}`);
