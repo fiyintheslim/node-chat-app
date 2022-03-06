@@ -88,6 +88,7 @@ export const me = async (
         })
         .catch ((err:AxiosError<error>)=> {
             router.push("/")
+            localStorage.removeItem("token")
             me[1]({})
         })
     }else{

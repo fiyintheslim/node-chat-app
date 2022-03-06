@@ -1,8 +1,10 @@
-import React from 'react'
+import {useContext} from 'react'
 import Navigation from "../../../components/Navigation"
 import Container from "../../../components/Container"
 
+
 const Chat = () => {
+  
   return (
     <Container>
         <div>chat</div>

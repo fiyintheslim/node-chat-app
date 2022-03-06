@@ -1,12 +1,9 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import socketClient from "socket.io-client"
+// import socketClient from "socket.io-client"
 import React, {useEffect, useState, useRef, useContext} from "react"
 import Context from '../components/Context'
 import style from "../styles/scss/general.module.scss"
-
-
-
 
 function MyApp({ Component, pageProps }: AppProps) {
 
@@ -38,7 +35,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(()=>{
    getDark()
-   const socket = socketClient(process.env.NEXT_PUBLIC_SERVER as string)
+  //  const socket = socketClient(process.env.NEXT_PUBLIC_SERVER as string)
   }, [])
 
   

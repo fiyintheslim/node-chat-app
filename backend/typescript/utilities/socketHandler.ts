@@ -18,8 +18,12 @@ export const connection = (io:Socket) => {
             console.log("A message was sent", data)
         })
 
+        socket.on("join_chat", ()=>{
+            console.log(`User:${socket.id} joined chat`)
+        })
+
         socket.on("disconnecting", ()=>{
-            console.log("User is dosconnecting")
+            console.log("User is disconnecting")
         })
     })
 }

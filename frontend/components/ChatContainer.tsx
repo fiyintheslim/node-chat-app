@@ -12,12 +12,12 @@ import {user} from "../utilities/types"
 
 const Container: React.FC = ({children}) => {
   const router = useRouter()
-  const context = useContext(MyContext) as [{} | user, React.Dispatch<React.SetStateAction<{} | user>>]
-  const meContext = context[0] !== {} ? context[0] as user : {avatar:""};
+  const context = useContext(MyContext) as {user:[{} | user, React.Dispatch<React.SetStateAction<{} | user>>]}
+  const meContext = context.user[0] !== {} ? context.user[0] as user : {avatar:""};
   const chatRGX = /\/chat\//
   useEffect(()=>{
     console.log("context in chat container", context)
-    me(context, router)
+    me(context.user, router)
   }, [])
 
   return (
