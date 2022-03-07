@@ -1,5 +1,5 @@
 import {Socket, Server} from "socket.io"
-import {message} from "./types"
+import {message, joinChat} from "./types"
 
 export const ioServer = (server:any) => {
     return new Server(server, {
@@ -18,8 +18,8 @@ export const connection = (io:Socket) => {
             console.log("A message was sent", data)
         })
 
-        socket.on("join_chat", ()=>{
-            console.log(`User:${socket.id} joined chat`)
+        socket.on("join_chat", (data:joinChat)=>{
+            console.log(`User:${socket.id} joined chat, ${data.username}`)
         })
 
         socket.on("disconnecting", ()=>{

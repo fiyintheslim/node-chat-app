@@ -5,7 +5,7 @@ export const MyContext = createContext({})
 
 
 const Context:FC = ({children}) => {
-  const user = useState<user | {} >({})
+  const user = useState<user | undefined >()
   const [socket, setSocket] = useState<Socket | undefined>(undefined)
   useEffect(()=>{
     const io = socketClient(process.env.NEXT_PUBLIC_SERVER as string)

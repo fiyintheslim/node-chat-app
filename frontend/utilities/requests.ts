@@ -65,7 +65,7 @@ export const login = async (
 }
 
 export const me = async (
-    me:[{} | user, React.Dispatch<React.SetStateAction<{} | user>>],
+    me:[undefined | user, React.Dispatch<React.SetStateAction<undefined | user>>],
     router: NextRouter
     ) => {
     const token = localStorage.getItem("token")
@@ -81,7 +81,7 @@ export const me = async (
             const user = res.data.user;
             const meContext = me[0]
 
-            if(Object.keys(meContext).length === 0){
+            if(meContext && Object.keys(meContext).length === 0){
                 me[1](user)
             }
             
@@ -89,10 +89,10 @@ export const me = async (
         .catch ((err:AxiosError<error>)=> {
             router.push("/")
             localStorage.removeItem("token")
-            me[1]({})
+            me[1](undefined)
         })
     }else{
-        me[1]({})
+        me[1](undefined)
         router.push("/")
     }
 }
