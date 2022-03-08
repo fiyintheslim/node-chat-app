@@ -1,9 +1,11 @@
 import React, {useEffect, useContext, Context} from 'react';
+import {Socket} from "socket.io-client"
 import {useRouter} from "next/router";
 import Header from "./Header";
 import {MyContext} from "./Context"
 import Navigation from "./Navigation"
 import Messenger from "./Messenger"
+import socket from "../utilities/socket"
 import {me} from "../utilities/requests"
 import {user} from "../utilities/types"
 
@@ -11,13 +13,20 @@ import {user} from "../utilities/types"
 
 const Container: React.FC = ({children}) => {
   const router = useRouter()
-  const context = useContext(MyContext) as {user: [undefined | user, React.Dispatch<React.SetStateAction<undefined | user>>]}
-  const meContext = context.user[0] ? context.user[0] as user : {avatar:""};
+  const context = useContext(MyContext) as {user: [undefined | user, React.Dispatch<React.SetStateAction<undefined | user>>], socket:[Socket | undefined, React.Dispatch<React.SetStateAction<Socket> | undefined>]}
+  const meContext = context.user[0] ? context.user[0] as user : {avatar:"", username:undefined};
 
   useEffect(()=>{
-    console.log("context in container", context)
     me(context.user, router)
-  }, [])
+    console.log("context in container", context)
+    if(meContext.username){
+      socket.auth = {username:meContext.username}
+      const connectedSocket = socket.connect();
+      console.log("Connected socket", connectedSocket)
+    }
+    
+    
+  }, [meContext])
 
   return (
     <>

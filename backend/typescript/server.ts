@@ -1,7 +1,7 @@
-const {Server, Socket} = require("socket.io");
+const {Server, Socket, RequestSocket} = require("socket.io");
 //const https = require("https");
 const {ioServer, connection} = require("./utilities/socketHandler");
-import {message} from "./utilities/types"
+
 const app = require("./app");
 
 
@@ -11,6 +11,7 @@ const server = app.listen(process.env.PORT, ()=>{
 
 const io = ioServer(server);
 connection(io)
+
 
 
 process.on("unhandledRejection", function(err){

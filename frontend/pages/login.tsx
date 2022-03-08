@@ -27,7 +27,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const context  = useContext(MyContext) as [{} | user, React.Dispatch<React.SetStateAction<{} | user>>];
+  const context  = useContext(MyContext) as {user:[undefined | user, React.Dispatch<React.SetStateAction<undefined | user>>]};
   
   return (
     <div className="h-full flex align-center justify-around flex-col">
@@ -44,7 +44,7 @@ const Login = () => {
           form.set("password", values.password);
           
           setLoading(true);
-          login(form, setLoading, context[1], setError, router);
+          login(form, setLoading, context.user[1], setError, router);
         }}
         validationSchema={loginSchema}
         >

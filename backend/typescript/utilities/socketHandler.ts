@@ -11,8 +11,11 @@ export const ioServer = (server:any) => {
 }
 
 export const connection = (io:Socket) => {
+    io.use((socket, next)=>{
+        //console.log("socket use method", socket.handshake)
+    })
     io.on("connection", (socket)=>{
-        console.log("User connected", socket.id)
+        console.log("User connected", socket.id, socket.handshake.auth)
 
         socket.on("message", (data:message)=>{
             console.log("A message was sent", data)

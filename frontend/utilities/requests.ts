@@ -33,10 +33,10 @@ export const signup = async (
    
 }
 
-export const login = async (
+export const login = (
     data:FormData,
     setLoading:React.Dispatch<React.SetStateAction<boolean>>,
-    setUser:React.Dispatch<React.SetStateAction<user | {}>>,
+    setUser:React.Dispatch<React.SetStateAction<user | undefined>>,
     setError:React.Dispatch<React.SetStateAction<string | null>>,
     router: NextRouter
     )=>{
@@ -51,25 +51,25 @@ export const login = async (
     .then((res:AxiosResponse<loginResponse>)=>{
         const data = res.data
         console.log(data.user)
-        setUser(data.user)
         setLoading(false);
+        setUser(data.user)
         localStorage.setItem("token", data.token);
         router.push("/app")
     })
     .catch((err:AxiosError<error>)=>{
-        console.log("login error", err.response!.data.error)
+        console.log("login error", err)
         setError(err.response!.data.error)
-        setUser({});
+        setUser(undefined);
         setLoading(false)
     })
 }
 
-export const me = async (
+export const me = (
     me:[undefined | user, React.Dispatch<React.SetStateAction<undefined | user>>],
     router: NextRouter
     ) => {
     const token = localStorage.getItem("token")
-    console.log("Server", process.env.NEXT_PUBLIC_SERVER)
+    console.log("token", token)
     if(token){
         const headers = {
             headers:{
@@ -80,18 +80,18 @@ export const me = async (
         .then((res:AxiosResponse<loginResponse>)=>{
             const user = res.data.user;
             const meContext = me[0]
-
-            if(meContext && Object.keys(meContext).length === 0){
+            if(!meContext){
                 me[1](user)
             }
-            
         })
         .catch ((err:AxiosError<error>)=> {
+            console.log("Error loading user, resetting token", err)
             router.push("/")
             localStorage.removeItem("token")
             me[1](undefined)
         })
     }else{
+        console.log("No token")
         me[1](undefined)
         router.push("/")
     }
