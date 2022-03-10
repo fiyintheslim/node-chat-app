@@ -1,25 +1,40 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useContext, Dispatch, SetStateAction} from 'react'
 import Link from "next/link"
 import Image from "next/image"
 import Container from "../../components/Container"
 import {getUsers} from "../../utilities/requests"
-import {user} from "../../utilities/types"
+import {user, loggedIn} from "../../utilities/types"
 import Card from "../../components/Card"
+import {MyContext} from "../../components/Context"
 
 
 const Home = () => {
+  const context = useContext(MyContext) as {loggedIn : [loggedIn[] | undefined, Dispatch<SetStateAction<loggedIn[] | undefined>>]}
+  
   const [users, setUsers] = useState<undefined | user[]>(undefined)
+  const [loggedIn, setLoggedIn] = useState<number[] | undefined>(undefined)
+
+  useEffect(()=>{
+    if(context.loggedIn[0]){
+      console.log("Online", context.loggedIn[0])
+      const ids = context.loggedIn[0].map(user=>user.userID)
+      console.log("array of id's", ids)
+      setLoggedIn(ids)
+    }
+  }, [context.loggedIn[0]])
 
   useEffect(()=>{
     getUsers(setUsers)
-  }, [users])
+  }, [])
+
+  useEffect(()=>{}, [loggedIn])
   
   return (
       <Container>
         <ul className="flex flex-col justify-evenly">
         {users && users.map(user=>(
           <li key={user.id} className="">
-            <Card user={user} />
+            <Card user={user} online={loggedIn?.includes(user.id)}  />
           </li>
           )
           )}

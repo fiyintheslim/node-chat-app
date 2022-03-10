@@ -19,3 +19,9 @@ export interface error {
     success:boolean,
     stack:string
 }
+
+export interface loggedIn {
+    id:string,
+    username:string,
+    userID:number
+}

@@ -6,4 +6,12 @@ server.onAny((e, ...arg)=>{
     console.log("Event fired", e, arg)
 })
 
+server.on("user", (data)=>{
+    console.log(data, server.id)
+})
+
+server.on("user_connected", (data)=>{
+    alert(`${data.username} is online`)
+})
+
 export default server

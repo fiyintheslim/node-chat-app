@@ -35,7 +35,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(()=>{
    getDark()
-  //  const socket = socketClient(process.env.NEXT_PUBLIC_SERVER as string)
+  
   }, [])
 
   
