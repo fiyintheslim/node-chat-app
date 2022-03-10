@@ -9,7 +9,7 @@ const Messenger = () => {
   const context = useContext(MyContext) as { user: [{} | user, React.Dispatch<React.SetStateAction<{} | user>>], socket: Socket }
   const socket = context.socket
   return (
-    <div className="sticky bottom-0 left-0 flex">
+    <div className="fixed w-full bottom-20 right-0 flex">
       <textarea style={{ resize: "none" }} className="grow m-1 w-full outline-none bg-indigo-400 dark:bg-slate-400 rounded-md p-2 dark:text-slate-900" >
       </textarea>
       <button

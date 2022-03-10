@@ -17,20 +17,38 @@ export const connection = (io: any) => {
     // })
     io.on("connection", async (socket: Socket) => {
         
-        const users:{id:string, username:string, userID:string}[] = [];
+        let users:{id:string, username:string, userID:string}[] = [];
+        
         const avail = io.of("/").sockets
         
         avail.forEach((e:any)=>{
-           if(e.connected){
             users.push({id:e.id, username:e.handshake.auth.username, userID:e.handshake.auth.userID})
-           }
         })
         
+        // users = users.reduce((acc:{id:string, username:string, userID:string}[], e:any)=>{
+        //     let obj = acc.find(el=>{
+        //         return el.userID === e.userID})
+
+        //     console.log("obj",e.userID, obj)
+
+        //     let index = obj ? acc.indexOf(obj) : undefined
+        //     console.log("index", index)
+        //     if(obj && index){
+        //         console.log("duplicate", acc, e)
+        //         acc[index] = {id:e.id, username:e.username, userID:e.userID}
+        //         return [...acc]
+        //     }else{
+        //         return [...acc, {id:e.id, username:e.username, userID:e.userID}]
+        //     }
+            
+        // }, [])
         
-        console.log("users", users)
+        
+        console.log("users", users);
+        //console.log("Filtered users", filteredUsers);
       
-        socket.emit("user", users)
-        socket.broadcast.emit("user_connected", {id:socket.id, username:socket.handshake.auth.username, userID:socket.handshake.auth.userID})
+        socket.emit("users", users)
+        socket.broadcast.emit("user_connected", users)
 
         socket.on("message", (data: message) => {
             console.log("A message was sent", data)
@@ -41,8 +59,14 @@ export const connection = (io: any) => {
         })
 
         socket.on("disconnecting", () => {
-            console.log("User is disconnecting")
-            console.log(io, io.connected)
+            console.log("User is disconnecting", socket)
+            console.log(socket.id)
+            users = users.filter((user)=>{
+                return user.userID !== socket.handshake.auth.userID
+            })
+            
+            console.log("users left", users)
+            socket.broadcast.emit("user_connected", users)
         })
     })
 }

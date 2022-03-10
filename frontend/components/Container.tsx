@@ -17,21 +17,26 @@ const Container: React.FC = ({children}) => {
   const meContext = context.user[0] ? context.user[0] as user : {avatar:"", username:undefined};
  
   socket.on("user_connected", (data)=>{
-    console.log(`${data.username} is online`)
+    console.log(`${data.username} is online in container`)
+    if(context.loggedIn){
+      context.loggedIn[1](data)
+    }
   })
-  socket.on("user", (data)=>{
+
+  socket.on("users", (data)=>{
     console.log("users", data)
     if(context.loggedIn){
       context.loggedIn[1](data)
     }
     
-    console.log(`User ${data.username} logged in`)
+    console.log(`user event`, data)
   })
+  
   useEffect(()=>{
     me(context.user, router)
     
     console.log("context in container", context)
-    if(meContext.username){
+    if(meContext.username && !context.socket[0]){
       socket.auth = {username:meContext.username, userID:meContext.id}
       const connectedSocket = socket.connect();
       console.log("Connected socket", connectedSocket)
