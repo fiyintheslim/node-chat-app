@@ -50,7 +50,7 @@ export const connection = (io: any) => {
         socket.emit("users", users)
         socket.broadcast.emit("user_connected", users)
 
-        socket.on("message", (data: message) => {
+        socket.on("private_message", (data: message) => {
             console.log("A message was sent", data)
         })
 

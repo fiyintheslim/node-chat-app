@@ -1,5 +1,6 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {NextRouter} from "next/router"
+import React from "react";
 import {loginResponse} from "../utilities/types"
 import {user, error} from "./types"
 
@@ -69,7 +70,7 @@ export const me = (
     router: NextRouter
     ) => {
     const token = localStorage.getItem("token")
-    console.log("token", token)
+    
     if(token){
         const headers = {
             headers:{
@@ -109,6 +110,22 @@ export const getUsers = async (setUsers:React.Dispatch<React.SetStateAction<user
         })
     }
     
+}
+
+export const getUser = async (id:number, setUser:React.Dispatch<React.SetStateAction<user | undefined>>) => {
+    const config = {
+        headers:{
+            "Token":localStorage.getItem("token")
+        }
+    }
+    axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/user/${id}`)
+    .then((res:AxiosResponse)=>{
+       
+       setUser(res.data.user)
+    })
+    .catch((err)=>{
+        console.log("Error in getUser", err)
+    })
 }
 
 export const trial = async ()=> {

@@ -25,3 +25,10 @@ export interface loggedIn {
     username:string,
     userID:number
 }
+
+export interface message {
+    to:string,
+    message:string,
+    username:string,
+    time:Date
+}

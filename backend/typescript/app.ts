@@ -5,6 +5,7 @@ import path = require("path");
 import cookieParser = require("cookie-parser")
 import cloudinary = require("cloudinary");
 import cors = require("cors")
+
 import fileUpload = require("express-fileupload")
 import user from "./routes/userRoutes"
 import chatApp from "./routes/appRoutes";
