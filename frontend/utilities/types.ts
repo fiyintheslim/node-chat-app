@@ -5,7 +5,8 @@ export interface user {
     avatar:string,
     avata_public_id:string,
     gender:string,
-    role:string
+    role:string,
+    socketSessionID?:string
 }
 
 export interface loginResponse {

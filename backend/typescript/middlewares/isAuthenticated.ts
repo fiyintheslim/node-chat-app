@@ -12,7 +12,7 @@ const isAuthenticated = async (req:Request, res:Response, next:NextFunction)=>{
         return next(new ErrorHandler("Login to access this resource", 403));
     }
     const verified = await verify(token) as {id:number, iat:number, exp:number};
-    const user = await client.query("SELECT id, username, email, avatar, avatar_public_id, role FROM users WHERE id=$1", [verified.id])
+    const user = await client.query("SELECT id, username, email, avatar, avatar_public_id, role, socketSessionID FROM users WHERE id=$1", [verified.id])
     
     res.locals.user = user.rows[0]
     

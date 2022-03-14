@@ -6,7 +6,7 @@ import {MyContext} from "./Context"
 import Navigation from "./Navigation"
 import Messenger from "./Messenger"
 import socket from "../utilities/socket"
-import {me} from "../utilities/requests"
+import {me, saveSessionID} from "../utilities/requests"
 import {user, loggedIn} from "../utilities/types"
 
 
@@ -52,12 +52,14 @@ const Container: React.FC = ({children}) => {
     socket.on("session", data=>{
       console.log("session ID", data)
       const socketSession = localStorage.getItem("socketSession")
-      if(data && socketSession === null){
+      console.log("socketSession", socketSession)
+      if(data && socketSession === null || socketSession === 'null'){
         localStorage.setItem("socketSession", data)
       }
+      //console.log("Me context in socket session", meContext.sessionID)
       
     })
-  }, [])
+  }, [meContext])
   
 
   return (

@@ -35,7 +35,7 @@ export const signUp = async (req:Request, res:Response, next:NextFunction)=>{
     
     
    const hashed = await bcrypt.hash(user.password, 10)
-    const saved = await client.query("INSERT INTO users (username, email, password, avatar, avatar_public_id) VALUES($1, $2, $3, $4, $5) RETURNING id, username, email, avatar, avatar_public_id", [user.username, user.email, hashed, upload.secure_url, upload.public_id]);
+    const saved = await client.query("INSERT INTO users (username, email, password, avatar, avatar_public_id) VALUES($1, $2, $3, $4, $5) RETURNING id, username, email, avatar, avatar_public_id, role, socketSessionID", [user.username, user.email, hashed, upload.secure_url, upload.public_id]);
     console.log(saved.rows[0])
     //send token
     
@@ -150,4 +150,14 @@ export const me = async (req:Request, res:Response, next:NextFunction) => {
 
 export const trial =async (req:Request, res:Response, next:NextFunction) =>{
     return res.status(200).json({success:true, message:"endpoint working"})
-} 
+}
+
+export const saveSessionID = async (req:Request, res:Response, next:NextFunction) => {
+    const sessionID = req.body.sessionID
+    const id = res.locals.user.id
+
+    const client = await postgresPool;
+    const result = await client.query("INSERT INTO users (socketSessionID) VALUES ($1) WHERE id=$2", [sessionID, id]);
+
+    return res.status(200).json({success:true, message:"Socket session saved successfully"})
+}

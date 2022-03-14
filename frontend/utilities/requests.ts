@@ -133,3 +133,24 @@ export const trial = async ()=> {
 
     console.log(res.data)
 }
+
+export const saveSessionID = (session:string)=>{
+    const token = localStorage.getItem("token")
+    
+    const data = new FormData();
+    data.set("sessionID", session)
+
+    if(token){
+
+        const config = {
+            headers:{
+                "Token":token
+            }
+        }
+
+        axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/save/sessionID)`, data, config)
+        .then((res:AxiosResponse)=>{
+            alert(`user session ${session} saved`)
+        })
+    }
+}

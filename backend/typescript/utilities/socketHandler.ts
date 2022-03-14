@@ -2,6 +2,7 @@ import { Socket, Server } from "socket.io"
 import crypto = require("crypto")
 import SessionStorage from "./socketSessionStorage"
 import { message, joinChat } from "./types"
+import {postgresPool} from "../app"
 
 export const ioServer = (server: any) => {
     return new Server(server, {
@@ -31,8 +32,9 @@ export const connection = (io: any) => {
                 socket.handshake.auth.sessionID = savedSocketSession
                 return next()
             }
-           
+            
             socket.handshake.auth.sessionID = socket.id;
+            console.log("null and socket not saved", savedSocketSession, userID)
             sessionStorage.addSession(userID, socket.id)
             
             return next()
@@ -45,6 +47,8 @@ export const connection = (io: any) => {
         return next()
     })
     io.on("connection", async (socket: any) => {
+        const client = await postgresPool;
+
         socket.emit("session", socket.handshake.auth.sessionID)
         socket.join(socket.handshake.auth.sessionID);
         
@@ -60,7 +64,9 @@ export const connection = (io: any) => {
         socket.emit("users", users)
         socket.broadcast.emit("user_connected", users)
 
-        socket.on("private_message", (res: any) => {
+        socket.on("private_message", async (res: any) => {
+            
+            //client.query("")
             console.log("A message was sent", res, res.data, res.to)
             socket.to(res.to).emit("private_message", res.data)
         })
