@@ -5,6 +5,7 @@ import {postgresPool} from "../app"
 
 
 const isAuthenticated = async (req:Request, res:Response, next:NextFunction)=>{
+    
     const token = req.get("Token");
     
     const client = await postgresPool; 

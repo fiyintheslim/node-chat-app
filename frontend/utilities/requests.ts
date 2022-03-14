@@ -144,13 +144,17 @@ export const saveSessionID = (session:string)=>{
 
         const config = {
             headers:{
-                "Token":token
+                "Token":token,
+                "Content-Type":"application/json"
             }
         }
-
-        axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/save/sessionID)`, data, config)
+        console.log("saving", token, data.get("sessionID"), config)
+        axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/save/sessionID`, data, config)
         .then((res:AxiosResponse)=>{
             alert(`user session ${session} saved`)
+        })
+        .catch((err:AxiosError)=>{
+            console.log("error saving sessionID", err.message)
         })
     }
 }

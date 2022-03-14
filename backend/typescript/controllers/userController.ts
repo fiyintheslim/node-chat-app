@@ -155,9 +155,9 @@ export const trial =async (req:Request, res:Response, next:NextFunction) =>{
 export const saveSessionID = async (req:Request, res:Response, next:NextFunction) => {
     const sessionID = req.body.sessionID
     const id = res.locals.user.id
-
+    console.log("Saving session id", sessionID, id)
     const client = await postgresPool;
-    const result = await client.query("INSERT INTO users (socketSessionID) VALUES ($1) WHERE id=$2", [sessionID, id]);
-
+    const result = await client.query("UPDATE users SET socketSessionID=$1 WHERE id=$2", [sessionID, id]);
+    console.log("saved session")
     return res.status(200).json({success:true, message:"Socket session saved successfully"})
 }

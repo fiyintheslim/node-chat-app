@@ -19,7 +19,7 @@ const randomId = async () => crypto.randomBytes(8).toString('hex');
 export const connection = (io: any) => {
 
     io.use(async (socket: any, next: any) => {
-
+        const client = await postgresPool
 
         const sessionID = socket.handshake.auth.sessionID;
         const userID = socket.handshake.auth.userID
@@ -28,13 +28,18 @@ export const connection = (io: any) => {
             const savedSocketSession = sessionStorage.getSessionID(userID);
             
             if (savedSocketSession) {
-                console.log("Saved socket", savedSocketSession)
+                
                 socket.handshake.auth.sessionID = savedSocketSession
                 return next()
             }
-            
+            const user = await client.query("SELECT socketSessionID FROM users WHERE id=$1", [userID])
+            if(user.rows[0]){
+                socket.handshake.auth.sessionID = user.rows[0];
+                sessionStorage.addSession(userID, user.rows[0])
+                return next()
+            }
             socket.handshake.auth.sessionID = socket.id;
-            console.log("null and socket not saved", savedSocketSession, userID)
+            
             sessionStorage.addSession(userID, socket.id)
             
             return next()

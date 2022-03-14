@@ -14,14 +14,14 @@ import {user, loggedIn} from "../utilities/types"
 const Container: React.FC = ({children}) => {
   const router = useRouter()
   const context = useContext(MyContext) as {user: [undefined | user, Dispatch<SetStateAction<undefined | user>>], socket:[Socket | undefined, Dispatch<SetStateAction<Socket> | undefined>], loggedIn:[loggedIn[] | undefined, Dispatch<SetStateAction<loggedIn[] | undefined>>]}
-  const meContext = context.user[0] ? context.user[0] as user : {avatar:"", username:undefined};
+  const meContext = context.user[0] 
  
   
   useEffect(()=>{
     me(context.user, router)
     let sessionID = localStorage.getItem("socketSession")
     console.log("Seesion id", sessionID)
-    if(meContext.username){
+    if(meContext && meContext.username){
       socket.auth = sessionID == null ? {username:meContext.username, userID:meContext.id} : {username:meContext.username, userID:meContext.id, sessionID}
       const connectedSocket = socket.connect();
       console.log("session id", sessionID, context, connectedSocket)
@@ -57,7 +57,10 @@ const Container: React.FC = ({children}) => {
         localStorage.setItem("socketSession", data)
       }
       //console.log("Me context in socket session", meContext.sessionID)
-      
+      if(meContext && meContext.id && !meContext.socketSessionID){
+        console.log("saving")
+        saveSessionID(data)
+      }
     })
   }, [meContext])
   
@@ -69,7 +72,7 @@ const Container: React.FC = ({children}) => {
         <div className="min-h-full grow md: md:ml-24">
         {children}
         </div>
-        <Navigation avatar={meContext.avatar}  />
+        <Navigation avatar={meContext && meContext.avatar}  />
       </div>
     </>
   )
