@@ -3,7 +3,7 @@ import {useRouter} from "next/router"
 import Container from "../../components/Container"
 import {MyContext} from "../../components/Context"
 import ChatContainer from "../../components/ChatContainer"
-import {user, loggedIn, message} from "../../utilities/types"
+import {user, loggedIn, message, active} from "../../utilities/types"
 import {getUser} from "../../utilities/requests"
 import Messenger from "../../components/Messenger"
 import socket from "../../utilities/socket"
@@ -18,6 +18,17 @@ const Chat = () => {
   const [messages, setMessages] = useState<message[]>([])
 
   const online = context.loggedIn[0] ? context.loggedIn[0] : undefined
+
+  
+
+  useEffect(()=>{
+    socket.on("private_message", (data:message)=>{
+      //alert("message received")
+      
+      setMessages([...messages, data])
+      console.log("Received message", data, messages)
+    })
+  }, [messages])
 
   useEffect(()=>{
     const id = router.query.id as string
@@ -44,15 +55,16 @@ const Chat = () => {
 
   const handleMyMessage = (msg:string)=>{
     console.log("send message", active, activeSocket)
-    if(active && activeSocket){
+    if(context.user[0] && activeSocket){
       let data = {
-        to:activeSocket.id,
-        message:msg,
-        username:active.username,
-        time:new Date(Date.now())
-      }
+                  message:msg,
+                  username:context.user[0].username,
+                  userID:context.user[0].id,
+                  time:Date.now()
+                }
+      let to = activeSocket.sessionID
       
-      socket.emit("private_message", data)
+      socket.emit("private_message", {data, to})
       setMessages([...messages, data])
     }
     
@@ -61,7 +73,7 @@ const Chat = () => {
   return (
     <Container>
       <div className="flex h-full">
-        <div className="basis-1/4 border-r border-slate-300 dark:bg-slate-700 bg-slate-200 dark:border-slate-600">
+        <div className="basis-1/4 border-r border-slate-300 bg-slate-200 dark:bg-slate-700 dark:border-slate-600">
           <ul>{
             chats.map(el=>(
               <li className="w-full h-10">
@@ -71,15 +83,7 @@ const Chat = () => {
           }</ul>
           <div>{}</div>
         </div>
-        <div className="grow relative min-h-screen  md:pb-0 flex flex-col">
-          <div className="border-b border-slate-300 p-3">
-          {active ? active.username : "Select Chat"}
-          </div>
-          <div className="min-h-full grow p-2">
-          
-          </div>
-          <Messenger sendMessage={handleMyMessage} />
-        </div>
+        <ChatContainer active={active} messages={messages} handleMyMessage={handleMyMessage} />
       </div>
     </Container>
   )

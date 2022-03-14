@@ -20,6 +20,14 @@ const setTables = async () =>{
         password_reset_token_expires VARCHAR(255),
         created_at TIMESTAMP default current_timestamp
     )`)
+
+    await client.query(`
+    CREATE TABLE messages IF NOT EXISTS(
+        owner integer[] NOT NULL,
+        messages[] NOT NULL,
+        admins[],
+        updated INTEGER NOT NULL
+    )`)
         console.log("tables set")
     await client.release();
 }

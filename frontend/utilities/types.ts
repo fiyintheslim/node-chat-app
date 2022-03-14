@@ -21,14 +21,19 @@ export interface error {
 }
 
 export interface loggedIn {
-    id:string,
-    username:string,
-    userID:number
+    sessionID: string,
+    userID: number,
+    username: string,
 }
 
 export interface message {
-    to:string,
     message:string,
     username:string,
-    time:Date
+    time:number
+}
+
+export interface active{
+    sessionID: string,
+    userID: number,
+    username: string,
 }

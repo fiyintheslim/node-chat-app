@@ -16,34 +16,49 @@ const Container: React.FC = ({children}) => {
   const context = useContext(MyContext) as {user: [undefined | user, Dispatch<SetStateAction<undefined | user>>], socket:[Socket | undefined, Dispatch<SetStateAction<Socket> | undefined>], loggedIn:[loggedIn[] | undefined, Dispatch<SetStateAction<loggedIn[] | undefined>>]}
   const meContext = context.user[0] ? context.user[0] as user : {avatar:"", username:undefined};
  
-  socket.on("user_connected", (data)=>{
-    console.log(`${data.username} is online in container`)
-    if(context.loggedIn){
-      context.loggedIn[1](data)
-    }
-  })
-
-  socket.on("users", (data)=>{
-  
-    if(!context.loggedIn[0]){
-
-      context.loggedIn[1](data)
-      console.log("Socket saved in context", data, context.loggedIn)
-      
-    }
-  })
   
   useEffect(()=>{
     me(context.user, router)
-    
-    if(meContext.username && !context.socket[0]){
-      socket.auth = {username:meContext.username, userID:meContext.id}
+    let sessionID = localStorage.getItem("socketSession")
+    console.log("Seesion id", sessionID)
+    if(meContext.username){
+      socket.auth = sessionID == null ? {username:meContext.username, userID:meContext.id} : {username:meContext.username, userID:meContext.id, sessionID}
       const connectedSocket = socket.connect();
-      console.log("Connected socket", context.loggedIn[0])
+      console.log("session id", sessionID, context, connectedSocket)
     }
     
     
   }, [meContext, context.loggedIn[0]])
+
+  useEffect(()=>{
+    socket.on("user_connected", (data)=>{
+      console.log(`${data.username} is online in container`)
+      if(context.loggedIn){
+        context.loggedIn[1](data)
+      }
+    })
+  
+    socket.on("users", (data)=>{
+    
+      if(!context.loggedIn[0]){
+  
+        context.loggedIn[1](data)
+        console.log("Socket saved in context", data, context.loggedIn)
+        
+      }
+    })
+  
+    
+    socket.on("session", data=>{
+      console.log("session ID", data)
+      const socketSession = localStorage.getItem("socketSession")
+      if(data && socketSession === null){
+        localStorage.setItem("socketSession", data)
+      }
+      
+    })
+  }, [])
+  
 
   return (
     <>

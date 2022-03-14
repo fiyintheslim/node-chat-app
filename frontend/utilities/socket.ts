@@ -19,4 +19,8 @@ server.on("disconnecting", ()=>{
     alert("Disconnecting")
 })
 
+server.on("connect_err", (err)=>{
+    console.log("Error", err)
+})
+
 export default server

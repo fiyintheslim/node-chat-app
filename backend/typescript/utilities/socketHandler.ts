@@ -1,4 +1,6 @@
 import { Socket, Server } from "socket.io"
+import crypto = require("crypto")
+import SessionStorage from "./socketSessionStorage"
 import { message, joinChat } from "./types"
 
 export const ioServer = (server: any) => {
@@ -10,48 +12,57 @@ export const ioServer = (server: any) => {
     })
 }
 
+const sessionStorage = new SessionStorage()
+const randomId = async () => crypto.randomBytes(8).toString('hex');
+
 export const connection = (io: any) => {
 
-    // io.use((socket, next)=>{
-    //     //console.log("socket use method", socket.handshake)
-    // })
-    io.on("connection", async (socket: Socket) => {
+    io.use(async (socket: any, next: any) => {
+
+
+        const sessionID = socket.handshake.auth.sessionID;
+        const userID = socket.handshake.auth.userID
+        console.log("connecting", sessionID, userID)
+        if (sessionID === null || sessionID ==="null" || !sessionID) {
+            const savedSocketSession = sessionStorage.getSessionID(userID);
+            
+            if (savedSocketSession) {
+                console.log("Saved socket", savedSocketSession)
+                socket.handshake.auth.sessionID = savedSocketSession
+                return next()
+            }
+           
+            socket.handshake.auth.sessionID = socket.id;
+            sessionStorage.addSession(userID, socket.id)
+            
+            return next()
+        }
         
-        let users:{id:string, username:string, userID:string}[] = [];
+        const savedSocketSession = sessionStorage.getSessionID(userID);
+        if(!savedSocketSession || savedSocketSession !== "null" || savedSocketSession !== null){
+            sessionStorage.addSession(userID, sessionID)
+        }
+        return next()
+    })
+    io.on("connection", async (socket: any) => {
+        socket.emit("session", socket.handshake.auth.sessionID)
+        socket.join(socket.handshake.auth.sessionID);
+        
+        let users: { sessionID: string, username: string, userID: string }[] = [];
         
         const avail = io.of("/").sockets
-        
-        avail.forEach((e:any)=>{
-            users.push({id:e.id, username:e.handshake.auth.username, userID:e.handshake.auth.userID})
+
+        avail.forEach((e: any) => {
+            users.push({ sessionID: e.handshake.auth.sessionID, username: e.handshake.auth.username, userID: e.handshake.auth.userID })
         })
-        
-        // users = users.reduce((acc:{id:string, username:string, userID:string}[], e:any)=>{
-        //     let obj = acc.find(el=>{
-        //         return el.userID === e.userID})
 
-        //     console.log("obj",e.userID, obj)
-
-        //     let index = obj ? acc.indexOf(obj) : undefined
-        //     console.log("index", index)
-        //     if(obj && index){
-        //         console.log("duplicate", acc, e)
-        //         acc[index] = {id:e.id, username:e.username, userID:e.userID}
-        //         return [...acc]
-        //     }else{
-        //         return [...acc, {id:e.id, username:e.username, userID:e.userID}]
-        //     }
-            
-        // }, [])
-        
-        
-        console.log("users", users);
-        //console.log("Filtered users", filteredUsers);
-      
+        console.log("connected", users, sessionStorage.allSessions())
         socket.emit("users", users)
         socket.broadcast.emit("user_connected", users)
 
-        socket.on("private_message", (data: message) => {
-            console.log("A message was sent", data)
+        socket.on("private_message", (res: any) => {
+            console.log("A message was sent", res, res.data, res.to)
+            socket.to(res.to).emit("private_message", res.data)
         })
 
         socket.on("join_chat", (data: joinChat) => {
@@ -59,12 +70,11 @@ export const connection = (io: any) => {
         })
 
         socket.on("disconnecting", () => {
-            console.log("User is disconnecting", socket)
-            console.log(socket.id)
-            users = users.filter((user)=>{
+            console.log("User is disconnecting", socket.id)
+            users = users.filter((user) => {
                 return user.userID !== socket.handshake.auth.userID
             })
-            
+
             console.log("users left", users)
             socket.broadcast.emit("user_connected", users)
         })

@@ -19,7 +19,7 @@ const Messenger = (prop:Props) => {
             prop.sendMessage(message)
             setMessage("")
           }
-        }} value={message} onChange={(e)=>{setMessage(e.target.value)}} className="grow m-1 w-full outline-none bg-indigo-200 border border-slate-400 dark:bg-indigo-600 rounded-md p-2 dark:text-slate-300" >
+        }} value={message} onChange={(e)=>{setMessage(e.target.value)}} className="grow m-1 w-full outline-none bg-indigo-200 border border-slate-400 dark:bg-indigo-400 rounded-md p-2 dark:text-slate-900" >
       </textarea>
       <button
         type="button"
