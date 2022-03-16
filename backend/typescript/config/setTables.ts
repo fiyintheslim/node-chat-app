@@ -24,10 +24,12 @@ const setTables = async () =>{
 
     await client.query(`
     CREATE TABLE messages IF NOT EXISTS(
-        messageID SERIAL PRIMARY KEY NOT NULL,
+        id SERIAL PRIMARY KEY NOT NULL,
         senderID INTEGER NOT NULL,
+        receiverID INTEGER,
         content TEXT NOT NULL,
-        roomID VARCHAR(255)
+        roomID VARCHAR(255),
+        time INTEGER NOT NULL,
     )`)
 
     await client.query(`

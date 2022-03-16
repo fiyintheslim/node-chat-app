@@ -113,12 +113,14 @@ export const getUsers = async (setUsers:React.Dispatch<React.SetStateAction<user
 }
 
 export const getUser = async (id:number, setUser:React.Dispatch<React.SetStateAction<user | undefined>>) => {
+    const token = localStorage.getItem("token")
+    if(token){
     const config = {
         headers:{
-            "Token":localStorage.getItem("token")
+            "Token": token
         }
     }
-    axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/user/${id}`)
+    axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/user/${id}`, config)
     .then((res:AxiosResponse)=>{
        
        setUser(res.data.user)
@@ -126,6 +128,7 @@ export const getUser = async (id:number, setUser:React.Dispatch<React.SetStateAc
     .catch((err)=>{
         console.log("Error in getUser", err)
     })
+}
 }
 
 export const trial = async ()=> {
@@ -155,6 +158,24 @@ export const saveSessionID = (session:string)=>{
         })
         .catch((err:AxiosError)=>{
             console.log("error saving sessionID", err.message)
+        })
+    }
+}
+
+export const saveMessage = (data:FormData)=>{
+    const token = localStorage.getItem("token");
+    if(token){
+        const config = {
+            headers:{
+                "Token":token
+            }
+        }
+        axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/save/message`, data, config)
+        .then((res:AxiosResponse)=>{
+            alert("message saved")
+        })
+        .catch((err:AxiosError)=>{
+            console.log("SSaving message error", err)
         })
     }
 }

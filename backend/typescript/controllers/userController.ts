@@ -55,8 +55,9 @@ export const login = async (req:Request, res:Response, next:NextFunction) =>{
     }
 
     const client = await postgresPool;
+    console.log("query postgres", client)
     const gottenUser = await client.query("SELECT * FROM users WHERE email = $1 OR username = $1", [user.detail]);
-    
+    console.log("after query")
 
     if(!gottenUser.rows[0]){
         return next(new ErrorHandler("User not found", 404))
@@ -71,7 +72,7 @@ export const login = async (req:Request, res:Response, next:NextFunction) =>{
     delete trimmed.created_at
     delete trimmed.password_reset_token
     delete trimmed.password_reset_token_expires
-    console.log
+    
     return res.status(200).cookie("token", token, {maxAge:parseInt(process.env.COOKIES_EXPIRES!) * 24 * 60 * 60 * 1000, httpOnly:true}).json({success:true, message:"Login successful.", user:trimmed, token})
 }
 
@@ -155,9 +156,9 @@ export const trial =async (req:Request, res:Response, next:NextFunction) =>{
 export const saveSessionID = async (req:Request, res:Response, next:NextFunction) => {
     const sessionID = req.body.sessionID
     const id = res.locals.user.id
-    console.log("Saving session id", sessionID, id)
+    
     const client = await postgresPool;
     const result = await client.query("UPDATE users SET socketSessionID=$1 WHERE id=$2", [sessionID, id]);
-    console.log("saved session")
+   
     return res.status(200).json({success:true, message:"Socket session saved successfully"})
 }

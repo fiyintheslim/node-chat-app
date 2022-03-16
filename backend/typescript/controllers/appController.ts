@@ -22,3 +22,17 @@ export const getUser = async (req:Request, res:Response, next:NextFunction) => {
         user:result.rows[0]
     })
 }
+
+export const saveMessage = async (req:Request, res:Response, next:NextFunction)=>{
+    const client = await postgresPool;
+
+    const content = req.body
+
+    //const result = await client.query("INSERT INTO messages (senderID, receiverID, content, roomID, time) VALUES ($1, $2, $3, $4)", [])
+    console.log("saving messages", content)
+    return res.status(200).json({
+        successful:true,
+        message:"Message saved",
+        content
+    })
+}

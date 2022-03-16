@@ -56,11 +56,12 @@ const Chat = () => {
   const handleMyMessage = (msg:string)=>{
     console.log("send message", active, activeSocket)
     if(context.user[0] && activeSocket){
+      let time = Date.now()
       let data = {
                   message:msg,
                   username:context.user[0].username,
                   userID:context.user[0].id,
-                  time:Date.now()
+                  time
                 }
       let to = activeSocket.sessionID
       

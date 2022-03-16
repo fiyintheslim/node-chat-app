@@ -57,7 +57,7 @@ const Container: React.FC = ({children}) => {
         localStorage.setItem("socketSession", data)
       }
       //console.log("Me context in socket session", meContext.sessionID)
-      if(meContext && meContext.id && !meContext.socketSessionID){
+      if(meContext && meContext.id && !meContext.socketsessionid){
         console.log("saving")
         saveSessionID(data)
       }
