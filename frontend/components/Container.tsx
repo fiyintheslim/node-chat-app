@@ -19,9 +19,14 @@ const Container: React.FC = ({children}) => {
   
   useEffect(()=>{
     me(context.user, router)
-    let sessionID = localStorage.getItem("socketSession")
-    console.log("Seesion id", sessionID)
+    
     if(meContext && meContext.username){
+      let sessionID = localStorage.getItem("socketSession")
+      console.log("Seesion id", sessionID)
+      if(meContext.socketsessionid && sessionID !== meContext.socketsessionid){
+        localStorage.setItem("socketSession", meContext.socketsessionid)
+      }
+
       socket.auth = sessionID == null ? {username:meContext.username, userID:meContext.id} : {username:meContext.username, userID:meContext.id, sessionID}
       const connectedSocket = socket.connect();
       console.log("session id", sessionID, context, connectedSocket)
@@ -32,7 +37,7 @@ const Container: React.FC = ({children}) => {
 
   useEffect(()=>{
     socket.on("user_connected", (data)=>{
-      console.log(`${data.username} is online in container`)
+      console.log(`A user is online (in container)`)
       if(context.loggedIn){
         context.loggedIn[1](data)
       }

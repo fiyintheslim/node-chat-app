@@ -4,13 +4,13 @@ import Container from "../../components/Container"
 import {MyContext} from "../../components/Context"
 import ChatContainer from "../../components/ChatContainer"
 import {user, loggedIn, message, active} from "../../utilities/types"
-import {getUser} from "../../utilities/requests"
+import {getUser, saveMessage, getMessages} from "../../utilities/requests"
 import Messenger from "../../components/Messenger"
 import socket from "../../utilities/socket"
 
 const Chat = () => {
   const router = useRouter()
-
+  const receiverID = useRef<string>()
   const context = useContext(MyContext) as {user: [undefined | user, Dispatch<SetStateAction<undefined | user>>], loggedIn:[loggedIn[] | undefined, Dispatch<SetStateAction<loggedIn[] | undefined>>]}
   const [chats, setChats] = useState<user[]>([])
   const [active, setActive] = useState<user | undefined>(undefined)
@@ -23,17 +23,18 @@ const Chat = () => {
 
   useEffect(()=>{
     socket.on("private_message", (data:message)=>{
-      //alert("message received")
       
       setMessages([...messages, data])
-      console.log("Received message", data, messages)
+      
     })
   }, [messages])
 
   useEffect(()=>{
     const id = router.query.id as string
     if(id){
+      receiverID.current = id
       getUser(parseInt(id), setActive)
+      getMessages(id, setMessages)
     }
   }, [router.isReady])
 
@@ -54,13 +55,24 @@ const Chat = () => {
   }, [active, context.loggedIn[0]])
 
   const handleMyMessage = (msg:string)=>{
+    let time = Date.now()
     console.log("send message", active, activeSocket)
+    if(context.user[0] && receiverID.current){
+      const formData = new FormData();
+      formData.set("senderID", context.user[0].id.toString())
+      formData.set("receiverID", receiverID.current)
+      formData.set("content", msg)
+      formData.set("time", time.toString())
+      formData.set("roomID", "null")
+
+      saveMessage(formData)
+    }
+    
     if(context.user[0] && activeSocket){
-      let time = Date.now()
+      
       let data = {
-                  message:msg,
-                  username:context.user[0].username,
-                  userID:context.user[0].id,
+                  content:msg,
+                  senderid:context.user[0].id,
                   time
                 }
       let to = activeSocket.sessionID

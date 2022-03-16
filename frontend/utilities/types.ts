@@ -28,8 +28,8 @@ export interface loggedIn {
 }
 
 export interface message {
-    message:string,
-    username:string,
+    content:string,
+    senderid:number,
     time:number
 }
 

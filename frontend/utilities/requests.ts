@@ -2,7 +2,7 @@ import axios, {AxiosError, AxiosResponse} from "axios";
 import {NextRouter} from "next/router"
 import React from "react";
 import {loginResponse} from "../utilities/types"
-import {user, error} from "./types"
+import {user, error, message} from "./types"
 
 
 
@@ -164,6 +164,7 @@ export const saveSessionID = (session:string)=>{
 
 export const saveMessage = (data:FormData)=>{
     const token = localStorage.getItem("token");
+
     if(token){
         const config = {
             headers:{
@@ -176,6 +177,24 @@ export const saveMessage = (data:FormData)=>{
         })
         .catch((err:AxiosError)=>{
             console.log("SSaving message error", err)
+        })
+    }
+}
+
+export const getMessages = (id:string, setMessages:React.Dispatch<React.SetStateAction<message[]|[]>>)=>{
+    const token = localStorage.getItem("token");
+    
+    if(token){
+        const config = {
+            headers:{
+                "Token":token
+            }
+        }
+
+        axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/messages?receiver=${id}`, config)
+        .then((res:AxiosResponse)=>{
+            console.log("Gotten messages", res)
+            setMessages([...res.data.messages])
         })
     }
 }
