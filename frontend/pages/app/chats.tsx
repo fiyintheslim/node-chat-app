@@ -16,16 +16,15 @@ const Chat = () => {
   const [active, setActive] = useState<user | undefined>(undefined)
   const [activeSocket, setActiveSocket] = useState<loggedIn | undefined>(undefined)
   const [messages, setMessages] = useState<message[]>([])
-
-  const online = context.loggedIn[0] ? context.loggedIn[0] : undefined
+  const [online, setOnline] = useState<loggedIn[]>([])
 
   
 
+  
+//socket event listener
   useEffect(()=>{
     socket.on("private_message", (data:message)=>{
-      
       setMessages([...messages, data])
-      
     })
   }, [messages])
 
@@ -39,25 +38,33 @@ const Chat = () => {
   }, [router.isReady])
 
   useEffect(()=>{
-    if(active && !chats){
-      setChats([...chats, active])
+    if(active && !chats.find((e)=>e.id === active.id)){
+      setChats([active, ...chats])
     }
 
     if(context.loggedIn[0] && active){
+      setOnline(context.loggedIn[0]);
       const ids = context.loggedIn[0].filter((el)=>{
         return el.userID === active.id
       })
       console.log("ids", ids)
       setActiveSocket(ids[ids.length - 1])
-      console.log("chats", context.loggedIn[0], activeSocket, active)
+      console.log("chats", context.loggedIn[0], activeSocket, chats)
     }
     
-  }, [active, context.loggedIn[0]])
+  }, [active, chats, context.loggedIn[0]])
 
   const handleMyMessage = (msg:string)=>{
     let time = Date.now()
-    console.log("send message", active, activeSocket)
+    
     if(context.user[0] && receiverID.current){
+      let data = {
+        content:msg,
+        senderid:context.user[0].id,
+        time
+      }
+      setMessages([...messages, data])
+
       const formData = new FormData();
       formData.set("senderID", context.user[0].id.toString())
       formData.set("receiverID", receiverID.current)
@@ -66,20 +73,17 @@ const Chat = () => {
       formData.set("roomID", "null")
 
       saveMessage(formData)
-    }
     
-    if(context.user[0] && activeSocket){
+    
+    if(activeSocket){
       
-      let data = {
-                  content:msg,
-                  senderid:context.user[0].id,
-                  time
-                }
+      
       let to = activeSocket.sessionID
       
       socket.emit("private_message", {data, to})
       setMessages([...messages, data])
     }
+  }
     
   }
 
@@ -88,10 +92,12 @@ const Chat = () => {
       <div className="flex h-full">
         <div className="basis-1/4 border-r border-slate-300 bg-slate-200 dark:bg-slate-700 dark:border-slate-600">
           <ul>{
-            chats.map(el=>(
-              <li className="w-full h-10">
-                <span className={`h-2 w-2 bg-slate-50 rounded-full`}></span>
-                {el.username}
+            chats.map((el, i)=>(
+              <li key={i} className="w-full h-12">
+                <p className={`h-full w-full flex items-center border-b border-slate-300`}>
+                  <span className={`mx-3 w-2 h-2 rounded-full ${online.find((e)=>e.userID === el.id) ? "bg-green-500" : "bg-slate-400"}`}></span>
+                  <span>{el.username}</span>
+                </p>
               </li>))
           }</ul>
           <div>{}</div>
