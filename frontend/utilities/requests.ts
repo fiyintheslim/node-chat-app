@@ -198,3 +198,20 @@ export const getMessages = (id:string, setMessages:React.Dispatch<React.SetState
         })
     }
 }
+
+export const getChats = (setChats:React.Dispatch<React.SetStateAction<user[]>>) => {
+    const token = localStorage.getItem("token");
+    if(token){
+        const config = {
+            headers:{
+                "Token":token
+            }
+        }
+
+        axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/chats`, config)
+        .then((res:AxiosResponse) => {
+            console.log("Chats", res.data)
+            setChats(res.data.chats)
+        })
+    }
+}

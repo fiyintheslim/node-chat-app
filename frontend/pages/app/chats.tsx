@@ -4,13 +4,13 @@ import Container from "../../components/Container"
 import {MyContext} from "../../components/Context"
 import ChatContainer from "../../components/ChatContainer"
 import {user, loggedIn, message, active} from "../../utilities/types"
-import {getUser, saveMessage, getMessages} from "../../utilities/requests"
+import {getUser, saveMessage, getMessages, getChats} from "../../utilities/requests"
 import Messenger from "../../components/Messenger"
 import socket from "../../utilities/socket"
 
 const Chat = () => {
   const router = useRouter()
-  const receiverID = useRef<string>()
+  const receiverID = useRef<string >()
   const context = useContext(MyContext) as {user: [undefined | user, Dispatch<SetStateAction<undefined | user>>], loggedIn:[loggedIn[] | undefined, Dispatch<SetStateAction<loggedIn[] | undefined>>]}
   const [chats, setChats] = useState<user[]>([])
   const [active, setActive] = useState<user | undefined>(undefined)
@@ -29,18 +29,20 @@ const Chat = () => {
   }, [messages])
 
   useEffect(()=>{
-    const id = router.query.id as string
-    if(id){
-      receiverID.current = id
-      getUser(parseInt(id), setActive)
-      getMessages(id, setMessages)
+    receiverID.current = router.query.id as string
+    if(receiverID.current && typeof receiverID.current === "string"){
+      
+      getUser(parseInt(receiverID.current), setActive)
+      getMessages(receiverID.current, setMessages)
     }
-  }, [router.isReady])
+  }, [router.isReady, receiverID.current])
 
   useEffect(()=>{
+    getChats(setChats)
     if(active && !chats.find((e)=>e.id === active.id)){
-      setChats([active, ...chats])
+      setChats([...chats, active])
     }
+    
 
     if(context.loggedIn[0] && active){
       setOnline(context.loggedIn[0]);
@@ -52,7 +54,8 @@ const Chat = () => {
       console.log("chats", context.loggedIn[0], activeSocket, chats)
     }
     
-  }, [active, chats, context.loggedIn[0]])
+    
+  }, [active, context.loggedIn[0]])
 
   const handleMyMessage = (msg:string)=>{
     let time = Date.now()
