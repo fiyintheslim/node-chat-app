@@ -59,17 +59,16 @@ const Chat = () => {
     
   }, [active, context.loggedIn[0]])
 
-  const handleMyMessage = (msg:string)=>{
+  const handleMyMessage = (msg:string, ele:React.MutableRefObject<HTMLDivElement | null>)=>{
     let time = Date.now()
-    
-    if(context.user[0] && receiverID){
+    if(context.user[0] && receiverID && msg){
       let data = {
         content:msg,
         senderid:context.user[0].id,
         time
       }
       setMessages([...messages, data])
-
+      
       const formData = new FormData();
       formData.set("senderID", context.user[0].id.toString())
       formData.set("receiverID", receiverID as string)
@@ -80,9 +79,14 @@ const Chat = () => {
       saveMessage(formData)
     
     
+      setTimeout(()=>{
+        if(ele.current){
+          console.log("Div", ele.current.scrollHeight)
+          ele.current.scrollTop = ele.current.scrollHeight
+        }
+      }, 200)
+    
     if(activeSocket){
-      
-      
       let to = activeSocket.sessionID
       
       socket.emit("private_message", {data, to})
@@ -91,6 +95,8 @@ const Chat = () => {
   }
     
   }
+    
+  
 
   const selectChat = (id:number) => {
     router.replace("/app/chats", undefined, {shallow:true})

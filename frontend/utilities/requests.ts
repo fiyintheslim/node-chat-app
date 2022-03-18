@@ -173,7 +173,7 @@ export const saveMessage = (data:FormData)=>{
         }
         axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/save/message`, data, config)
         .then((res:AxiosResponse)=>{
-            alert("message saved")
+            
         })
         .catch((err:AxiosError)=>{
             console.log("SSaving message error", err)
