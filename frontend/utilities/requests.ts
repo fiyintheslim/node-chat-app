@@ -2,7 +2,7 @@ import axios, {AxiosError, AxiosResponse} from "axios";
 import {NextRouter} from "next/router"
 import React from "react";
 import {loginResponse} from "../utilities/types"
-import {user, error, message} from "./types"
+import {user, error, message, chat} from "./types"
 
 
 
@@ -199,7 +199,7 @@ export const getMessages = (id:string, setMessages:React.Dispatch<React.SetState
     }
 }
 
-export const getChats = (setChats:React.Dispatch<React.SetStateAction<user[]>>) => {
+export const getChats = (setChats:React.Dispatch<React.SetStateAction<chat[]>>) => {
     const token = localStorage.getItem("token");
     if(token){
         const config = {
@@ -212,6 +212,9 @@ export const getChats = (setChats:React.Dispatch<React.SetStateAction<user[]>>) 
         .then((res:AxiosResponse) => {
             console.log("Chats", res.data)
             setChats(res.data.chats)
+        })
+        .catch((err:AxiosError) => {
+            console.log("Error loading previos chats", err)
         })
     }
 }

@@ -38,3 +38,9 @@ export interface active{
     userID: number,
     username: string,
 }
+
+export interface chat{
+    id:number,
+    username:string,
+    
+}

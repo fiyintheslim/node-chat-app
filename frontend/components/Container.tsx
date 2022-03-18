@@ -73,8 +73,8 @@ const Container: React.FC = ({children}) => {
   return (
     <>
       <Header />
-      <div className="min-h-screen pb-20 md:pb-0 relative md:flex md:flex-row-reverse">
-        <div className="min-h-full grow md: md:ml-24">
+      <div className="h-screen overflow-hidden pt-20 md:pb-0 relative md:flex md:flex-row-reverse">
+        <div className="h-full w-full md:ml-24">
         {children}
         </div>
         <Navigation avatar={meContext && meContext.avatar}  />

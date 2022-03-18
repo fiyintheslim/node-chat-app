@@ -12,7 +12,7 @@ const Messenger = (prop:Props) => {
   const [message, setMessage] = useState<string>("")
   const socket = context.socket
   return (
-    <div className="fixed w-full bottom-20 right-0 flex">
+    <div className="absolute w-full bottom-0 right-0 flex">
       <textarea style={{ resize: "none" }} 
       onKeyUp={(e)=>{
           if(e.key === "Enter"){
