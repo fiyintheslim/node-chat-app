@@ -13,7 +13,7 @@ const Chat = () => {
   
   const context = useContext(MyContext) as {user: [undefined | user, Dispatch<SetStateAction<undefined | user>>], loggedIn:[loggedIn[] | undefined, Dispatch<SetStateAction<loggedIn[] | undefined>>]}
   const [chats, setChats] = useState<chat[]>([])
-  const [active, setActive] = useState<user | undefined>(undefined)
+  const [active, setActive] = useState<user | undefined>()
   const [activeSocket, setActiveSocket] = useState<loggedIn | undefined>(undefined)
   const [messages, setMessages] = useState<message[]>([])
   const [online, setOnline] = useState<loggedIn[]>([])
@@ -48,9 +48,11 @@ const Chat = () => {
     
     if(context.loggedIn[0] && active){
       setOnline(context.loggedIn[0]);
+
       const ids = context.loggedIn[0].filter((el)=>{
         return el.userID === active.id
       })
+
       console.log("ids", ids)
       setActiveSocket(ids[ids.length - 1])
       console.log("chats", context.loggedIn[0], activeSocket, chats)
@@ -78,10 +80,8 @@ const Chat = () => {
 
       saveMessage(formData)
     
-    
       setTimeout(()=>{
         if(ele.current){
-          console.log("Div", ele.current.scrollHeight)
           ele.current.scrollTop = ele.current.scrollHeight
         }
       }, 200)
@@ -103,6 +103,7 @@ const Chat = () => {
     setReceiverID(id.toString());
    
     console.log("receiver changed", receiverID)
+    getChats(setChats)
   }
 
   return (

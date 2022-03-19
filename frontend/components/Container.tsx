@@ -22,14 +22,14 @@ const Container: React.FC = ({children}) => {
     
     if(meContext && meContext.username){
       let sessionID = localStorage.getItem("socketSession")
-      console.log("Seesion id", sessionID)
+      
       if(meContext.socketsessionid && sessionID !== meContext.socketsessionid){
         localStorage.setItem("socketSession", meContext.socketsessionid)
       }
 
       socket.auth = sessionID == null ? {username:meContext.username, userID:meContext.id} : {username:meContext.username, userID:meContext.id, sessionID}
       const connectedSocket = socket.connect();
-      console.log("session id", sessionID, context, connectedSocket)
+      
     }
     
     
@@ -37,7 +37,7 @@ const Container: React.FC = ({children}) => {
 
   useEffect(()=>{
     socket.on("user_connected", (data)=>{
-      console.log(`A user is online (in container)`)
+      
       if(context.loggedIn){
         context.loggedIn[1](data)
       }
@@ -55,15 +55,15 @@ const Container: React.FC = ({children}) => {
   
     
     socket.on("session", data=>{
-      console.log("session ID", data)
+      
       const socketSession = localStorage.getItem("socketSession")
-      console.log("socketSession", socketSession)
+      
       if(data && socketSession === null || socketSession === 'null'){
         localStorage.setItem("socketSession", data)
       }
       //console.log("Me context in socket session", meContext.sessionID)
       if(meContext && meContext.id && !meContext.socketsessionid){
-        console.log("saving")
+        
         saveSessionID(data)
       }
     })

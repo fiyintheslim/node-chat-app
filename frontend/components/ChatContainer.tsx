@@ -31,7 +31,7 @@ const ChatContainer= (props:Props) => {
     <>
      <div className="w-full relative h-full  md:pb-0 flex flex-col">
         <div className="border-b border-slate-300 px-3 py-4 dark:border-slate-600 flex items-center">
-          <Image src={active ? active.avatar : "/img/user.svg"} layout="intrinsic" width={30} height={30} className="rounded-full pr-3" />
+          <Image src={active && active.avatar ? active.avatar : "/img/user.svg"} layout="intrinsic" width={30} height={30} className="rounded-full pr-3" />
           <p className="pl-4">{active ? active.username : "Select Chat"}</p>
         </div>
         <div ref={bottom} className="h-full p-2 mb-16 relative overflow-y-scroll">

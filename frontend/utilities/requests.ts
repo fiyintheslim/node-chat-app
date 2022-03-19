@@ -122,7 +122,7 @@ export const getUser = async (id:number, setUser:React.Dispatch<React.SetStateAc
     }
     axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/user/${id}`, config)
     .then((res:AxiosResponse)=>{
-       
+       console.log("getting user", res.data.user)
        setUser(res.data.user)
     })
     .catch((err)=>{
@@ -210,9 +210,9 @@ export const getChats = (setChats:React.Dispatch<React.SetStateAction<chat[]>>) 
 
         axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/chats`, config)
         .then((res:AxiosResponse) => {
-            console.log("Chats", res.data)
+            
             setChats(res.data.chats)
-        })
+        })  
         .catch((err:AxiosError) => {
             console.log("Error loading previos chats", err)
         })
