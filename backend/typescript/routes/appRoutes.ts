@@ -1,5 +1,5 @@
 import express = require('express');
-import {getUsers, getUser, saveMessage, getMessages, getChats} from "../controllers/appController"
+import {getUsers, getUser, saveMessage, getMessages, getChats, getActivities} from "../controllers/appController"
 import isAuthenticated from "../middlewares/isAuthenticated"
 
 
@@ -10,5 +10,6 @@ router.route("/user/:id").get(isAuthenticated, getUser);
 router.route("/save/message").post(isAuthenticated, saveMessage);
 router.route("/messages").get(isAuthenticated, getMessages);
 router.route("/chats").get(isAuthenticated, getChats);
+router.route("/activities").get(getActivities);
 
 export default router

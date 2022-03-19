@@ -114,7 +114,7 @@ const Chat = () => {
             chats.map((el, i)=>(
               <li key={i} className="w-full h-12">
                 <p onClick={()=>selectChat(el.id)} className={`cursor-pointer h-full w-full flex items-center border-b border-slate-300 ${ active && active.id === el.id ? "bg-slate-400 dark:bg-slate-500 dark:text-slate-900" : ""} dark:border-slate-500`}>
-                  <span className={`mx-3 w-2 h-2 rounded-full ${online.find((e)=>e.userID === el.id) ? "bg-green-400" : "bg-slate-500 dark:bg-slate-700"}`}></span>
+                  <span className={`mx-3 w-2 h-2 rounded-full ${online.find((e)=>e.userID === el.id) ? "bg-green-400" : "bg-slate-500 dark:bg-slate-900"}`}></span>
                   <span>{el.username}</span>
                 </p>
               </li>))

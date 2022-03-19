@@ -59,3 +59,17 @@ export const getChats = async (req:Request, res:Response, next:NextFunction) => 
                                         [id])
     return res.status(200).json({success:true, chats:result.rows})
 }
+
+export const getActivities = async (req:Request, res:Response, next:NextFunction) => {
+    const id = res.locals.user.id;
+    //const id = req.query.id
+    console.log("Activities of", id)
+    const client = await postgresPool;
+
+    const all = await client.query("SELECT COUNT(id) FROM messages")
+    const messages = await client.query("SELECT COUNT(id) FROM messages WHERE senderid=$1 OR receiverid=$1", [id]);
+    const sent =  await client.query("SELECT COUNT(id) FROM messages WHERE senderid=$1", [id]);
+    const received = await client.query("SELECT COUNT(id) FROM messages WHERE receiverid=$1", [id]);
+    
+    return res.status(200).json({success:true, stats:{all:all.rows[0].count, messages:messages.rows[0].count, sent:sent.rows[0].count, received:received.rows[0].count}})
+}
