@@ -15,6 +15,7 @@ const setTables = async () =>{
         avatar VARCHAR(255),
         avatar_public_id VARCHAR(255),
         role VARCHAR(6) NOT NULL DEFAULT 'user',
+        description TEXT,
         gender VARCHAR(6) NOT NULL,
         socketSessionID VARCHAR(255),
         password_reset_token VARCHAR(255),
