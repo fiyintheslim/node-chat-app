@@ -6,7 +6,8 @@ export interface user {
     avata_public_id:string,
     gender:string,
     role:string,
-    socketsessionid?:string
+    socketsessionid?:string,
+    description?:string
 }
 
 export interface loginResponse {

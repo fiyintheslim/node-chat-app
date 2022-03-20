@@ -7,47 +7,55 @@ import {MyContext} from "../../components/Context"
 import {user} from "../../utilities/types"
 import Modal from "../../components/Modal"
 import UpdateDescription from "../../components/updateDescription"
+import Warning from "../../components/Warning";
+import {me} from "../../utilities/requests"
 
 const Profile = () => {
   const router = useRouter();
   const context = useContext(MyContext) as {user: [undefined | user, Dispatch<SetStateAction<undefined | user>>]}
   const meContext = context.user[0] 
 
-  const [modal, setModal] = useState(true)
+  const [modal, setModal] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [which, setWhich] = useState<string | undefined>(undefined)
  
   useEffect(()=>{
-    if(!meContext){
-    
-    }
-  }, [])
+    me(context.user, router)
+  }, [loading, meContext])
 
   const logOut = ()=>{
     localStorage.removeItem("token")
     context.user[1](undefined)
   }
 
-  const updateProfileTemplate = <div>
-
-  </div>
-
   return (
     
     <Container>
       {meContext ?
-      (<div>
+      (<div className="h-full overflow-y-scroll pb-24">
         <p className="text-2xl my-4 mx-3 font-bold">My Account</p>
-        <div className="flex flex-col justify-center items-center p-3 m-3 rounded-xl bg-slate-300 md:flex-row md:justify-start dark:bg-slate-800">
-          <div className="w-60 h-60 rounded-full relative md:mr-10">
-            <svg onClick={()=>setModal(true)} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pen-fill absolute cursor-pointer h-6 w-6 p-1 right-6 top-30 z-50 rounded-full border border-slate-300 dark:border-slate-600" viewBox="0 0 16 16">
-              <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
-            </svg>
+        <div className="relative flex flex-col justify-center items-center p-3 m-3 rounded-xl bg-slate-300 md:flex-row md:justify-start dark:bg-slate-800">
+          <div className="w-60 h-60 rounded-full relative md:w-96 md:mr-10">
             <a target="_blank" href={meContext.avatar} >
               <Image src={meContext.avatar} layout="fill" className="rounded-full " />
             </a>
           </div>
-          <div className="flex flex-col justify-between">
-            <p className="block text-xl my-2">{meContext.username}</p>
-            <p className="block">Containing description</p>
+          <div className="flex flex-col justify-between py-2 w-full">
+            <div className="flex flex-col items-center md:items-start">
+              <p className="text-xs opacity-40 text-extrabold">Username</p>
+              <p className="block text-xl my-2">{meContext.username}</p>
+            </div>
+            <div className="flex flex-col items-center w-full md:items-start relative">
+              {meContext.description &&
+              <>
+              <p className="text-xs opacity-40 text-extrabold">Description</p>
+              <p className="block">{meContext.description}</p>
+              <svg onClick={()=>setModal(true)} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pen-fill absolute cursor-pointer h-6 w-6 p-1 right-0 top-0 z-50 rounded-full border border-slate-400 dark:border-slate-600" viewBox="0 0 16 16">
+                <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
+              </svg>
+              </>
+              }
+            </div>
           </div>
         </div>
         <div>
@@ -76,7 +84,12 @@ const Profile = () => {
         (<div className="h-full flex items-center justify-center">Loading profile...</div>)
       }
       <Modal isOpen={modal} setOpen={setModal} >
-        <UpdateDescription />
+        {which === "descr" && 
+          <UpdateDescription loading={loading} setLoading={setLoading} setModal={setModal} />
+        }
+        {which === "delete" && 
+          <Warning />
+        }
       </Modal>
     </Container>
   )

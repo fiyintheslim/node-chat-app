@@ -181,7 +181,7 @@ export const saveMessage = (data:FormData)=>{
     }
 }
 
-export const getMessages = (id:string, setMessages:React.Dispatch<React.SetStateAction<message[]|[]>>)=>{
+export const getMessages = (id:string, setMessages:React.Dispatch<React.SetStateAction<message[]>>)=>{
     const token = localStorage.getItem("token");
     
     if(token){
@@ -215,6 +215,28 @@ export const getChats = (setChats:React.Dispatch<React.SetStateAction<chat[]>>) 
         })  
         .catch((err:AxiosError) => {
             console.log("Error loading previos chats", err)
+        })
+    }
+}
+
+export const updateDescription = (description:string, setloading:React.Dispatch<React.SetStateAction<boolean>>) => {
+    const token = localStorage.getItem("token");
+    if(token){
+        const config = {
+            headers:{
+                "Token":token,
+                "Content-Type":"application/json"
+            }
+        }
+
+        axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/update/description`, {description}, config)
+        .then((res:AxiosResponse)=>{
+            console.log("Update description", res)
+            setloading(false)
+            
+        })
+        .catch((err:AxiosError)=>{
+            setloading(false)
         })
     }
 }

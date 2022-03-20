@@ -34,7 +34,7 @@ const ChatContainer= (props:Props) => {
           <Image src={active && active.avatar ? active.avatar : "/img/user.svg"} layout="intrinsic" width={30} height={30} className="rounded-full pr-3" />
           <p className="pl-4">{active ? active.username : "Select Chat"}</p>
         </div>
-        <div ref={bottom} className="h-full p-2 mb-16 relative overflow-y-scroll">
+        <div ref={bottom} className="h-full p-2 mb-20 relative overflow-y-scroll">
           {messages.map((data, i)=>{
             let time = typeof data.time === "string" ? parseInt(data.time) : data.time
             return <p key={i} className={`flex my-1 flex-col  ${context.user[0] && data.senderid === context.user[0].id ? "items-end" : "items-start"}`}>

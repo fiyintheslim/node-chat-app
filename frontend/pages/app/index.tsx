@@ -32,7 +32,7 @@ const Home = () => {
   
   return (
       <Container>
-        <ul className="flex flex-col justify-evenly">
+        <ul className="overflow-y-scroll pb-24 h-full flex flex-col justify-start md:pt-1">
         {users && users.map(user=>(
           <li key={user.id} className="">
             <Card user={user} online={loggedIn?.includes(user.id)}  />
