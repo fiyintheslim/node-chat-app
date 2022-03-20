@@ -10,6 +10,7 @@ import {MyContext} from "../../components/Context"
 
 const Home = () => {
   const context = useContext(MyContext) as {loggedIn : [loggedIn[] | undefined, Dispatch<SetStateAction<loggedIn[] | undefined>>]}
+  // const { toasts, handlers } = useToaster();
   
   const [users, setUsers] = useState<undefined | user[]>(undefined)
   const [loggedIn, setLoggedIn] = useState<number[] | undefined>(undefined)
@@ -39,6 +40,14 @@ const Home = () => {
           )
           )}
         </ul>
+        {/* {toasts
+        .filter((toast) => toast.visible)
+        .map((toast) => (
+          <div key={toast.id} {...toast.ariaProps}>
+            {toast.message}
+          </div>
+        ))} */}
+        {/* <Toaster /> */}
       </Container>
   )
 }

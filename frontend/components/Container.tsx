@@ -11,6 +11,7 @@ import {user, loggedIn} from "../utilities/types"
 
 
 
+
 const Container: React.FC = ({children}) => {
   const router = useRouter()
   const context = useContext(MyContext) as {user: [undefined | user, Dispatch<SetStateAction<undefined | user>>], socket:[Socket | undefined, Dispatch<SetStateAction<Socket> | undefined>], loggedIn:[loggedIn[] | undefined, Dispatch<SetStateAction<loggedIn[] | undefined>>]}
@@ -72,6 +73,7 @@ const Container: React.FC = ({children}) => {
 
   return (
     <>
+    
       <Header />
       <div className="h-screen overflow-hidden pt-20 md:pb-0 relative md:flex md:flex-row-reverse">
         <div className="h-full w-full md:ml-24">
@@ -79,6 +81,7 @@ const Container: React.FC = ({children}) => {
         </div>
         <Navigation avatar={meContext && meContext.avatar}  />
       </div>
+      
     </>
   )
 }

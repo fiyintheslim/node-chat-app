@@ -58,7 +58,7 @@ export const login = (
         router.push("/app")
     })
     .catch((err:AxiosError<error>)=>{
-        console.log("login error", err)
+        console.log("login error", err.response)
         setError(err.response!.data.error)
         setUser(undefined);
         setLoading(false)
@@ -86,15 +86,15 @@ export const me = (
             }
         })
         .catch ((err:AxiosError<error>)=> {
-            console.log("Error loading user, resetting token", err)
-            router.push("/")
+            console.log("Error loading user, resetting token", err.response)
+            router.push("/login")
             localStorage.removeItem("token")
             me[1](undefined)
         })
     }else{
         console.log("No token")
         me[1](undefined)
-        router.push("/")
+        router.push("/login")
     }
 }
 

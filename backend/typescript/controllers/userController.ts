@@ -162,3 +162,13 @@ export const saveSessionID = async (req:Request, res:Response, next:NextFunction
    
     return res.status(200).json({success:true, message:"Socket session saved successfully"})
 }
+
+export const updateDescription = async (req:Request, res:Response, next:NextFunction) => {
+    const id = res.locals.user.id;
+    const description = req.body.description
+    console.log("description", description)
+    const client = await postgresPool;
+    const result = await client.query("UPDATE users SET description=$1 WHERE id=$2", [description, id]);
+
+    return res.status(200).json({success:true, message:"Profile description updated"})
+}

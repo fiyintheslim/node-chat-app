@@ -6,7 +6,7 @@ import Link from "next/link"
 import {Formik, Field, Form, FormikProps} from "formik"
 import * as Yup from "yup";
 import style from "../styles/scss/forms.module.scss"
-import {login} from "../utilities/requests";
+import {login, me} from "../utilities/requests";
 import Header from "../components/Header"
 import See from "../components/see"
 import {MyContext} from "../components/Context"
@@ -23,11 +23,21 @@ interface form{ detail:string, password:string}
 const Login = () => {
   const router = useRouter();
 
+  const context  = useContext(MyContext) as {user:[undefined | user, React.Dispatch<React.SetStateAction<undefined | user>>]};
+
   const [pVisible, setPVisible] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const context  = useContext(MyContext) as {user:[undefined | user, React.Dispatch<React.SetStateAction<undefined | user>>]};
+  useEffect(()=>{
+    me(context.user, router)
+  }, [])
+
+  useEffect(()=>{
+    if(context.user[0]){
+      router.push("/app")
+    }
+  }, [context.user[0]])
   
   return (
     <div className="h-full flex align-center justify-around flex-col">

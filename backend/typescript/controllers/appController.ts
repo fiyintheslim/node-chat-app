@@ -15,7 +15,7 @@ export const getUser = async (req:Request, res:Response, next:NextFunction) => {
     const userID = req.params.id
     const client = await postgresPool;
 
-    const result = await client.query("SELECT id, username, email, role, gender, avatar, avatar_public_id, socketsessionid FROM users WHERE id=$1", [userID]);
+    const result = await client.query("SELECT id, username, email, role, gender, avatar, avatar_public_id, socketsessionid, description FROM users WHERE id=$1", [userID]);
 
     return res.status(200).json({
         success:true,

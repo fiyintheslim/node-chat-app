@@ -17,7 +17,7 @@ const Messenger = (props:Props) => {
     <div className="absolute w-full bottom-0 right-0 flex">
       <textarea style={{ resize: "none" }} 
       onKeyPress={(e)=>{
-        console.log("key", e.key)
+        console.log("key", e.key, e.which)
           if(e.key === "Enter"&& /./g.test(message)){
             console.log("sending with enter", message, message.length)
             sendMessage(message, container)

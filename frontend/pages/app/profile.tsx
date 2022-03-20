@@ -6,6 +6,7 @@ import Container from "../../components/Container"
 import {MyContext} from "../../components/Context"
 import {user} from "../../utilities/types"
 import Modal from "../../components/Modal"
+import UpdateDescription from "../../components/updateDescription"
 
 const Profile = () => {
   const router = useRouter();
@@ -25,6 +26,10 @@ const Profile = () => {
     context.user[1](undefined)
   }
 
+  const updateProfileTemplate = <div>
+
+  </div>
+
   return (
     
     <Container>
@@ -33,7 +38,7 @@ const Profile = () => {
         <p className="text-2xl my-4 mx-3 font-bold">My Account</p>
         <div className="flex flex-col justify-center items-center p-3 m-3 rounded-xl bg-slate-300 md:flex-row md:justify-start dark:bg-slate-800">
           <div className="w-60 h-60 rounded-full relative md:mr-10">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pen-fill absolute h-6 w-6 p-1 left-8 top-30 z-50 rounded-full border border-slate-300 dark:border-slate-600" viewBox="0 0 16 16">
+            <svg onClick={()=>setModal(true)} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pen-fill absolute cursor-pointer h-6 w-6 p-1 right-6 top-30 z-50 rounded-full border border-slate-300 dark:border-slate-600" viewBox="0 0 16 16">
               <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
             </svg>
             <a target="_blank" href={meContext.avatar} >
@@ -68,9 +73,11 @@ const Profile = () => {
       
       </div>)
       :
-        (<div className="h-full flex items-center justify-center">Login to view</div>)
+        (<div className="h-full flex items-center justify-center">Loading profile...</div>)
       }
-      <Modal isOpen={modal} setOpen={setModal} />
+      <Modal isOpen={modal} setOpen={setModal} >
+        <UpdateDescription />
+      </Modal>
     </Container>
   )
 }
