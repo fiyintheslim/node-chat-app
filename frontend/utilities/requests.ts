@@ -82,6 +82,7 @@ export const me = (
             const user = res.data.user;
             const meContext = me[0]
             if(!meContext){
+                console.log("User", user)
                 me[1](user)
             }
         })

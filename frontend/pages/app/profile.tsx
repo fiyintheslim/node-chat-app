@@ -1,6 +1,7 @@
 import {useContext, Dispatch, SetStateAction, useEffect, useState} from 'react'
 import {useRouter} from "next/router"
 import Image from "next/image"
+import Chart from "../../components/Chart"
 import Navigation from "../../components/Navigation"
 import Container from "../../components/Container"
 import {MyContext} from "../../components/Context"
@@ -9,6 +10,7 @@ import Modal from "../../components/Modal"
 import UpdateDescription from "../../components/updateDescription"
 import Warning from "../../components/Warning";
 import {me} from "../../utilities/requests"
+import toast from "react-hot-toast"
 
 const Profile = () => {
   const router = useRouter();
@@ -27,7 +29,7 @@ const Profile = () => {
     localStorage.removeItem("token")
     context.user[1](undefined)
   }
-
+ toast("Profile page loaded")
   return (
     
     <Container>
@@ -50,7 +52,11 @@ const Profile = () => {
               <>
               <p className="text-xs opacity-40 text-extrabold">Description</p>
               <p className="block">{meContext.description}</p>
-              <svg onClick={()=>setModal(true)} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pen-fill absolute cursor-pointer h-6 w-6 p-1 right-0 top-0 z-50 rounded-full border border-slate-400 dark:border-slate-600" viewBox="0 0 16 16">
+              <svg onClick={()=>{
+                setModal(true)
+                setWhich("descr")
+              }
+                } xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pen-fill absolute cursor-pointer h-6 w-6 p-1 right-0 top-0 z-50 rounded-full border border-slate-400 dark:border-slate-600" viewBox="0 0 16 16">
                 <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
               </svg>
               </>
@@ -59,8 +65,10 @@ const Profile = () => {
           </div>
         </div>
         <div>
-          <div></div>
-          <div></div>
+          <h2>Activities</h2>
+          <div>
+              <Chart /> 
+          </div>
         </div>
         <div className="flex justify-center">
           <div className="flex justify-evenly w-80">
@@ -70,7 +78,10 @@ const Profile = () => {
             </svg>
             <span>Logout</span>
           </button>
-          <button type="button" className="flex rounded bg-red-700 p-3 items-center cursor-pointer">
+          <button onClick={()=>{
+            setModal(true)
+            setWhich("delete")
+          }} type="button" className="flex rounded bg-red-700 p-3 items-center cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash3-fill mr-2" viewBox="0 0 16 16">
               <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
             </svg>

@@ -14,6 +14,7 @@ const Home = () => {
   
   const [users, setUsers] = useState<undefined | user[]>(undefined)
   const [loggedIn, setLoggedIn] = useState<number[] | undefined>(undefined)
+  
 
   useEffect(()=>{
     if(context.loggedIn[0]){
