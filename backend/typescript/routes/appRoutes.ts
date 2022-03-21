@@ -10,6 +10,6 @@ router.route("/user/:id").get(isAuthenticated, getUser);
 router.route("/save/message").post(isAuthenticated, saveMessage);
 router.route("/messages").get(isAuthenticated, getMessages);
 router.route("/chats").get(isAuthenticated, getChats);
-router.route("/activities").get(getActivities);
+router.route("/activities").get(isAuthenticated, getActivities);
 
 export default router

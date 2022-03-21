@@ -71,5 +71,5 @@ export const getActivities = async (req:Request, res:Response, next:NextFunction
     const sent =  await client.query("SELECT COUNT(id) FROM messages WHERE senderid=$1", [id]);
     const received = await client.query("SELECT COUNT(id) FROM messages WHERE receiverid=$1", [id]);
     
-    return res.status(200).json({success:true, stats:{all:all.rows[0].count, messages:messages.rows[0].count, sent:sent.rows[0].count, received:received.rows[0].count}})
+    return res.status(200).json({success:true, stats:{all:all.rows[0].count, mine:messages.rows[0].count, sent:sent.rows[0].count, received:received.rows[0].count}})
 }

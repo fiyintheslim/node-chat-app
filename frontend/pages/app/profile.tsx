@@ -64,8 +64,8 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <div>
-          <h2>Activities</h2>
+        <div className='p-3 m-3 rounded-xl bg-slate-300 dark:bg-slate-800'>
+          <h2 className="text-2xl my-4 mx-3 font-bold">Activities</h2>
           <div>
               <Chart /> 
           </div>

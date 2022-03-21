@@ -75,7 +75,7 @@ export const login = async (req:Request, res:Response, next:NextFunction) =>{
     
     return res.status(200).cookie("token", token, {maxAge:parseInt(process.env.COOKIES_EXPIRES!) * 24 * 60 * 60 * 1000, httpOnly:true}).json({success:true, message:"Login successful.", user:trimmed, token})
 }
-
+//logout
 export const logout = async (req:Request, res:Response, next:NextFunction) =>{
     
     const cookie = req.cookies.token;
@@ -87,7 +87,7 @@ export const logout = async (req:Request, res:Response, next:NextFunction) =>{
 
     return res.status(200).cookie("token", cookie, {maxAge:0, httpOnly:true}).json({successful:true, message:"Logged out successfully."})
 }
-
+//request password reset
 export const requestPasswordReset = async (req:Request, res:Response, next:NextFunction)=>{
     
     const email = req.body.email;
@@ -113,7 +113,7 @@ export const requestPasswordReset = async (req:Request, res:Response, next:NextF
     return res.status(200).json({success:true, message:"Token sent, check your email.", resetToken})
 
 }
-
+//reset password
 export const passwordReset = async (req:Request, res:Response, next:NextFunction) =>{
     const resetToken = req.params.token;
     const id = req.params.id
@@ -143,7 +143,7 @@ export const passwordReset = async (req:Request, res:Response, next:NextFunction
 
     return res.status(200).json({success:true, message:"password reset successful"})
 }
-
+//get profile details
 export const me = async (req:Request, res:Response, next:NextFunction) => {
     
     return res.status(200).json({success:true, user:res.locals.user})
@@ -152,7 +152,7 @@ export const me = async (req:Request, res:Response, next:NextFunction) => {
 export const trial =async (req:Request, res:Response, next:NextFunction) =>{
     return res.status(200).json({success:true, message:"endpoint working"})
 }
-
+//saving socket session ID
 export const saveSessionID = async (req:Request, res:Response, next:NextFunction) => {
     const sessionID = req.body.sessionID
     const id = res.locals.user.id
@@ -162,7 +162,7 @@ export const saveSessionID = async (req:Request, res:Response, next:NextFunction
    
     return res.status(200).json({success:true, message:"Socket session saved successfully"})
 }
-
+//update profile dscription
 export const updateDescription = async (req:Request, res:Response, next:NextFunction) => {
     const id = res.locals.user.id;
     const description = req.body.description
@@ -171,4 +171,14 @@ export const updateDescription = async (req:Request, res:Response, next:NextFunc
     const result = await client.query("UPDATE users SET description=$1 WHERE id=$2", [description, id]);
 
     return res.status(200).json({success:true, message:"Profile description updated"})
+}
+//delete account
+export const deleteAccount = async (req:Request, res:Response, next:NextFunction) => {
+    const id = res.locals.user.id;
+
+    const client = await postgresPool;
+
+    const result = await client.query("DELET FROM users WHERE id=$1", [id]);
+
+    return res.status(200).json({success:true, message:"User account deleted"})
 }

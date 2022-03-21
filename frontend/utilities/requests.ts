@@ -241,3 +241,39 @@ export const updateDescription = (description:string, setloading:React.Dispatch<
         })
     }
 }
+
+export const getActivities = async (setActivities:React.Dispatch<React.SetStateAction<{all:string, mine:string, sent:string, received:string} | undefined>>)=>{
+    const token =localStorage.getItem("token");
+    if(token){
+        const config = {
+            headers:{
+            "Token":token
+        }
+    }
+
+        axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/activities`, config)
+        .then((res:AxiosResponse) => {
+            setActivities(res.data.stats)
+        })
+        .catch((err:AxiosError)=>{
+
+        })
+    }
+}
+
+export const deleteAccount = async (router: NextRouter)=>{
+    const token = localStorage.getItem("token");
+    if(token){
+        const config = {
+            headers:{
+                "Token":token
+            }
+        }
+
+        axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/account/delete`, config)
+        .then((res:AxiosResponse)=>{
+            localStorage.removeItem("token");
+            router.push("/")
+        })
+    }
+}
