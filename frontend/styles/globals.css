@@ -21,8 +21,16 @@ a {
 * {
   box-sizing: border-box;
 }
+body::-webkit-scrollbar {
+  width: 3px;
+}
+body::-webkit-scrollbar-thumb {
+  background-color: red;
+  outline: 1px solid slategrey;
+}
 body::-webkit-scrollbar-track {
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+
 }
 /*colors rose-700 indigo-700 fuchsia-700*/
 /*colors mode slate-100 slate-900*/

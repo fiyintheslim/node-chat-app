@@ -19,7 +19,7 @@ const Navigation = (props:Props) => {
     }
 
   return (
-    <div className="z-30 fixed left-0 bottom-0 shadow flex justify-around items-center w-screen h-20 bg-slate-300 dark:bg-slate-700 md:justify-evenly md:fixed md:left-0 md:bottom-0 md:flex-col md:w-24 md:h-full md:pt-9" style={{opacity:0.8,}}>
+    <div className="z-20 fixed left-0 bottom-0 shadow flex justify-around items-center w-screen h-20 bg-slate-300 dark:bg-slate-700 md:justify-evenly md:fixed md:left-0 md:bottom-0 md:flex-col md:w-24 md:h-full md:pt-9" style={{opacity:0.8,}}>
         <div onClick={()=>navigate("/app")} className={`cursor-pointer ${/^\/app$/.test(current) ? "text-indigo-500 fill-indigo-700":"fill-slate-500 fill-slate-300"} flex flex-col items-center cursor-pointer`}>
             <svg  xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"  viewBox="0 0 16 16">
                 <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5z"/>

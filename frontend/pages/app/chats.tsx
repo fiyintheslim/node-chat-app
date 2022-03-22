@@ -19,6 +19,8 @@ const Chat = () => {
   const [online, setOnline] = useState<loggedIn[]>([])
   const [receiverID, setReceiverID] = useState<string | string[]>()
 
+  const [showChats, setShowChats] = useState(false)
+
   
 
   
@@ -46,16 +48,18 @@ const Chat = () => {
       setChats([...chats, {id:active.id, username:active.username}])
     }
     
-    if(context.loggedIn[0] && active){
+    if(context.loggedIn[0] ){
       setOnline(context.loggedIn[0]);
-
-      const ids = context.loggedIn[0].filter((el)=>{
-        return el.userID === active.id
-      })
+      if(active){
+        const ids = context.loggedIn[0].filter((el)=>{
+          return el.userID === active.id
+        })
+      
 
       console.log("ids", ids)
       setActiveSocket(ids[ids.length - 1])
       console.log("chats", context.loggedIn[0], activeSocket, chats)
+      }
     }
     
     
@@ -95,8 +99,6 @@ const Chat = () => {
   }
     
   }
-    
-  
 
   const selectChat = (id:number) => {
     router.replace("/app/chats", undefined, {shallow:true})
@@ -104,12 +106,13 @@ const Chat = () => {
    
     console.log("receiver changed", receiverID)
     getChats(setChats)
+    setShowChats(false)
   }
 
   return (
     <Container>
-      <div className="flex h-full">
-        <div className="basis-1/4 border-r border-slate-300 bg-slate-200 dark:bg-slate-700 dark:border-slate-600">
+      <div className="flex h-full relative">
+        <div className={`absolute h-full overflow-y-scroll w-64 z-30 left-0 ${showChats ? "block" : "hidden"} md:block top-0 md:basis-1/4 md:static border-r border-slate-300 bg-slate-200 dark:bg-slate-700 dark:border-slate-600`}>
           <ul>{
             chats.map((el, i)=>(
               <li key={i} className="w-full h-12">
@@ -120,7 +123,7 @@ const Chat = () => {
               </li>))
           }</ul>
         </div>
-        <ChatContainer active={active} messages={messages} handleMyMessage={handleMyMessage} />
+        <ChatContainer active={active} messages={messages} handleMyMessage={handleMyMessage} setShowChats={setShowChats} showChats={showChats} />
       </div>
     </Container>
   )

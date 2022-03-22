@@ -14,7 +14,7 @@ const Messenger = (props:Props) => {
   const [message, setMessage] = useState<string>("")
   const socket = context.socket
   return (
-    <div className="absolute w-full bottom-0 right-0 flex">
+    <div className="absolute w-full bottom-20 right-0 flex md:bottom-0">
       <textarea style={{ resize: "none" }} 
       onKeyPress={(e)=>{
         console.log("key", e.key, e.which)

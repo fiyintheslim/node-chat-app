@@ -7,6 +7,7 @@ export interface signupUser {
 export interface message {
     id:string,
     message:string
+    username:string
 }
 export interface joinChat {
     id:number,

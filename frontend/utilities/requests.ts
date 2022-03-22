@@ -1,6 +1,7 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {NextRouter} from "next/router"
 import React from "react";
+import toast from "react-hot-toast"
 import {loginResponse} from "../utilities/types"
 import {user, error, message, chat} from "./types"
 
@@ -29,6 +30,7 @@ export const signup = async (
         }).catch((err:AxiosError)=>{
             console.log(err.response)
             setError(err.response?.data.error)
+            toast.error(err.response?.data.error)
         })
     
    
@@ -57,11 +59,12 @@ export const login = (
         localStorage.setItem("token", data.token);
         router.push("/app")
     })
-    .catch((err:AxiosError<error>)=>{
+    .catch((err:AxiosError)=>{
         console.log("login error", err.response)
         setError(err.response!.data.error)
         setUser(undefined);
         setLoading(false)
+        toast.error(err.response?.data.error)
     })
 }
 
@@ -86,16 +89,18 @@ export const me = (
                 me[1](user)
             }
         })
-        .catch ((err:AxiosError<error>)=> {
+        .catch ((err:AxiosError)=> {
             console.log("Error loading user, resetting token", err.response)
             router.push("/login")
             localStorage.removeItem("token")
             me[1](undefined)
+            toast.error(err.response?.data.error)
         })
     }else{
         console.log("No token")
         me[1](undefined)
         router.push("/login")
+        toast.error("Login to access.")
     }
 }
 
@@ -108,6 +113,9 @@ export const getUsers = async (setUsers:React.Dispatch<React.SetStateAction<user
         .then((res:AxiosResponse<{success:boolean, users:user[]}>) => {
             console.log()
             setUsers(res.data.users)
+        })
+        .catch((err:AxiosError)=>{
+            toast.error("Problem loading users.")
         })
     }
     
@@ -197,6 +205,9 @@ export const getMessages = (id:string, setMessages:React.Dispatch<React.SetState
             console.log("Gotten messages", res)
             setMessages([...res.data.messages])
         })
+        .catch((err:AxiosError)=>{
+            toast.error("Problem loading older messages.")
+        })
     }
 }
 
@@ -213,9 +224,11 @@ export const getChats = (setChats:React.Dispatch<React.SetStateAction<chat[]>>) 
         .then((res:AxiosResponse) => {
             
             setChats(res.data.chats)
+            
         })  
         .catch((err:AxiosError) => {
             console.log("Error loading previos chats", err)
+            toast.error("Problem loading older chats")
         })
     }
 }
@@ -234,10 +247,12 @@ export const updateDescription = (description:string, setloading:React.Dispatch<
         .then((res:AxiosResponse)=>{
             console.log("Update description", res)
             setloading(false)
+            toast.success("Profile description updated successfully.")
             
         })
         .catch((err:AxiosError)=>{
             setloading(false)
+            toast.error("Problem updating profile description.")
         })
     }
 }
@@ -274,6 +289,9 @@ export const deleteAccount = async (router: NextRouter)=>{
         .then((res:AxiosResponse)=>{
             localStorage.removeItem("token");
             router.push("/")
+        })
+        .catch((err:AxiosError)=>{
+
         })
     }
 }
