@@ -178,7 +178,7 @@ export const deleteAccount = async (req:Request, res:Response, next:NextFunction
 
     const client = await postgresPool;
 
-    const result = await client.query("DELET FROM users WHERE id=$1", [id]);
+    const result = await client.query("DELETE FROM users WHERE id=$1", [id]);
 
     return res.status(200).json({success:true, message:"User account deleted"})
 }

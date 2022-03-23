@@ -1,6 +1,7 @@
 import {Request, Response, NextFunction} from "express"
 import crypto = require("crypto");
 import ErrorHandler from "../utilities/registerError";
+import cloudinary = require("cloudinary")
 import {postgresPool} from "../app"
 
 export const getUsers = async (req:Request, res:Response, next:NextFunction)=>{
@@ -76,12 +77,17 @@ export const getActivities = async (req:Request, res:Response, next:NextFunction
 }
 
 export const createGroup = async (req:Request, res:Response, next:NextFunction) => {
-    //const id = res.locals.user.id
+    const id = res.locals.user.id
     const groupId = crypto.randomBytes(8).toString("hex");
-    const {groupName, interests} = req.body;
+    const {groupName, interests, avatar} = req.body;
     const client = await postgresPool;
-
-    //const result = await client.query("INSERT INTO groups (groupid, groupname, interests, groupowner) VALUES ($1, $2, $3, $4)", [groupId, groupName, interests, id]);
+    const upload = await cloudinary.v2.uploader.upload(avatar, {
+        folder:"chat/groups",
+        width:500,
+        heigth:500,
+        crop:"fill"
+    })
+    const result = await client.query("INSERT INTO groups (groupid, groupname, interests, groupowner, groupavatar, groupavatar_public_id) VALUES ($1, $2, $3, $4)", [groupId, groupName, interests, id, upload.secure_url, upload.public_id]);
 
     return res.status(200).json({successs:true, message:"Group created successfully.", group:req.body, groupId})
 }

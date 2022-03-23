@@ -39,6 +39,9 @@ const setTables = async () =>{
         groupname VARCHAR(255) NOT NULL,
         groupowner VARCHAR(255) NOT NULL,
         interests TEXT,
+        groupavatar VARCHAR(255),
+        groupavatar_public_id VARCHAR(255),
+        time VARCHAR(255)
     ) 
     `)
         console.log("tables set")

@@ -11,6 +11,6 @@ router.route("/save/message").post(isAuthenticated, saveMessage);
 router.route("/messages").get(isAuthenticated, getMessages);
 router.route("/chats").get(isAuthenticated, getChats);
 router.route("/activities").get(isAuthenticated, getActivities);
-router.route("/create/group").post(createGroup);
+router.route("/create/group").post(isAuthenticated, createGroup);
 
 export default router
