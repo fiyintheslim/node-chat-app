@@ -291,7 +291,7 @@ export const deleteAccount = async (router: NextRouter)=>{
             router.push("/")
         })
         .catch((err:AxiosError)=>{
-
+            toast.error("Problem deleting your account.")
         })
     }
 }

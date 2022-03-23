@@ -22,15 +22,24 @@ a {
   box-sizing: border-box;
 }
 body::-webkit-scrollbar {
-  width: 3px;
+  width: 4px;
 }
 body::-webkit-scrollbar-thumb {
-  background-color: red;
+  background-color: rgb(87, 87, 87);
+  border-radius: 40px;
   outline: 1px solid slategrey;
 }
 body::-webkit-scrollbar-track {
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 
+}
+.overflow-y-scroll::-webkit-scrollbar{
+  width:4px;
+}
+.overflow-y-scroll::-webkit-scrollbar-thumb{
+  width:2px;
+  background-color: rgb(87, 87, 87);
+  border-radius:10%;
 }
 /*colors rose-700 indigo-700 fuchsia-700*/
 /*colors mode slate-100 slate-900*/

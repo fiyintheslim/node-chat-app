@@ -45,3 +45,11 @@ export interface chat{
     username:string,
     
 }
+
+export interface group {
+    id:string,
+    groupname:string,
+    description:string,
+    avatar:string,
+    interests:string[]
+}

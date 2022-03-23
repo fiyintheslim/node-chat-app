@@ -1,4 +1,5 @@
 import {Request, Response, NextFunction} from "express"
+import crypto = require("crypto");
 import ErrorHandler from "../utilities/registerError";
 import {postgresPool} from "../app"
 
@@ -55,7 +56,7 @@ export const getChats = async (req:Request, res:Response, next:NextFunction) => 
     const result = await client.query(`SELECT id, username FROM users WHERE NOT id=$1 AND (id IN 
                                         (SELECT senderid FROM messages WHERE senderid=$1 OR receiverid=$1)
                                          OR id IN
-                                        (SELECT receiverid FROM messages WHERE senderid=$1 OR receiverid=$1))`, 
+                                        (SELECT receiverid FROM messages WHERE senderid=$1 OR receiverid=$1)) ORDER BY username`, 
                                         [id])
     return res.status(200).json({success:true, chats:result.rows})
 }
@@ -72,4 +73,15 @@ export const getActivities = async (req:Request, res:Response, next:NextFunction
     const received = await client.query("SELECT COUNT(id) FROM messages WHERE receiverid=$1", [id]);
     
     return res.status(200).json({success:true, stats:{all:all.rows[0].count, mine:messages.rows[0].count, sent:sent.rows[0].count, received:received.rows[0].count}})
+}
+
+export const createGroup = async (req:Request, res:Response, next:NextFunction) => {
+    //const id = res.locals.user.id
+    const groupId = crypto.randomBytes(8).toString("hex");
+    const {groupName, interests} = req.body;
+    const client = await postgresPool;
+
+    //const result = await client.query("INSERT INTO groups (groupid, groupname, interests, groupowner) VALUES ($1, $2, $3, $4)", [groupId, groupName, interests, id]);
+
+    return res.status(200).json({successs:true, message:"Group created successfully.", group:req.body, groupId})
 }

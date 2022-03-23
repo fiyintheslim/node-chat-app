@@ -123,7 +123,7 @@ const Chat = () => {
               </li>))
           }</ul>
         </div>
-        <ChatContainer active={active} messages={messages} handleMyMessage={handleMyMessage} setShowChats={setShowChats} showChats={showChats} />
+        <ChatContainer active={active} messages={messages} handleMyMessage={handleMyMessage} setShowChats={setShowChats} showChats={showChats} message={"Select chat."} />
       </div>
     </Container>
   )

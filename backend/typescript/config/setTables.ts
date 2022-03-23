@@ -24,7 +24,7 @@ const setTables = async () =>{
     )`)
 
     await client.query(`
-    CREATE TABLE messages IF NOT EXISTS(
+    CREATE TABLE IF NOT EXISTS messages (
         id SERIAL PRIMARY KEY NOT NULL,
         senderID INTEGER NOT NULL,
         receiverID INTEGER,
@@ -35,10 +35,10 @@ const setTables = async () =>{
 
     await client.query(`
     CREATE TABLE IF NOT EXISTS groups(
-        groupID SERIAL NOT NULL PRIMARY KEY,
-        groupName TEXT NOT NULL,
-        groupOwner TEXT NOT NULL,
-        groupAdmins TEXT,
+        id VARCHAR(255) NOT NULL PRIMARY KEY,
+        groupname VARCHAR(255) NOT NULL,
+        groupowner VARCHAR(255) NOT NULL,
+        interests TEXT,
     ) 
     `)
         console.log("tables set")
