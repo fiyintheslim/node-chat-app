@@ -10,6 +10,7 @@ import See from "../components/see"
 import {signup} from "../utilities/requests"
 import {MyContext} from "../components/Context"
 import {user} from "../utilities/types"
+import toast from 'react-hot-toast'
 
 
 const registerSchema = Yup.object().shape({
@@ -51,7 +52,7 @@ const Register = () => {
       fileReader.onload = (e)=>{
 
         if(e.loaded > 2097152){
-          return setError("Image has to be less than 2mb")
+          return toast.error("Image has to be less than 2mb")
         }
 
         const img = e.target!.result as string
