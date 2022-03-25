@@ -57,7 +57,7 @@ export const getChats = async (req:Request, res:Response, next:NextFunction) => 
     const result = await client.query(`SELECT id, username FROM users WHERE NOT id=$1 AND (id IN 
                                         (SELECT senderid FROM messages WHERE senderid=$1 OR receiverid=$1)
                                          OR id IN
-                                        (SELECT receiverid FROM messages WHERE senderid=$1 OR receiverid=$1)) ORDER BY username`, 
+                                        (SELECT receiverid FROM messages WHERE senderid=$1 OR receiverid=$1)) ORDER BY username ASC`, 
                                         [id])
     return res.status(200).json({success:true, chats:result.rows})
 }

@@ -60,11 +60,12 @@ export const login = (
         router.push("/app")
     })
     .catch((err:AxiosError)=>{
-        console.log("login error", err.response)
-        setError(err.response!.data.error)
-        setUser(undefined);
         setLoading(false)
-        toast.error(err.response?.data.error)
+        console.log("login error", err)
+        //setError(err.response!.data.error)
+        setUser(undefined);
+        
+        toast.error("Wrong email or password.")
     })
 }
 
@@ -94,7 +95,7 @@ export const me = (
             router.push("/login")
             localStorage.removeItem("token")
             me[1](undefined)
-            toast.error(err.response?.data.error)
+            toast.error("Error loading user.")
         })
     }else{
         console.log("No token")
@@ -233,7 +234,7 @@ export const getChats = (setChats:React.Dispatch<React.SetStateAction<chat[]>>) 
     }
 }
 
-export const updateDescription = (description:string, setloading:React.Dispatch<React.SetStateAction<boolean>>) => {
+export const updateDescription = (description:string, setloading:React.Dispatch<React.SetStateAction<boolean>>, router:NextRouter) => {
     const token = localStorage.getItem("token");
     if(token){
         const config = {
@@ -248,7 +249,7 @@ export const updateDescription = (description:string, setloading:React.Dispatch<
             console.log("Update description", res)
             setloading(false)
             toast.success("Profile description updated successfully.")
-            
+            router.reload()
         })
         .catch((err:AxiosError)=>{
             setloading(false)

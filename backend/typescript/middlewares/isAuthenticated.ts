@@ -12,12 +12,18 @@ const isAuthenticated = async (req:Request, res:Response, next:NextFunction)=>{
     if(!token){
         return next(new ErrorHandler("Login to access this resource", 403));
     }
-    const verified = await verify(token) as {id:number, iat:number, exp:number};
-    const user = await client.query("SELECT id, username, email, avatar, avatar_public_id, role, socketsessionid, description FROM users WHERE id=$1", [verified.id])
-    
-    res.locals.user = user.rows[0]
-    
-    return next()
+    try{
+        const verified = await verify(token) as {id:number, iat:number, exp:number};
+        
+        const user = await client.query("SELECT id, username, email, avatar, avatar_public_id, role, socketsessionid, description FROM users WHERE id=$1", [verified.id])
+        
+        res.locals.user = user.rows[0]
+        
+        return next()
+    }catch(err){
+        console.log("JWT error");
+        return next(new ErrorHandler("Invalid token", 403))
+    }
     
 }
 

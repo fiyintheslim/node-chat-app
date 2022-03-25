@@ -1,4 +1,5 @@
 import {useState, Dispatch, SetStateAction} from "react";
+import {useRouter} from "next/router"
 import {Dialog} from "@headlessui/react"
 import {updateDescription} from "../utilities/requests"
 
@@ -10,13 +11,14 @@ interface Props {
 
 const Description = (props:Props)=>{
     const {loading, setLoading, setModal} = props;
+    const router = useRouter()
     const count = 2000
     const [desc, setDesc] = useState("");
 
     const handleDescription = () => {
         if(desc.length > 0){
             setLoading(true)
-            updateDescription(desc, setLoading)
+            updateDescription(desc, setLoading, router)
             setModal(false)
         }
     }

@@ -14,7 +14,7 @@ export const ioServer = (server: any) => {
 }
 
 const sessionStorage = new SessionStorage()
-const randomId = async () => crypto.randomBytes(8).toString('hex');
+
 
 export const connection = async (io: any) => {
     
