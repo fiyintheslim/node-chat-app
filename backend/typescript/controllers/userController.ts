@@ -178,7 +178,10 @@ export const deleteAccount = async (req:Request, res:Response, next:NextFunction
 
     const client = await postgresPool;
 
-    const result = await client.query("DELETE FROM users WHERE id=$1", [id]);
-
+    const result = await client.query("DELETE FROM users WHERE id=$1 RETURNING avatar_public_id", [id]);
+    const imgID = result.rows[0].avatar_public_id;
+    if(imgID){
+        await cloudinary.v2.uploader.destroy(imgID)
+    }
     return res.status(200).json({success:true, message:"User account deleted"})
 }

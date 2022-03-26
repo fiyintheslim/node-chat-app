@@ -87,7 +87,8 @@ export const createGroup = async (req:Request, res:Response, next:NextFunction) 
         heigth:500,
         crop:"fill"
     })
-    const result = await client.query("INSERT INTO groups (groupid, groupname, interests, groupowner, groupavatar, groupavatar_public_id) VALUES ($1, $2, $3, $4)", [groupId, groupName, interests, id, upload.secure_url, upload.public_id]);
+    console.log("upload", upload, groupId)
+    const result = await client.query("INSERT INTO groups (groupid, groupname, interests, groupowner, groupavatar, groupavatar_public_id) VALUES ($1, $2, $3, $4, $5, $6)", [groupId, groupName, interests, id, upload.secure_url, upload.public_id]);
 
     return res.status(200).json({successs:true, message:"Group created successfully.", group:req.body, groupId})
 }

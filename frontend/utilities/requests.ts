@@ -296,3 +296,22 @@ export const deleteAccount = async (router: NextRouter)=>{
         })
     }
 }
+
+export const createGroup = (data:FormData) => {
+    const token = localStorage.getItem("token");
+    if(token){
+        const config = {
+            headers:{
+                "Token":token,
+                "Content-Type":"multipart/formdata"
+            }
+        }
+        axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/create/group`, data, config)
+        .then((res:AxiosResponse)=>{
+            toast.success("Group created")
+        })
+        .catch((err:AxiosError)=>{
+            toast.error("Group creation failed")
+        })
+    }
+}

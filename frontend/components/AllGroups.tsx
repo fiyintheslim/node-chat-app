@@ -24,7 +24,7 @@ const AllGroups = () => {
         </div>
     </div>
     <Modal isOpen={modal} setOpen={setModal}>
-        <CreateGroup />
+        <CreateGroup setModal={setModal} />
     </Modal>
     </>
     )

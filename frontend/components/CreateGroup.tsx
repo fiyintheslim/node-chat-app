@@ -1,11 +1,18 @@
-import {useState, useRef} from 'react'
+import React, {useState, useRef} from 'react'
 import Image from "next/image"
 import toast from "react-hot-toast"
+import {createGroup} from "../utilities/requests"
 
-const CreateGroup = () => {
+interface Props {
+    setModal:React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const CreateGroup = (props:Props) => {
+    const {setModal} = props
     const dropZone = useRef<HTMLDivElement>(null)
-    const [interests, setInterests] = useState(["football", "basketball", "baseball", "snooker"])
-    const [avatar, setAvatar] = useState<string>()
+    const [interests, setInterests] = useState<string[]>([])
+    const [groupName, setGroupName] = useState("")
+    const [avatar, setAvatar] = useState<string>("")
 
     const dragOverHandler = (e:React.DragEvent)=>{
         e.preventDefault();
@@ -34,6 +41,22 @@ const CreateGroup = () => {
               setAvatar(img)
         }
     }
+    const uploadFile = (e:React.ChangeEvent<HTMLInputElement>) => {
+        const fileReader = new FileReader()
+        if(e.target.files){
+        fileReader.readAsDataURL(e.target.files[0])
+
+        fileReader.onload = function (e) {
+            if(e.loaded > 2097152){
+                return toast.error("Image has to be less than 2mb")
+              }
+      
+              const img = e.target!.result as string
+              console.log("Image uploaded", img)
+              setAvatar(img)
+        }
+    }
+    } 
     const removeInterest = (interest:string) => {
         setInterests(interests.filter(e=>e !== interest))
     }
@@ -55,28 +78,37 @@ const CreateGroup = () => {
         
         
     }
+    const createGroupHandler = () => {
+        const interestString = JSON.stringify(interests)
+        const formData = new FormData()
+        formData.set("groupName", groupName);
+        formData.set("interests", interestString);
+        formData.set("avatar", avatar)
+        createGroup(formData)
+        setModal(false)
+    }
   return (
     <div className="flex flex-col items-start">
     <h2 className="text-center font-extrabold m-3">Create Group</h2>
     <div className="w-full h-64 my-6 flex flex-col justify-center items-center border rounded-md  relative p-1" ref={dropZone} onDragOver={(e)=>dragOverHandler(e)} onDrop={(e)=>dropHandler(e)} onDragLeave={(e)=>handleDragLeave(e)} >
         {avatar &&
-        <Image layout="fill" src={avatar} className="z-10 rounded-md"/>
+            <Image layout="fill" src={avatar} className="z-10 rounded-md"/>
         }
         <div className="z-20 opacity-75 bg-indigo-200 w-full h-full flex flex-col justify-center items-center rounded-md">
-        <p className="py-4 font-bold text-slate-800">Drag & Drop Image.</p>
-        <label htmlFor="groupAvatar" className="bg-indigo-500 p-3 rounded cursor-pointer">Choose group Image</label>
-        <input id="groupAvatar" className="hidden" type="file" />
+            <p className="py-4 font-bold text-slate-800">Drag &amp Drop Image.</p>
+            <label htmlFor="groupAvatar" className="bg-indigo-500 p-3 rounded cursor-pointer">Choose group Image</label>
+            <input onChange={uploadFile} id="groupAvatar" className="hidden" type="file" />
         </div>
     </div>
     <div className="flex flex-col items-start w-full mt-2">
         <label htmlFor="groupName" className="font-bold italic">Enter group name</label>
-        <input id="groupName" className="bg-slate-300 text-slate-900 outline-none rounded-lg h-10 w-full p-1 dark:bg-slate-500 dark:text-slate-50" type="text" placeholder="15 hours of work"/>
+        <input value={groupName} onChange={(e)=>setGroupName(e.target.value)} id="groupName" className="bg-slate-300 text-slate-900 outline-none rounded-lg h-10 w-full p-1 dark:bg-slate-500 dark:text-slate-50" type="text" placeholder="15 hours of work"/>
     </div>
     <div className="flex flex-col items-start w-full mt-2">
         <label htmlFor="interests" className="font-bold italic"> Enter interests</label>
         <input onChange={(e)=>addInterest(e)} id="interests" className="bg-slate-300 text-slate-900 outline-none w-full rounded-lg p-3 dark:bg-slate-500 dark:text-slate-50" placeholder="separate with commas (,)"/>
-        <div className="flex flex-wrap justify-evenly my-3">{interests.map((el)=>(
-        <p className="mx-1 bg-slate-300 text-slate-900 p-2 rounded-xl flex justify-between items-center">
+        <div className="flex flex-wrap justify-start my-3">{interests.map((el, i)=>(
+        <p key={i} className="m-1 bg-slate-300 text-slate-900 p-2 rounded-xl flex justify-between items-center">
             <span className="text-xs font-bold">
                 {el}
             </span>
@@ -89,7 +121,7 @@ const CreateGroup = () => {
         )}</div>
     </div>
     <div className="w-full my-3 flex justify-center">
-        <button className="bg-indigo-700 p-3 rounded outline-none">Create Group</button>
+        <button onClick={createGroupHandler} className="bg-indigo-700 p-3 rounded outline-none">Create Group</button>
     </div>
 </div>
   )
