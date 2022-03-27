@@ -89,7 +89,7 @@ const ChatContainer= (props:Props) => {
             {(active && active.username) || (group && group.groupname)}
             </h2>
             {active && active.description && <p className="">{active.description}</p>}
-            {group && group.interests && <p className="">{JSON.parse(group.interests).map((el:string)=><span>{el}</span>)}</p>}
+            {group && group.interests && <p className="my-5">{JSON.parse(group.interests).map((el:string)=><span className="px-2 py-1 rounded-full bg-indigo-500 mx-1">{el}</span>)}</p>}
           </div>
         </div>
       </Modal>

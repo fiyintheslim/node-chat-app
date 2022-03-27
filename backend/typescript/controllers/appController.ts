@@ -126,7 +126,7 @@ export const getGroup = async (req:Request, res:Response, next:NextFunction) => 
     const groupid = req.query.groupid
     const client = await postgresPool;
 
-    const result = await client.query("SELECT groupid, groupname, groupavatar, groupowner FROM groups WHERE groupid=$1", [groupid]);
+    const result = await client.query("SELECT groupid, groupname, groupavatar, groupowner, interests FROM groups WHERE groupid=$1", [groupid]);
 
     return res.status(200).json({success:true, group:result.rows[0]})
 }

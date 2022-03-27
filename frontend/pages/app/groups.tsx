@@ -18,7 +18,6 @@ const Groups = () => {
 
 //getting a ll groups and groups joined
   useEffect(()=>{
-    getGroups()
     getMyGroups()
     .then(res=>{
       setGroups(res)
@@ -97,7 +96,7 @@ const Groups = () => {
         }</ul>
       </div>
       {allGroups ?
-      <AllGroups />
+      <AllGroups myGroups={groups} />
       :
       <ChatContainer group={activeGroup} messages={messages} handleMyMessage={handleMyMessage} setShowChats={setShowGroups} showChats={showGroups} message={"Select group chat."} />
       }
