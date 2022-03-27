@@ -29,7 +29,7 @@ const setTables = async () =>{
         senderID INTEGER NOT NULL,
         receiverID INTEGER,
         content TEXT NOT NULL,
-        roomID VARCHAR(255),
+        groupid VARCHAR(255),
         time VARCAHR(255) NOT NULL,
     )`)
 
@@ -47,7 +47,7 @@ const setTables = async () =>{
 
     await client.query(`CREATE TABLE IF NOT EXISTS groups_participants(
         participant VARCHAR(255),
-        group_id VARCHAR(255)
+        groupid VARCHAR(255)
     )`)
         console.log("tables set")
     await client.release();

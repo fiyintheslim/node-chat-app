@@ -52,13 +52,13 @@ export const getMessages = async (req:Request, res:Response, next:NextFunction) 
 export const getChats = async (req:Request, res:Response, next:NextFunction) => {
     const id = res.locals.user.id;
     const client = await postgresPool;
-    console.log("Before result")
+    
     const result = await client.query(`SELECT id, username FROM users WHERE NOT id=$1 AND (id IN 
                                         (SELECT senderid FROM messages WHERE senderid=$1 OR receiverid=$1)
                                          OR id IN
                                         (SELECT receiverid FROM messages WHERE senderid=$1 OR receiverid=$1)) ORDER BY username ASC`, 
                                         [id])
-                                        console.log("result.rows", result.rows)         
+                                               
     return res.status(200).json({success:true, chats:result.rows})
 }
 
@@ -117,7 +117,33 @@ export const joinGroup = async (req:Request, res:Response, next:NextFunction) =>
 
     const client = await postgresPool;
 
-    await client.query("INSERT INTO groups_participants (participant, group_id) VALUES ($1, $2)", [id, groupId]);
+    await client.query("INSERT INTO groups_participants (participant, groupid) VALUES ($1, $2)", [id, groupId]);
 
     return res.status(200).json({success:true, message:"Added to group successfully"});
+}
+
+export const getGroup = async (req:Request, res:Response, next:NextFunction) => {
+    const groupid = req.query.groupid
+    const client = await postgresPool;
+
+    const result = await client.query("SELECT groupid, groupname, groupavatar, groupowner FROM groups WHERE groupid=$1", [groupid]);
+
+    return res.status(200).json({success:true, group:result.rows[0]})
+}
+
+export const saveGroupMessage = async (req:Request, res:Response, next:NextFunction) => {
+    const {senderid, content, time, groupid} = req.body
+    const client = await postgresPool;
+
+    await client.query("INSERT INTO messages (senderid, groupid, content, time) VALUES ($1, $2, $3, $4)", [senderid, groupid, content, time])
+    return res.status(200).json({success:true, content: req.body})
+}
+
+export const getGroupMessages = async (req:Request, res:Response, next:NextFunction) => {
+    const groupid = req.body.groupid
+    const client = await postgresPool;
+
+    const groupMessages = await client.query("SELECT * FROM messages WHERE groupid = $1", [groupid])
+    
+    return res.status(200).json({success:true, messages:groupMessages.rows})
 }

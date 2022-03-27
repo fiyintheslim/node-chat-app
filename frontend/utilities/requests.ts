@@ -228,7 +228,7 @@ export const getChats = (setChats:React.Dispatch<React.SetStateAction<chat[]>>) 
             
         })  
         .catch((err:AxiosError) => {
-            console.log("Error loading previos chats", err)
+            console.log("Error loading previous chats", err)
             toast.error("Problem loading older chats")
         })
     }
@@ -362,5 +362,47 @@ export const getMyGroups = async () => {
         } catch (error:any) {
             console.log("Problem loading my groups")
         }
+    }
+}
+
+export const getGroup = async (groupid:string) => {
+    try {
+        const result:AxiosResponse = await axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/group?groupid=${groupid}`)
+        return result.data.group
+    } catch (error:any) {
+        console.log("Problem getting group");
+        toast.error("Problem loading group")
+    }
+}
+
+export const saveGroupMessage = async (data:FormData) => {
+    const token = localStorage.getItem("token");
+    if(token){
+        const config = {
+            headers:{
+                "Token":token,
+                "Content-type":"application/json"
+            }
+        }
+        try{
+            const result:AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/save/message/group`, data, config)
+            console.log("saving grp msg", result.data.content)
+        }catch(err){
+            console.log("Error saving message")
+        }
+    }
+}
+
+export const getGroupMessages = async (groupid:string) => {
+    const config ={
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }
+    try{
+        const res:AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/group/messages`, {groupid}, config)
+        return res.data.messages
+    }catch(err){
+        console.log("Problem loading group messages")
     }
 }

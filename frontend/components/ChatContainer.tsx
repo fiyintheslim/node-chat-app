@@ -33,7 +33,7 @@ const ChatContainer= (props:Props) => {
   }, [])
 
   const handleModal = ()=>{
-    if(active){
+    if(active || group){
       setModal(true)
     }
   }
@@ -42,7 +42,7 @@ const ChatContainer= (props:Props) => {
     <>
      <div className="w-full relative h-full  md:pb-0 flex flex-col">
         <div  className="border-b border-slate-300 px-3 py-4 dark:border-slate-600 flex items-center relative">
-          <Image onClick={handleModal} src={(active && active.avatar) || (group && group.avatar ) || "/img/user.svg"} layout="intrinsic" width={30} height={30} className="cursor-pointer rounded-full pr-3" />
+          <Image onClick={handleModal} src={(active && active.avatar) || (group && group.groupavatar ) || "/img/user.svg"} layout="intrinsic" width={30} height={30} className="cursor-pointer rounded-full pr-3" />
           <div className="pl-4">
             <p className="w-40 overflow-hidden text-ellipsis">{(active && active.username) || (group && group.groupname) || message}</p>
             {active && active.description && 
@@ -72,16 +72,16 @@ const ChatContainer= (props:Props) => {
                   </p>
           })}
         </div>
-        {active &&
+        {(active || group) &&
         <Messenger sendMessage={handleMyMessage} container={bottom} />
         }
       </div>
       <Modal isOpen={modal} setOpen={setModal}>
         <div className="flex flex-col items-center p-2">
-          <h2 className="font-bold text-2xl">User Profile</h2>
+          <h2 className="font-bold text-2xl">{active ? "User Profile" : "Group Info"}</h2>
           <div className="relative w-48 h-48 m-2 border rounded-full">
-            <a target="_blank" href={(active && active.avatar) || (group && group.avatar)}>
-            <Image layout="fill" src={(active && active.avatar) || (group && group.avatar ) || "/img/user.svg"} className="rounded-full border" />
+            <a target="_blank" href={(active && active.avatar) || (group && group.groupavatar)}>
+            <Image layout="fill" src={(active && active.avatar) || (group && group.groupavatar ) || "/img/user.svg"} className="rounded-full border" />
             </a>
           </div>
           <div className="flex flex-col items-center">
@@ -89,7 +89,7 @@ const ChatContainer= (props:Props) => {
             {(active && active.username) || (group && group.groupname)}
             </h2>
             {active && active.description && <p className="">{active.description}</p>}
-            {group && group.description && <p className="">{group.description}</p>}
+            {group && group.interests && <p className="">{JSON.parse(group.interests).map((el:string)=><span>{el}</span>)}</p>}
           </div>
         </div>
       </Modal>

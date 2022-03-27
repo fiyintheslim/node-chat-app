@@ -3,13 +3,20 @@ import AllGroups from "../../components/AllGroups"
 import {MyContext} from "../../components/Context"
 import Container from "../../components/Container"
 import ChatContainer from "../../components/ChatContainer"
-import {saveMessage, joinGroup, getGroups, getMyGroups} from "../../utilities/requests"
+import {saveMessage, joinGroup, getGroups, getMyGroups, getGroup, saveGroupMessage, getGroupMessages} from "../../utilities/requests"
 import socket from "../../utilities/socket"
 import {group, message, user} from "../../utilities/types"
 
 const Groups = () => {
   const context = useContext(MyContext) as {user: [undefined | user, React.Dispatch<React.SetStateAction<undefined | user>>]}
 
+  const [groups, setGroups] = useState<group[]>([]);
+  const [activeGroup, setActiveGroup] = useState<group>()
+  const [showGroups, setShowGroups] = useState(false)
+  const [messages, setMessages] = useState<message[]>([])
+  const [allGroups, setAllGroups] = useState(false)
+
+//getting a ll groups and groups joined
   useEffect(()=>{
     getGroups()
     getMyGroups()
@@ -17,23 +24,32 @@ const Groups = () => {
       setGroups(res)
     })
   }, [])
+//getting older messages for selscted group
+  useEffect(()=>{
+    if(activeGroup){
+      getGroupMessages(activeGroup.groupid)
+      .then((res)=>{
+        setMessages(res)
+      })
+    }
+    
+  }, [activeGroup])
 
-  const [groups, setGroups] = useState<group[]>([]);
-  const [activeGroup, setActiveGroup] = useState<group>()
-  const [showGroups, setShowGroups] = useState(false)
-  const [messages, setMessages] = useState<message[]>([])
-  const [groupID, setGroupID] = useState<string>()
-  const [allGroups, setAllGroups] = useState(false)
+ 
 
   const selectGroup = (id:string) => {
-
+    getGroup(id)
+    .then((res)=>{
+      setActiveGroup(res)
+      setAllGroups(false)
+    })
   }
   const change = ()=> {
     setAllGroups(!allGroups)
   }
   const handleMyMessage = (msg:string, ele:React.MutableRefObject<HTMLDivElement | null>)=>{
     let time = Date.now()
-    if(context.user[0] && groupID && msg){
+    if(context.user[0] && activeGroup && activeGroup.groupid && msg){
       let data = {
         content:msg,
         senderid:context.user[0].id,
@@ -42,13 +58,13 @@ const Groups = () => {
       setMessages([...messages, data])
       
       const formData = new FormData();
-      formData.set("senderID", context.user[0].id.toString())
-      formData.set("receiverID", groupID as string)
+      formData.set("senderid", context.user[0].id.toString())
+      formData.set("groupid", activeGroup.groupid)
       formData.set("content", msg)
       formData.set("time", time.toString())
       
 
-      saveMessage(formData)
+      saveGroupMessage(formData)
     
       setTimeout(()=>{
         if(ele.current){
@@ -56,8 +72,8 @@ const Groups = () => {
         }
       }, 200)
     
-    if(groupID){
-      let to = groupID
+    if(activeGroup && activeGroup.groupid){
+      let to = activeGroup.groupid
       
       socket.emit("group_message", {data, to})
       setMessages([...messages, data])
@@ -73,7 +89,7 @@ const Groups = () => {
         <li onClick={change} className="pl-2 cursor-pointer h-12 w-full flex items-center border-b border-slate-300 bg-slate-300 dark:bg-slate-800 dark:border-slate-500">{allGroups ? "My Groups":"All groups"}</li>
           {
           groups.map((el, i)=>(
-            <li key={el.groupid} className="w-full h-12">
+            <li onClick={(e)=>selectGroup(el.groupid)} key={el.groupid} className="w-full h-12">
               <p onClick={()=>selectGroup(el.groupid)} className={`cursor-pointer h-full w-full flex items-center border-b border-slate-300 ${ activeGroup && activeGroup.groupid === el.groupid ? "bg-slate-400 dark:bg-slate-500 dark:text-slate-900" : ""} dark:border-slate-500`}>
                 <span>{el.groupname}</span>
               </p>
