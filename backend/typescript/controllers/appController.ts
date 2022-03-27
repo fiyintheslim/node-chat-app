@@ -31,7 +31,6 @@ export const saveMessage = async (req:Request, res:Response, next:NextFunction)=
     const {senderID, receiverID, content, time} = req.body
 
     const result = await client.query("INSERT INTO messages (senderID, receiverID, content, time) VALUES ($1, $2, $3, $4)", [senderID, receiverID, content, time])
-    console.log("saving messages", content)
     return res.status(200).json({
         successful:true,
         message:"Message saved",
@@ -44,21 +43,22 @@ export const getMessages = async (req:Request, res:Response, next:NextFunction) 
     const senderID = res.locals.user.id;
 
     const client = await postgresPool;
-
+    
     const result = await client.query("SELECT senderid, content, time FROM messages WHERE (senderid=$1 AND receiverid=$2) OR (senderid=$2 AND receiverid=$1)", [senderID, receiver]);
-
+    
     return res.status(200).json({success:true, messages:result.rows})
 }
 
 export const getChats = async (req:Request, res:Response, next:NextFunction) => {
     const id = res.locals.user.id;
     const client = await postgresPool;
-
+    console.log("Before result")
     const result = await client.query(`SELECT id, username FROM users WHERE NOT id=$1 AND (id IN 
                                         (SELECT senderid FROM messages WHERE senderid=$1 OR receiverid=$1)
                                          OR id IN
                                         (SELECT receiverid FROM messages WHERE senderid=$1 OR receiverid=$1)) ORDER BY username ASC`, 
                                         [id])
+                                        console.log("result.rows", result.rows)         
     return res.status(200).json({success:true, chats:result.rows})
 }
 
@@ -100,6 +100,15 @@ export const getGroups = async (req:Request, res:Response, next:NextFunction) =>
     const results = await client.query("SELECT groupid, groupname, groupavatar, groupowner, interests FROM groups");
 
     return res.status(200).json({sucess:true, groups:results.rows})
+} 
+
+export const getMyGroups = async (req:Request, res:Response, next:NextFunction) => {
+    const id = res.locals.user.id;
+    const client = await postgresPool;
+
+    const result = await client.query("SELECT groupname, groupid, groupowner FROM groups WHERE groupid IN (SELECT groupid FROM groups_participants WHERE participant = $1)", [id]);
+
+    return res.status(200).json({success:true, myGroups:result.rows})
 }
 
 export const joinGroup = async (req:Request, res:Response, next:NextFunction) => {

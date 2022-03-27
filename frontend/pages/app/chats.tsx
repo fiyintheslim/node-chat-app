@@ -44,9 +44,9 @@ const Chat = () => {
 
   useEffect(()=>{
     getChats(setChats)
-    if(active && !chats.find((e)=>e.id === active.id)){
-      setChats([...chats, {id:active.id, username:active.username}])
-    }
+    // if(active && !chats.find((e)=>e.id === active.id)){
+    //   setChats([...chats, {id:active.id, username:active.username}])
+    // }
     
     if(context.loggedIn[0] ){
       setOnline(context.loggedIn[0]);

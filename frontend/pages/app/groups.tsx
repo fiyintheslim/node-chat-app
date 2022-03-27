@@ -3,7 +3,7 @@ import AllGroups from "../../components/AllGroups"
 import {MyContext} from "../../components/Context"
 import Container from "../../components/Container"
 import ChatContainer from "../../components/ChatContainer"
-import {saveMessage, joinGroup, getGroups} from "../../utilities/requests"
+import {saveMessage, joinGroup, getGroups, getMyGroups} from "../../utilities/requests"
 import socket from "../../utilities/socket"
 import {group, message, user} from "../../utilities/types"
 
@@ -12,7 +12,10 @@ const Groups = () => {
 
   useEffect(()=>{
     getGroups()
-    
+    getMyGroups()
+    .then(res=>{
+      setGroups(res)
+    })
   }, [])
 
   const [groups, setGroups] = useState<group[]>([]);
@@ -67,7 +70,7 @@ const Groups = () => {
     <div className="flex h-full relative">
       <div className={`absolute h-full overflow-y-scroll w-64 z-30 left-0 ${showGroups ? "block" : "hidden"} md:block top-0 md:basis-1/4 md:static border-r border-slate-300 bg-slate-200 dark:bg-slate-700 dark:border-slate-600`}>
         <ul>
-        <li onClick={change} className="pl-2 cursor-pointer h-12 w-full flex items-center border-b border-slate-300 dark:border-slate-500">{allGroups ? "My Groups":"All groups"}</li>
+        <li onClick={change} className="pl-2 cursor-pointer h-12 w-full flex items-center border-b border-slate-300 bg-slate-300 dark:bg-slate-800 dark:border-slate-500">{allGroups ? "My Groups":"All groups"}</li>
           {
           groups.map((el, i)=>(
             <li key={el.groupid} className="w-full h-12">

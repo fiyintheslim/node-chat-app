@@ -30,7 +30,7 @@ const setTables = async () =>{
         receiverID INTEGER,
         content TEXT NOT NULL,
         roomID VARCHAR(255),
-        time INTEGER NOT NULL,
+        time VARCAHR(255) NOT NULL,
     )`)
 
     await client.query(`

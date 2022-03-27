@@ -95,7 +95,7 @@ const CreateGroup = (props:Props) => {
             <Image layout="fill" src={avatar} className="z-10 rounded-md"/>
         }
         <div className="z-20 opacity-75 bg-indigo-200 w-full h-full flex flex-col justify-center items-center rounded-md">
-            <p className="py-4 font-bold text-slate-800">Drag &amp Drop Image.</p>
+            <p className="py-4 font-bold text-slate-800">Drag & Drop Image.</p>
             <label htmlFor="groupAvatar" className="bg-indigo-500 p-3 rounded cursor-pointer">Choose group Image</label>
             <input onChange={uploadFile} id="groupAvatar" className="hidden" type="file" />
         </div>

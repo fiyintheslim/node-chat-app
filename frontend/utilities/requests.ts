@@ -345,3 +345,22 @@ export const getGroups = async () => {
         toast.error("Problem loading groups")
     }
 }
+
+export const getMyGroups = async () => {
+    const token = localStorage.getItem("token");
+    if(token){
+        const config = {
+            headers:{
+                "Token":token
+            }
+        }
+
+        try {
+            const res:AxiosResponse = await axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/groups/mine`, config);
+            console.log("my groups", res.data.myGroups)
+            return res.data.myGroups
+        } catch (error:any) {
+            console.log("Problem loading my groups")
+        }
+    }
+}
