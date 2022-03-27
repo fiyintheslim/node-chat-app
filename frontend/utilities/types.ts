@@ -47,9 +47,9 @@ export interface chat{
 }
 
 export interface group {
-    id:string,
+    groupid:string,
+    groupowner:string,
     groupname:string,
-    description:string,
-    avatar:string,
-    interests:string[]
+    groupavatar:string,
+    interests:string,
 }

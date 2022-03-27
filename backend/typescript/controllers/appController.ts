@@ -13,7 +13,7 @@ export const getUsers = async (req:Request, res:Response, next:NextFunction)=>{
 }
 
 export const getUser = async (req:Request, res:Response, next:NextFunction) => {
-    console
+    
     const userID = req.params.id
     const client = await postgresPool;
 
@@ -89,6 +89,26 @@ export const createGroup = async (req:Request, res:Response, next:NextFunction) 
     })
     console.log("upload", upload, groupId)
     const result = await client.query("INSERT INTO groups (groupid, groupname, interests, groupowner, groupavatar, groupavatar_public_id) VALUES ($1, $2, $3, $4, $5, $6)", [groupId, groupName, interests, id, upload.secure_url, upload.public_id]);
+    await client.query("INSERT INTO groups_participants (participant, group_id) VALUES ($1, $2)", [id, groupId]);
 
     return res.status(200).json({successs:true, message:"Group created successfully.", group:req.body, groupId})
+}
+
+export const getGroups = async (req:Request, res:Response, next:NextFunction) => {
+
+    const client = await postgresPool;
+    const results = await client.query("SELECT groupid, groupname, groupavatar, groupowner, interests FROM groups");
+
+    return res.status(200).json({sucess:true, groups:results.rows})
+}
+
+export const joinGroup = async (req:Request, res:Response, next:NextFunction) => {
+    const id = res.locals.user.id;
+    const groupId = req.body.groupId;
+
+    const client = await postgresPool;
+
+    await client.query("INSERT INTO groups_participants (participant, group_id) VALUES ($1, $2)", [id, groupId]);
+
+    return res.status(200).json({success:true, message:"Added to group successfully"});
 }

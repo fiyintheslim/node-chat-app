@@ -315,3 +315,33 @@ export const createGroup = (data:FormData) => {
         })
     }
 }
+
+export const joinGroup = async (data:string) => {
+    const token = localStorage.getItem("token");
+    
+    if(token){
+        const config = {
+            headers:{
+                "Token":token,
+                "Content-Type":"multipart/form-data"
+            }
+        }
+        try{
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/group/join`, {groupId:data}, config)
+        //.then((res:Axios))
+        }catch(err:any){
+            console.log(err.response)
+        }
+    }
+}
+
+export const getGroups = async () => {
+    try{
+        const res:AxiosResponse =  await axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/groups`)
+        console.log(res)
+        return res.data.groups
+    }catch(err:any){
+        console.log(err.response);
+        toast.error("Problem loading groups")
+    }
+}

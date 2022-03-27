@@ -41,6 +41,15 @@ body::-webkit-scrollbar-track {
   background-color: rgb(87, 87, 87);
   border-radius:10%;
 }
+p::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.example {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
 /*colors rose-700 indigo-700 fuchsia-700*/
 /*colors mode slate-100 slate-900*/
 /*text slate-900 dark:slate-200*/

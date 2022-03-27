@@ -1,15 +1,19 @@
-import React, {useState, useContext} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import AllGroups from "../../components/AllGroups"
 import {MyContext} from "../../components/Context"
 import Container from "../../components/Container"
 import ChatContainer from "../../components/ChatContainer"
-import {saveMessage} from "../../utilities/requests"
+import {saveMessage, joinGroup, getGroups} from "../../utilities/requests"
 import socket from "../../utilities/socket"
 import {group, message, user} from "../../utilities/types"
 
 const Groups = () => {
   const context = useContext(MyContext) as {user: [undefined | user, React.Dispatch<React.SetStateAction<undefined | user>>]}
 
+  useEffect(()=>{
+    getGroups()
+    
+  }, [])
 
   const [groups, setGroups] = useState<group[]>([]);
   const [activeGroup, setActiveGroup] = useState<group>()
@@ -66,8 +70,8 @@ const Groups = () => {
         <li onClick={change} className="pl-2 cursor-pointer h-12 w-full flex items-center border-b border-slate-300 dark:border-slate-500">{allGroups ? "My Groups":"All groups"}</li>
           {
           groups.map((el, i)=>(
-            <li key={i} className="w-full h-12">
-              <p onClick={()=>selectGroup(el.id)} className={`cursor-pointer h-full w-full flex items-center border-b border-slate-300 ${ activeGroup && activeGroup.id === el.id ? "bg-slate-400 dark:bg-slate-500 dark:text-slate-900" : ""} dark:border-slate-500`}>
+            <li key={el.groupid} className="w-full h-12">
+              <p onClick={()=>selectGroup(el.groupid)} className={`cursor-pointer h-full w-full flex items-center border-b border-slate-300 ${ activeGroup && activeGroup.groupid === el.groupid ? "bg-slate-400 dark:bg-slate-500 dark:text-slate-900" : ""} dark:border-slate-500`}>
                 <span>{el.groupname}</span>
               </p>
             </li>))

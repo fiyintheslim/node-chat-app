@@ -51,7 +51,7 @@ const ChatContainer= (props:Props) => {
             
           </div>
           
-          <div onClick={()=>setShowChats(!showChats)} className={`bg-slate-400 p-2 rounded-full absolute right-3 top-4 md:hidden dark:bg-slate-700`}>
+          <div onClick={()=>setShowChats(!showChats)} className={`bg-slate-400 cursor-pointer p-2 rounded-full absolute right-3 top-4 md:hidden dark:bg-slate-700`}>
             {showChats ?
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle fill" viewBox="0 0 16 16">
               <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>

@@ -44,6 +44,11 @@ const setTables = async () =>{
         time VARCHAR(255)
     ) 
     `)
+
+    await client.query(`CREATE TABLE IF NOT EXISTS groups_participants(
+        participant VARCHAR(255),
+        group_id VARCHAR(255)
+    )`)
         console.log("tables set")
     await client.release();
 }
