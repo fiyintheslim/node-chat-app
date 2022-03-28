@@ -33,12 +33,12 @@ const Profile = () => {
     
     <Container>
       {meContext ?
-      (<div className="h-full overflow-y-scroll pb-24 md:pb-0">
+      (<div className="h-full overflow-y-scroll pb-24 md:pb-0 moz-scroll">
         <p className="text-2xl my-4 mx-3 font-bold">My Account</p>
         <div className=" shadow relative flex flex-col justify-center items-center p-3 m-3 rounded-xl bg-slate-300 md:flex-row md:justify-start dark:bg-slate-800">
           <div className="w-60 h-60 rounded-full relative md:w-96 md:mr-10">
             <a target="_blank" href={meContext.avatar} >
-              <Image src={meContext.avatar} layout="fill" className="rounded-full " />
+              <Image src={meContext.avatar} layout="fill" className="rounded-full object-cover" />
             </a>
           </div>
           <div className="flex flex-col justify-between py-2 w-full relative">
@@ -71,7 +71,7 @@ const Profile = () => {
         </div>
         <div className="flex justify-center p-3 m-3 rounded-xl bg-slate-300 dark:bg-slate-800">
           <div className="flex justify-evenly w-80">
-          <button onClick={()=>{logOut()}} type="button" className="flex rounded bg-orange-500 p-3 items-center cursor-pointer">
+          <button onClick={()=>{logOut()}} type="button" className="outline-none flex rounded bg-orange-500 p-3 items-center cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-door-closed-fill mr-2" viewBox="0 0 16 16">
               <path d="M12 1a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V2a1 1 0 0 1 1-1h8zm-2 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
             </svg>
@@ -80,7 +80,7 @@ const Profile = () => {
           <button onClick={()=>{
             setModal(true)
             setWhich("delete")
-          }} type="button" className="flex rounded bg-red-700 p-3 items-center cursor-pointer">
+          }} type="button" className="outline-none flex rounded bg-red-700 p-3 items-center cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash3-fill mr-2" viewBox="0 0 16 16">
               <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
             </svg>

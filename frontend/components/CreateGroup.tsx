@@ -85,6 +85,9 @@ const CreateGroup = (props:Props) => {
         formData.set("interests", interestString);
         formData.set("avatar", avatar)
         createGroup(formData)
+        .then((res)=>{
+            toast.success("Group created successfully.")
+        })
         setModal(false)
     }
   return (

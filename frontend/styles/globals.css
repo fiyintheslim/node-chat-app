@@ -50,6 +50,12 @@ p::-webkit-scrollbar {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+.moz-scroll{
+    scrollbar-width: thin;
+}
+.moz-scroll-none{
+  scrollbar-width: none;
+}
 /*colors rose-700 indigo-700 fuchsia-700*/
 /*colors mode slate-100 slate-900*/
 /*text slate-900 dark:slate-200*/

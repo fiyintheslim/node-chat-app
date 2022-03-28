@@ -50,16 +50,16 @@ const Chart = () => {
           {
             label: 'Activities',
             backgroundColor: [
-              '#B21F00',
-              '#C9DE00',
-              '#2FDE00',
-              '#00A6B4',
+              '#1b1736',
+              '#53350f',
+              '#113f03',
+              '#194b50',
             ],
             hoverBackgroundColor: [
-            '#501800',
-            '#4B5000',
-            '#175000',
-            '#003350',
+            '#0d051d',
+            '#2c2312',
+            '#102409',
+            '#0d2227',
             ],
             data:[...Object.values(activities).map((el)=>parseInt(el))]
           }

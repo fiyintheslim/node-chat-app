@@ -33,7 +33,7 @@ const Home = () => {
   
   return (
       <Container>
-        <ul className="overflow-y-scroll pb-24 h-full flex flex-col justify-start md:pt-1">
+        <ul className="overflow-y-scroll pb-24 h-full w-full md:pt-1 moz-scroll pb-24 md:pb-0 grid gap-px grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
         {users && users.map(user=>(
           <li key={user.id} className="">
             <Card user={user} online={loggedIn?.includes(user.id)}  />
@@ -41,14 +41,7 @@ const Home = () => {
           )
           )}
         </ul>
-        {/* {toasts
-        .filter((toast) => toast.visible)
-        .map((toast) => (
-          <div key={toast.id} {...toast.ariaProps}>
-            {toast.message}
-          </div>
-        ))} */}
-        {/* <Toaster /> */}
+        
       </Container>
   )
 }

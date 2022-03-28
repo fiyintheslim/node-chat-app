@@ -17,8 +17,9 @@ const Card = (props:Prop) => {
             <Image src={user.avatar ? user.avatar : "/img/user.svg"} layout="fill" className="object-cover absolute left-0 top-0 w-full h-full z-0 rounded-xl "  />
             <div  className="z-10 opacity-40 bg-slate-900 dark:bg-slate-700 absolute left-0 top-0 w-full h-full rounded-xl "></div>
             <p className="z-20 inline absolute top-2 left-2 text-xl font-bold">{user.username}</p>
-            <p className={`z-20 inline absolute p-2 bottom-2 right-2 opacity-75 ${online ? 'bg-green-400 text-green-900': 'bg-red-400 text-red-900'} rounded-full h-9 w-20 text-center font-extrabold`}>
-            {online && online ? 'Online' : 'Offline'}  
+            <p className={`z-20 inline absolute p-2 bottom-2 right-2 opacity-75  h-9 text-center font-extrabold flex items-center`}>
+              <span className={`z-20 mr-1 block w-3 h-3 ${online ? 'bg-green-400': 'bg-slate-600'} rounded-full`}></span>
+              <span>{online && online ? 'Online' : 'Offline'}</span>
             </p>
         </div>
     </Link>

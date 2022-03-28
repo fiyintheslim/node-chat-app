@@ -1,6 +1,7 @@
 import { Socket, Server } from "socket.io"
 import crypto = require("crypto")
 import SessionStorage from "./socketSessionStorage"
+import getGroups from "./getAllGroups"
 import { message, joinChat } from "./types"
 
 
@@ -53,6 +54,7 @@ export const connection = async (io: any) => {
         socket.emit("session", socket.handshake.auth.sessionID)
         socket.join(socket.handshake.auth.sessionID);
         
+        
         let users: { sessionID: string, username: string, userID: string }[] = [];
         
         const avail = io.of("/").sockets
@@ -69,6 +71,11 @@ export const connection = async (io: any) => {
             
             console.log("A message was sent", res, res.data, res.to)
             socket.to(res.to).emit("private_message", res.data)
+        })
+
+        socket.on("group_message", async (data:any)=>{
+            console.log("group message", data)
+            socket.to(data.to).emit("group_message", data.data)
         })
 
         socket.on("join_chat", (data: joinChat) => {

@@ -112,7 +112,7 @@ const Chat = () => {
   return (
     <Container>
       <div className="flex h-full relative">
-        <div className={`absolute h-full overflow-y-scroll w-64 z-30 left-0 ${showChats ? "block" : "hidden"} md:block top-0 md:basis-1/4 md:static border-r border-slate-300 bg-slate-200 dark:bg-slate-700 dark:border-slate-600`}>
+        <div className={`moz-scroll absolute h-full overflow-y-scroll w-64 z-30 left-0 ${showChats ? "block" : "hidden"} md:block top-0 md:basis-1/4 md:static border-r border-slate-300 bg-slate-200 dark:bg-slate-700 dark:border-slate-600`}>
           <ul>{
             chats.map((el, i)=>(
               <li key={i} className="w-full h-12">

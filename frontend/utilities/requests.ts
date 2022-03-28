@@ -297,7 +297,7 @@ export const deleteAccount = async (router: NextRouter)=>{
     }
 }
 
-export const createGroup = (data:FormData) => {
+export const createGroup = async (data:FormData) => {
     const token = localStorage.getItem("token");
     if(token){
         const config = {
@@ -306,17 +306,18 @@ export const createGroup = (data:FormData) => {
                 "Content-Type":"multipart/formdata"
             }
         }
-        axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/create/group`, data, config)
-        .then((res:AxiosResponse)=>{
-            toast.success("Group created")
-        })
-        .catch((err:AxiosError)=>{
+        try{
+            const res:AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/create/group`, data, config)
+            return res;
+        }catch(err:any){
             toast.error("Group creation failed")
-        })
+        }
+        
+        
     }
 }
 
-export const joinGroup = async (data:string) => {
+export const joinGroup = async (data:FormData) => {
     const token = localStorage.getItem("token");
     
     if(token){
@@ -327,7 +328,9 @@ export const joinGroup = async (data:string) => {
             }
         }
         try{
-        const res = await axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/group/join`, {groupId:data}, config)
+            console.log("groupId", data)
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/group/join`, data, config)
+
         //.then((res:Axios))
         }catch(err:any){
             console.log(err.response)

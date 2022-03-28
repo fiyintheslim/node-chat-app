@@ -31,7 +31,8 @@ export interface loggedIn {
 export interface message {
     content:string,
     senderid:number,
-    time:number
+    time:number,
+    username?:string
 }
 
 export interface active{
@@ -52,4 +53,11 @@ export interface group {
     groupname:string,
     groupavatar:string,
     interests:string,
+}
+
+export interface groupmessage{
+    content:string,
+    senderid:number,
+    time:number,
+    
 }

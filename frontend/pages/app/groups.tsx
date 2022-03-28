@@ -18,9 +18,9 @@ const Groups = () => {
 
 //getting a ll groups and groups joined
   useEffect(()=>{
-    getMyGroups()
-    .then(res=>{
-      setGroups(res)
+    loadMyGroups()
+    socket.on("group_message", (data)=>{
+      alert("message")
     })
   }, [])
 //getting older messages for selscted group
@@ -34,17 +34,25 @@ const Groups = () => {
     
   }, [activeGroup])
 
- 
+ const loadMyGroups = ()=>{
+  getMyGroups()
+  .then(res=>{
+    setGroups(res)
+    console.log("groups", res)
+  })
+ }
 
   const selectGroup = (id:string) => {
     getGroup(id)
     .then((res)=>{
       setActiveGroup(res)
       setAllGroups(false)
+      setShowGroups(false)
     })
   }
   const change = ()=> {
     setAllGroups(!allGroups)
+    setShowGroups(false)
   }
   const handleMyMessage = (msg:string, ele:React.MutableRefObject<HTMLDivElement | null>)=>{
     let time = Date.now()
@@ -52,7 +60,8 @@ const Groups = () => {
       let data = {
         content:msg,
         senderid:context.user[0].id,
-        time
+        time,
+        username:context.user[0].username
       }
       setMessages([...messages, data])
       
@@ -83,20 +92,22 @@ const Groups = () => {
   return (
     <Container>
     <div className="flex h-full relative">
-      <div className={`absolute h-full overflow-y-scroll w-64 z-30 left-0 ${showGroups ? "block" : "hidden"} md:block top-0 md:basis-1/4 md:static border-r border-slate-300 bg-slate-200 dark:bg-slate-700 dark:border-slate-600`}>
+      <div className={`moz-scroll absolute h-full overflow-y-scroll w-64 z-30 left-0 ${showGroups ? "block" : "hidden"} md:block top-0 md:basis-1/4 md:static border-r border-slate-300 bg-slate-200 dark:bg-slate-700 dark:border-slate-600`}>
         <ul>
-        <li onClick={change} className="pl-2 cursor-pointer h-12 w-full flex items-center border-b border-slate-300 bg-slate-300 dark:bg-slate-800 dark:border-slate-500">{allGroups ? "My Groups":"All groups"}</li>
+          <li onClick={change} className="my-3 cursor-pointer h-12 w-full flex justify-center items-center ">
+            <span className="text-center rounded-full bg-indigo-500 dark:bg-indigo-800 p-3 w-2/3">{allGroups ? "My Groups":"All groups"}</span>
+          </li>
           {
           groups.map((el, i)=>(
             <li onClick={(e)=>selectGroup(el.groupid)} key={el.groupid} className="w-full h-12">
-              <p onClick={()=>selectGroup(el.groupid)} className={`cursor-pointer h-full w-full flex items-center border-b border-slate-300 ${ activeGroup && activeGroup.groupid === el.groupid ? "bg-slate-400 dark:bg-slate-500 dark:text-slate-900" : ""} dark:border-slate-500`}>
-                <span>{el.groupname}</span>
+              <p onClick={()=>selectGroup(el.groupid)} className={`cursor-pointer h-full w-full flex items-center border-b border-t border-slate-300 ${ activeGroup && activeGroup.groupid === el.groupid ? "bg-slate-400 dark:bg-slate-500 dark:text-slate-900" : ""} dark:border-slate-500`}>
+                <span className="px-3">{el.groupname}</span>
               </p>
             </li>))
         }</ul>
       </div>
       {allGroups ?
-      <AllGroups myGroups={groups} />
+      <AllGroups setShowChats={setShowGroups} showChats={showGroups} myGroups={groups} loadMyGroups={loadMyGroups}/>
       :
       <ChatContainer group={activeGroup} messages={messages} handleMyMessage={handleMyMessage} setShowChats={setShowGroups} showChats={showGroups} message={"Select group chat."} />
       }

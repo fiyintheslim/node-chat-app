@@ -89,7 +89,8 @@ export const createGroup = async (req:Request, res:Response, next:NextFunction) 
     })
     console.log("upload", upload, groupId)
     const result = await client.query("INSERT INTO groups (groupid, groupname, interests, groupowner, groupavatar, groupavatar_public_id) VALUES ($1, $2, $3, $4, $5, $6)", [groupId, groupName, interests, id, upload.secure_url, upload.public_id]);
-    await client.query("INSERT INTO groups_participants (participant, group_id) VALUES ($1, $2)", [id, groupId]);
+    
+    await client.query("INSERT INTO groups_participants (participant, groupid) VALUES ($1, $2)", [id, groupId]);
 
     return res.status(200).json({successs:true, message:"Group created successfully.", group:req.body, groupId})
 }
@@ -114,7 +115,7 @@ export const getMyGroups = async (req:Request, res:Response, next:NextFunction) 
 export const joinGroup = async (req:Request, res:Response, next:NextFunction) => {
     const id = res.locals.user.id;
     const groupId = req.body.groupId;
-
+    console.log(groupId)
     const client = await postgresPool;
 
     await client.query("INSERT INTO groups_participants (participant, groupid) VALUES ($1, $2)", [id, groupId]);
@@ -143,7 +144,7 @@ export const getGroupMessages = async (req:Request, res:Response, next:NextFunct
     const groupid = req.body.groupid
     const client = await postgresPool;
 
-    const groupMessages = await client.query("SELECT * FROM messages WHERE groupid = $1", [groupid])
+    const groupMessages = await client.query("SELECT messages.groupid, messages.content, messages.time, messages.senderid, users.username FROM messages INNER JOIN users ON users.id = messages.senderid WHERE groupid = $1", [groupid])
     
     return res.status(200).json({success:true, messages:groupMessages.rows})
 }
