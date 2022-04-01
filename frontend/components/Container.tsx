@@ -6,8 +6,8 @@ import {MyContext} from "./Context"
 import Navigation from "./Navigation"
 import Messenger from "./Messenger"
 import socket from "../utilities/socket"
-import {me, saveSessionID} from "../utilities/requests"
-import {user, loggedIn} from "../utilities/types"
+import {me, saveSessionID, getMyGroups} from "../utilities/requests"
+import {user, loggedIn, group} from "../utilities/types"
 
 
 
@@ -19,7 +19,7 @@ const Container: React.FC = ({children}) => {
  
   
   useEffect(()=>{
-    me(context.user, router)
+    me(context.user, router, socket)
     
     if(meContext && meContext.username){
       let sessionID = localStorage.getItem("socketSession")
@@ -29,7 +29,7 @@ const Container: React.FC = ({children}) => {
       }
 
       socket.auth = sessionID == null ? {username:meContext.username, userID:meContext.id} : {username:meContext.username, userID:meContext.id, sessionID}
-      const connectedSocket = socket.connect();
+      socket.connect();
       
     }
     
@@ -54,7 +54,6 @@ const Container: React.FC = ({children}) => {
       }
     })
   
-    
     socket.on("session", data=>{
       
       const socketSession = localStorage.getItem("socketSession")
@@ -68,12 +67,13 @@ const Container: React.FC = ({children}) => {
         saveSessionID(data)
       }
     })
+
+    
   }, [meContext])
   
 
   return (
     <>
-    
       <Header />
       <div className="h-screen overflow-hidden pt-20 md:pb-0 relative md:flex md:flex-row-reverse">
         <div className="h-full w-full md:ml-24">

@@ -3,7 +3,7 @@ import {NextRouter} from "next/router"
 import React from "react";
 import toast from "react-hot-toast"
 import {loginResponse} from "../utilities/types"
-import {user, error, message, chat} from "./types"
+import {user, error, message, chat, group} from "./types"
 
 
 
@@ -71,7 +71,8 @@ export const login = (
 
 export const me = (
     me:[undefined | user, React.Dispatch<React.SetStateAction<undefined | user>>],
-    router: NextRouter
+    router: NextRouter,
+    socket?:any
     ) => {
     const token = localStorage.getItem("token")
     
@@ -102,6 +103,15 @@ export const me = (
         me[1](undefined)
         router.push("/login")
         toast.error("Login to access.")
+    }
+    if(socket){
+        getMyGroups()
+        .then((res)=>{
+      
+        const groupIds= res.map((grp:group)=>grp.groupid);
+    
+        socket.emit("groups", groupIds)
+        })
     }
 }
 

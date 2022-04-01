@@ -48,7 +48,6 @@ const ChatContainer= (props:Props) => {
             {active && active.description && 
               <p className="w-40 overflow-hidden whitespace-nowrap text-xs text-slate-400 text-ellipsis">{active.description}</p>
             }
-            
           </div>
           
           <div onClick={()=>setShowChats(!showChats)} className={`bg-slate-400 cursor-pointer p-2 rounded-full absolute right-3 top-4 md:hidden dark:bg-slate-700`}>
@@ -64,13 +63,13 @@ const ChatContainer= (props:Props) => {
           </div>
         </div>
         <div ref={bottom} className="moz-scroll h-full p-2 mb-40 relative overflow-y-scroll md:mb-20">
-          {messages.map((data, i)=>{
+          {(active || group) && messages.map((data, i)=>{
             let time = typeof data.time === "string" ? parseInt(data.time) : data.time
-            return <p key={i} className={`flex my-1 flex-col  ${context.user[0] && data.senderid === context.user[0].id ? "items-end" : "items-start"}`}>
-                    {data.username && <span className="text-slate-500 text-xs ">{data.username}</span>}
+            return (<p key={i} className={`flex my-1 flex-col  ${context.user[0] && data.senderid === context.user[0].id ? "items-end" : "items-start"}`}>
+                    {data.username && <span className={`text-slate-500 text-xs mx-1`}>{data.username}</span>}
                     <span className={`p-2 max-w-lg rounded-lg text-slate-900 ${context.user[0] && data.senderid === context.user[0].id ? "bg-indigo-600 dark:bg-indigo-900 rounded-br-none" : "bg-indigo-300 dark:bg-indigo-500 rounded-bl-none"} dark:text-slate-50`}>{data.content}</span>
                     <span className={`text-slate-500 text-xs`}>{`${String(new Date(time).getHours()).padStart(2, "0")}:${String(new Date(time).getMinutes()).padStart(2, "0")}`}</span>
-                  </p>
+                  </p>)
           })}
         </div>
         {(active || group) &&
@@ -90,7 +89,7 @@ const ChatContainer= (props:Props) => {
             {(active && active.username) || (group && group.groupname)}
             </h2>
             {active && active.description && <p className="">{active.description}</p>}
-            {group && group.interests && <p className="my-5 flex flex-wrap">{JSON.parse(group.interests).map((el:string)=><span className="m-1 px-2 py-1 rounded-full bg-indigo-500 mx-1">{el}</span>)}</p>}
+            {group && group.interests && <p className="my-5 flex flex-wrap">{JSON.parse(group.interests).map((el:string, i:number)=><span key={i} className="m-1 px-2 py-1 rounded-full bg-indigo-500 mx-1">{el}</span>)}</p>}
           </div>
         </div>
       </Modal>

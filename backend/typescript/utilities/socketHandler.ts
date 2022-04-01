@@ -67,6 +67,13 @@ export const connection = async (io: any) => {
         socket.emit("users", users)
         socket.broadcast.emit("user_connected", users)
 
+        socket.on("groups", (data:any)=>{
+            console.log("groups", data)
+            data.forEach((str:string)=>{
+                socket.join(str)
+            })
+        })
+
         socket.on("private_message", async (res: any) => {
             
             console.log("A message was sent", res, res.data, res.to)
@@ -75,7 +82,7 @@ export const connection = async (io: any) => {
 
         socket.on("group_message", async (data:any)=>{
             console.log("group message", data)
-            socket.to(data.to).emit("group_message", data.data)
+            socket.to(data.to).emit("group_message", data)
         })
 
         socket.on("join_chat", (data: joinChat) => {
