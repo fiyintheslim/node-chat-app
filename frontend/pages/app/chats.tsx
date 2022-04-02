@@ -65,7 +65,7 @@ const Chat = () => {
     
   }, [active, context.loggedIn[0]])
 
-  const handleMyMessage = (msg:string, ele:React.MutableRefObject<HTMLDivElement | null>)=>{
+  const handleMyMessage = (msg:string)=>{
     let time = Date.now()
     if(context.user[0] && receiverID && msg){
       let data = {
@@ -84,11 +84,7 @@ const Chat = () => {
 
       saveMessage(formData)
     
-      setTimeout(()=>{
-        if(ele.current){
-          ele.current.scrollTop = ele.current.scrollHeight
-        }
-      }, 200)
+      
     
     if(activeSocket){
       let to = activeSocket.sessionID
@@ -113,7 +109,7 @@ const Chat = () => {
     <Container>
       <div className="flex h-full relative">
         <div className={`moz-scroll absolute h-full overflow-y-scroll w-64 z-30 left-0 ${showChats ? "block" : "hidden"} md:block top-0 md:basis-1/4 md:static border-r border-slate-300 bg-slate-200 dark:bg-slate-700 dark:border-slate-600`}>
-          <ul>{
+          <ul className="h-full">{chats.length > 0 ?
             chats.map((el, i)=>(
               <li key={i} className="w-full h-12">
                 <p onClick={()=>selectChat(el.id)} className={`cursor-pointer h-full w-full flex items-center border-b border-slate-300 ${ active && active.id === el.id ? "bg-slate-400 dark:bg-slate-500 dark:text-slate-900" : ""} dark:border-slate-500`}>
@@ -121,6 +117,10 @@ const Chat = () => {
                   <span>{el.username}</span>
                 </p>
               </li>))
+              :
+              <li className="h-full flex items-center justify-center">
+                <div>No conversations</div>
+              </li>
           }</ul>
         </div>
         <ChatContainer active={active} messages={messages} handleMyMessage={handleMyMessage} setShowChats={setShowChats} showChats={showChats} message={"Select chat."} />

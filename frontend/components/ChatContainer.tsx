@@ -4,15 +4,16 @@ import Image from "next/image";
 import {MyContext} from "./Context"
 import Navigation from "./Navigation"
 import Messenger from "./Messenger"
-import {me} from "../utilities/requests"
+import {me, deleteGroup} from "../utilities/requests"
 import Modal from "./Modal"
 import {user, loggedIn, message, group, groupmessage} from "../utilities/types"
+import toast from 'react-hot-toast';
 
 interface Props { 
   active?:user | undefined,
   group?: group | undefined,
   messages:message[],
-  handleMyMessage:(msg:string, ele:React.MutableRefObject<HTMLDivElement | null>)=>void,
+  handleMyMessage:(msg:string)=>void,
   showChats:boolean,
   setShowChats:React.Dispatch<React.SetStateAction<boolean>>,
   message:string
@@ -25,17 +26,35 @@ const ChatContainer= (props:Props) => {
   const context = useContext(MyContext) as {user:[undefined | user, React.Dispatch<React.SetStateAction<undefined | user>>]}
   
   const [modal, setModal] = useState(false)
+  const [confirm, setConfirm] = useState(false)
   const bottom = useRef<null | HTMLDivElement>(null)
+  
   
   useEffect(()=>{
     console.log("context in chat container", context)
     console.log("Active", active)
-  }, [])
+    if(bottom.current){
+    bottom.current.scrollTop = bottom.current.scrollHeight
+    }
+  }, [messages])
 
   const handleModal = ()=>{
     if(active || group){
       setModal(true)
     }
+  }
+
+  const handleDeleteGroup = (group:group) => {
+    if(group){
+      deleteGroup(group.groupid)
+      .then((res:string) => {
+        toast.success(res)
+      })
+      .catch((err:any)=>{
+        toast.error(err)
+      })
+    }
+    
   }
 
   return (
@@ -73,7 +92,7 @@ const ChatContainer= (props:Props) => {
           })}
         </div>
         {(active || group) &&
-        <Messenger sendMessage={handleMyMessage} container={bottom} />
+        <Messenger sendMessage={handleMyMessage} />
         }
       </div>
       <Modal isOpen={modal} setOpen={setModal}>
@@ -81,7 +100,7 @@ const ChatContainer= (props:Props) => {
           <h2 className="font-bold text-2xl">{active ? "User Profile" : "Group Info"}</h2>
           <div className="relative w-48 h-48 m-2 border rounded-full">
             <a target="_blank" href={(active && active.avatar) || (group && group.groupavatar)}>
-            <Image layout="fill" src={(active && active.avatar) || (group && group.groupavatar ) || "/img/user.svg"} className="rounded-full border" />
+            <Image layout="fill" src={(active && active.avatar) || (group && group.groupavatar ) || "/img/user.svg"} className="rounded-full border object-cover" />
             </a>
           </div>
           <div className="flex flex-col items-center">
@@ -91,6 +110,28 @@ const ChatContainer= (props:Props) => {
             {active && active.description && <p className="">{active.description}</p>}
             {group && group.interests && <p className="my-5 flex flex-wrap">{JSON.parse(group.interests).map((el:string, i:number)=><span key={i} className="m-1 px-2 py-1 rounded-full bg-indigo-500 mx-1">{el}</span>)}</p>}
           </div>
+          {group && context.user[0]?.id.toString() === group.groupowner.toString() && 
+            <div className="">
+              <h2>Delete Group</h2>
+              {confirm ? 
+                <div className="flex justify-evenly">
+                  <button onClick={()=>handleDeleteGroup(group)} type="button" className="bg-green-600 p-3 w-20 flex justify-center rounded-lg cursor-pointer outline-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check-lg" viewBox="0 0 16 16">
+                      <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                    </svg>
+                  </button>
+                  <button onClick={()=>setConfirm(false)} type="button" className="bg-red-600 p-3 w-20 flex justify-center rounded-lg cursor-pointer outline-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16">
+                      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                  </button>
+                </div>
+              :
+                <div>
+                  <button type="button" className="" onClick={()=>setConfirm(true)}>Delete Group?</button>
+                </div>
+              }
+            </div>}
         </div>
       </Modal>
     </>

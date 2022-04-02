@@ -32,7 +32,7 @@ export const signUp = async (req:Request, res:Response, next:NextFunction)=>{
         heigth:500,
         crop:"fill"
     })
-    
+    console.log("after uploading")
     
    const hashed = await bcrypt.hash(user.password, 10)
     const saved = await client.query("INSERT INTO users (username, email, password, avatar, avatar_public_id) VALUES($1, $2, $3, $4, $5) RETURNING id, username, email, avatar, avatar_public_id, role, socketSessionID", [user.username, user.email, hashed, upload.secure_url, upload.public_id]);

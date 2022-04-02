@@ -3,7 +3,15 @@ import AllGroups from "../../components/AllGroups"
 import {MyContext} from "../../components/Context"
 import Container from "../../components/Container"
 import ChatContainer from "../../components/ChatContainer"
-import {saveMessage, joinGroup, getGroups, getMyGroups, getGroup, saveGroupMessage, getGroupMessages} from "../../utilities/requests"
+import {
+  saveMessage, 
+  joinGroup, 
+  getGroups, 
+  getMyGroups, 
+  getGroup, 
+  saveGroupMessage, 
+  getGroupMessages,
+  deleteGroup} from "../../utilities/requests"
 import socket from "../../utilities/socket"
 import {group, message, user} from "../../utilities/types"
 
@@ -16,14 +24,14 @@ const Groups = () => {
   const [messages, setMessages] = useState<message[]>([])
   const [allGroups, setAllGroups] = useState(false)
 
-  const activeGroupRef = useRef<group | null>(null)
+  const activeGroupRef = useRef<string | null>(null)
   if(socket){
     
   }
 //getting a ll groups and groups joined
 function receivingGroupMessage (activeGroup:group|undefined, data:any) {
-  console.log("same group", activeGroupRef.current?.groupid === data.to, activeGroup, messages)
-  if(activeGroupRef.current?.groupid === data.to){
+  console.log("same group", activeGroupRef.current === data.to, activeGroup, messages)
+  if(activeGroupRef.current === data.to){
     console.log("message from socket", messages)
     setMessages([...messages, data.data])
   }else{
@@ -68,7 +76,7 @@ function receivingGroupMessage (activeGroup:group|undefined, data:any) {
     getGroup(id)
     .then((res)=>{
       setActiveGroup(res)
-      activeGroupRef.current = res
+      activeGroupRef.current = res.groupid
       setAllGroups(false)
       setShowGroups(false)
     })
@@ -77,7 +85,7 @@ function receivingGroupMessage (activeGroup:group|undefined, data:any) {
     setAllGroups(!allGroups)
     setShowGroups(false)
   }
-  const handleMyMessage = (msg:string, ele:React.MutableRefObject<HTMLDivElement | null>)=>{
+  const handleMyMessage = (msg:string)=>{
     let time = Date.now()
     if(context.user[0] && activeGroup && activeGroup.groupid && msg){
       let data = {
@@ -94,17 +102,12 @@ function receivingGroupMessage (activeGroup:group|undefined, data:any) {
       formData.set("content", msg)
       formData.set("time", time.toString())
       
-      //saveGroupMessage(formData)
+      saveGroupMessage(formData)
     
       let to = activeGroup.groupid
       
       socket.emit("group_message", {data, to})
       
-      setTimeout(()=>{
-        if(ele.current){
-          ele.current.scrollTop = ele.current.scrollHeight
-        }
-      }, 200)
   }
     
   }

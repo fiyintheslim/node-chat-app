@@ -419,3 +419,21 @@ export const getGroupMessages = async (groupid:string) => {
         console.log("Problem loading group messages")
     }
 }
+
+export const deleteGroup = async (groupid:string) => {
+    const token = localStorage.getItem("token");
+    if(token){
+        const config = {
+            headers:{
+                "Content-Type":"application/json"
+            }
+        }
+        try {
+            const res:AxiosResponse = await axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/group/delete?groupid=${groupid}`)
+            return res.data.message
+        } catch (error:any) {
+            return error.response.data;
+        }
+        
+    }
+}

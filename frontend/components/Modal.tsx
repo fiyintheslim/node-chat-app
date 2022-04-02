@@ -12,7 +12,7 @@ const Modal = (props:Props)=>{
     const {isOpen, setOpen, children} = props
     //const [open, setOpen]= useState(true)
     return(
-        <Dialog open={isOpen} onClose={()=>setOpen(false)} className="fixed z-50 top-30 flex items-center justify-center w-screen h-screen top-0 left-0 border" >
+        <Dialog open={isOpen} onClose={()=>setOpen(false)} className="fixed z-50 top-30 flex items-center justify-center w-screen h-screen top-0 left-0 border shadow-xl" >
             <Dialog.Overlay className="z-10 bg-slate-900 absolute top-0 left-0 w-full h-full opacity-25 blur-sm" />
             <div className="bg-slate-400 m-4 w-full md:w-96 rounded-xl p-2 z-50 relative dark:bg-slate-800 dark:text-slate-200">
                     <svg onClick={()=>setOpen(false)} xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-x cursor-pointer absolute right-3 top-3" viewBox="0 0 16 16">

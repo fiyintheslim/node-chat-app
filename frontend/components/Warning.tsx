@@ -9,7 +9,7 @@ const Warning = () => {
     }
   return (
     <div>
-        <p className="py-4 w-64 px-2">Are you sure you want to delete your account?</p>
+        <p className="py-4 w-64 px-2 text-lg font-bold">Are you sure you want to delete your account?</p>
         <div className="flex w-96 justify-center py-4">
             
             <button onClick={confirm} className={`bg-green-600 p-3 w-20 flex justify-center rounded-lg cursor-pointer outline-0`}>

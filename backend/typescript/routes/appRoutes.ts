@@ -12,7 +12,8 @@ import {
     getMyGroups,
     getGroup,
     saveGroupMessage,
-    getGroupMessages
+    getGroupMessages,
+    deleteMyGroup
 } from "../controllers/appController"
 import isAuthenticated from "../middlewares/isAuthenticated"
 
@@ -32,6 +33,7 @@ router.route("/group/join").post(isAuthenticated, joinGroup);
 router.route("/groups/mine").get(isAuthenticated, getMyGroups);
 router.route("/group").get(getGroup)
 router.route("/group/messages").post(getGroupMessages)
+router.route("/group/delete").get(isAuthenticated, deleteMyGroup);
 
 
 export default router

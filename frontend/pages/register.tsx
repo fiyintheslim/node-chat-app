@@ -76,8 +76,12 @@ const Register = () => {
           form.set("password", values.password);
           form.set("email", values.email);
           form.set("avatar", avatar as string);
+          if(!avatar){
+            toast.error("Choose profile picture")
+          }else{
+            signup(form, setLoading, context[1], setError, router)
+          }
           
-          signup(form, setLoading, context[1], setError, router)
         }}
         validationSchema={registerSchema}
         >
@@ -88,7 +92,7 @@ const Register = () => {
             <Form className="flex flex-col justify-evenly w-100 p-3">
               <div className="flex flex-col items-center">
                 <div style={{width:"250px", height:"250px"}}>
-                  <Image layout="intrinsic" className="rounded-full" src={avatar ? avatar : "/img/user.svg"} width={250} height={250} alt="avatar"  />
+                  <Image layout="intrinsic" className="rounded-full object-cover" src={avatar ? avatar : "/img/user.svg"} width={250} height={250} alt="avatar"  />
                 </div>
                 {avatar ? 
                 <button className="c-btn text-center my-3 bg-indigo-700 text-slate-200 dark:bg-slate-800 dark:text-slate-400" type="button" onClick={()=>setAvatar(null)}>Remove avatar</button> 
