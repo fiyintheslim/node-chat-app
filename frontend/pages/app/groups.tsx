@@ -121,7 +121,7 @@ function receivingGroupMessage (activeGroup:group|undefined, data:any) {
           </li>
           {groups &&
           groups.map((el, i)=>(
-            <li onClick={(e)=>selectGroup(el.groupid)} key={el.groupid} className="w-full h-12">
+            <li  onClick={(e)=>selectGroup(el.groupid)} key={el.groupid} className="w-full h-12">
               <p onClick={()=>selectGroup(el.groupid)} className={`cursor-pointer h-full w-full flex items-center border-b border-t border-slate-300 ${ activeGroup && activeGroup.groupid === el.groupid ? "bg-slate-400 dark:bg-slate-500 dark:text-slate-900" : ""} dark:border-slate-500`}>
                 <span className="px-3">{el.groupname}</span>
               </p>

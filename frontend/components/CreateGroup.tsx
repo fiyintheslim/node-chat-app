@@ -98,7 +98,7 @@ const CreateGroup = (props:Props) => {
     <h2 className="text-center font-extrabold m-3">Create Group</h2>
     <div className="w-full h-64 my-6 flex flex-col justify-center items-center border rounded-md  relative p-1" ref={dropZone} onDragOver={(e)=>dragOverHandler(e)} onDrop={(e)=>dropHandler(e)} onDragLeave={(e)=>handleDragLeave(e)} >
         {avatar &&
-            <Image layout="fill" src={avatar} className="z-10 rounded-md"/>
+            <Image layout="fill" alt="group image" src={avatar} className="z-10 rounded-md"/>
         }
         <div className="z-20 opacity-75 bg-indigo-200 w-full h-full flex flex-col justify-center items-center rounded-md">
             <p className="py-4 font-bold text-slate-800">Drag & Drop Image.</p>

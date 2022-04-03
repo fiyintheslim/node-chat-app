@@ -40,7 +40,7 @@ const Navigation = (props:Props) => {
         </div>
         
         <div onClick={()=>navigate("/app/profile")} className={`cursor-pointer ${/\/app\/profile/.test(current) ? "text-indigo-500 fill-indigo-700":"fill-slate-500 fill-slate-300"} flex flex-col items-center cursor-pointer`}>
-            <Image layout="intrinsic" width={30} height={30} src={avatar ? avatar : "/img/user.svg"} className="rounded-full" />
+            <Image layout="intrinsic" alt="user image" width={30} height={30} src={avatar ? avatar : "/img/user.svg"} className="rounded-full" />
             <p className="text-xs inline">Profile</p>
         </div>
         

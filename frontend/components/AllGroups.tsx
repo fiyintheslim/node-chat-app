@@ -89,7 +89,7 @@ const AllGroups = (props:Props) => {
         <div>
             <h2 className="text-xl font-bold text-center py-3">Join {chosenGroup.groupname}?</h2>
             <div className="my-4">
-                <p className="text-center flex flex-wrap">{JSON.parse(chosenGroup.interests).map((int:string)=><span className="m-1 px-2 py-1 rounded-full bg-indigo-500 mx-1">{int}</span>)}</p>
+                <p className="text-center flex flex-wrap">{JSON.parse(chosenGroup.interests).map((int:string, i:number)=><span key={i} className="m-1 px-2 py-1 rounded-full bg-indigo-500 mx-1">{int}</span>)}</p>
             </div>
             {myGroups.find((grp)=>grp.groupid === chosenGroup.groupid) ?
             <div className="my-3">

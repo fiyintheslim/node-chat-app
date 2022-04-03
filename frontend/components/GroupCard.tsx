@@ -16,7 +16,7 @@ const GroupCard = (props:Props) => {
     const {groupname, groupavatar, interests, groupowner} = group
   return (
         <div onClick={()=>join(group)} className="relative h-60 text-slate-100 m-1 block cursor-pointer overflow-hidden shadow shadow-slate-500 dark:shadow-slate-800 rounded-xl">
-            <Image src={groupavatar ? groupavatar : "/img/user.svg"} layout="fill" className="object-cover absolute left-0 top-0 w-full h-full z-0 rounded-xl"  />
+            <Image alt="group image" src={groupavatar ? groupavatar : "/img/user.svg"} layout="fill" className="object-cover absolute left-0 top-0 w-full h-full z-0 rounded-xl"  />
             <div  className="z-10 opacity-40 bg-slate-900 dark:bg-slate-700 absolute left-0 top-0 w-full h-full rounded-xl shadow-md"></div>
             <p className="z-20 inline absolute top-2 left-2 text-xl font-bold">{groupname}</p>
             <p className="z-20 inline absolute top-2 right-2 text-xl font-bold flex items-center">{
@@ -38,7 +38,7 @@ const GroupCard = (props:Props) => {
               :
                ""}</p>
             <p className={`z-20 inline absolute p-2 bottom-2 left-1 shadow-inner font-extrabold w-64 overflow-x-scroll moz-scroll-none shadow-inner flex justify-start`}>
-            {JSON.parse(interests).map((int:string)=><span className="bg-slate-300 px-2 m-1 py-1 rounded-full text-slate-600 text-xs">{int}</span>)} 
+            {JSON.parse(interests).map((int:string, i:number)=><span key={i} className="bg-slate-300 px-2 m-1 py-1 rounded-full text-slate-600 text-xs">{int}</span>)} 
             </p>
         </div>
   )
