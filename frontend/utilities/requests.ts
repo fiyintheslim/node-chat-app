@@ -7,31 +7,20 @@ import {user, error, message, chat, group} from "./types"
 
 
 
-export const signup = async (
-    data:FormData, 
-    setLoading:React.Dispatch<React.SetStateAction<boolean>>,
-    setUser:React.Dispatch<React.SetStateAction<user | {}>>,
-    setError:React.Dispatch<React.SetStateAction<string | undefined>>,
-    router:NextRouter
-    )=>{
+export const signup = async (data:FormData)=>{
     const config = {
         headers:{
             "Content-Type":"multipart/form-data"
         }
     }
-    axios.post("http://localhost:5000/api/v1/register", data, config).then(res=>{
-            console.log(res.data)
-            setLoading(false)
-            setUser(res.data.user)
-            setError(undefined)
-            router.push("/app")
-            localStorage.setItem("token", res.data.token)
+    try {
+
+        const res:AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/register`, data, config)
+    
         return res.data
-        }).catch((err:AxiosError)=>{
-            console.log(err.response)
-            setError(err.response?.data.error)
-            toast.error(err.response?.data.error)
-        })
+    }catch (err:any){
+        return err.response
+    }
     
    
 }
@@ -90,6 +79,18 @@ export const me = (
                 console.log("User", user)
                 me[1](user)
             }
+            return user;
+        })
+        .then(()=>{
+            if(socket){
+                getMyGroups()
+                .then((res)=>{
+              
+                const groupIds= res.map((grp:group)=>grp.groupid);
+            
+                socket.emit("groups", groupIds)
+                })
+            }
         })
         .catch ((err:AxiosError)=> {
             console.log("Error loading user, resetting token", err.response)
@@ -104,15 +105,7 @@ export const me = (
         router.push("/login")
         toast.error("Login to access.")
     }
-    if(socket){
-        getMyGroups()
-        .then((res)=>{
-      
-        const groupIds= res.map((grp:group)=>grp.groupid);
     
-        socket.emit("groups", groupIds)
-        })
-    }
 }
 
 export const getUsers = async (setUsers:React.Dispatch<React.SetStateAction<user[] | undefined>>)=>{
@@ -287,7 +280,7 @@ export const getActivities = async (setActivities:React.Dispatch<React.SetStateA
     }
 }
 
-export const deleteAccount = async (router: NextRouter)=>{
+export const deleteAccount = async ()=>{
     const token = localStorage.getItem("token");
     if(token){
         const config = {
@@ -295,15 +288,14 @@ export const deleteAccount = async (router: NextRouter)=>{
                 "Token":token
             }
         }
-
-        axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/account/delete`, config)
-        .then((res:AxiosResponse)=>{
-            localStorage.removeItem("token");
-            router.push("/")
-        })
-        .catch((err:AxiosError)=>{
+        try{
+            const res:AxiosResponse = await axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/account/delete`, config);
+            return res.data
+        }catch(err){
             toast.error("Problem deleting your account.")
-        })
+        }
+        
+       
     }
 }
 
@@ -425,14 +417,16 @@ export const deleteGroup = async (groupid:string) => {
     if(token){
         const config = {
             headers:{
+                "Token":token,
                 "Content-Type":"application/json"
             }
         }
         try {
-            const res:AxiosResponse = await axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/group/delete?groupid=${groupid}`)
+            const res:AxiosResponse = await axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/group/delete?groupid=${groupid}`, config)
             return res.data.message
         } catch (error:any) {
-            return error.response.data;
+            console.log(error.response.data)
+            toast.error(error.response.data.error);
         }
         
     }

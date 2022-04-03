@@ -1,5 +1,6 @@
 import React, {useState, useRef} from 'react'
 import Image from "next/image"
+import {useRouter} from 'next/router'
 import toast from "react-hot-toast"
 import {createGroup} from "../utilities/requests"
 
@@ -9,6 +10,7 @@ interface Props {
 
 const CreateGroup = (props:Props) => {
     const {setModal} = props
+    const router = useRouter()
     const dropZone = useRef<HTMLDivElement>(null)
     const [interests, setInterests] = useState<string[]>([])
     const [groupName, setGroupName] = useState("")
@@ -87,6 +89,7 @@ const CreateGroup = (props:Props) => {
         createGroup(formData)
         .then((res)=>{
             toast.success("Group created successfully.")
+            router.reload()
         })
         setModal(false)
     }

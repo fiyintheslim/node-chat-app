@@ -48,7 +48,11 @@ const ChatContainer= (props:Props) => {
     if(group){
       deleteGroup(group.groupid)
       .then((res:string) => {
-        toast.success(res)
+        if(res){
+          setModal(false)
+          toast.success(res)
+          router.reload()
+        }
       })
       .catch((err:any)=>{
         toast.error(err)
@@ -82,14 +86,22 @@ const ChatContainer= (props:Props) => {
           </div>
         </div>
         <div ref={bottom} className="moz-scroll h-full p-2 mb-40 relative overflow-y-scroll md:mb-20">
-          {(active || group) && messages.map((data, i)=>{
+          {(active || group) && messages.length > 0 ? messages.map((data, i)=>{
             let time = typeof data.time === "string" ? parseInt(data.time) : data.time
             return (<p key={i} className={`flex my-1 flex-col  ${context.user[0] && data.senderid === context.user[0].id ? "items-end" : "items-start"}`}>
                     {data.username && <span className={`text-slate-500 text-xs mx-1`}>{data.username}</span>}
                     <span className={`p-2 max-w-lg rounded-lg text-slate-900 ${context.user[0] && data.senderid === context.user[0].id ? "bg-indigo-600 dark:bg-indigo-900 rounded-br-none" : "bg-indigo-300 dark:bg-indigo-500 rounded-bl-none"} dark:text-slate-50`}>{data.content}</span>
                     <span className={`text-slate-500 text-xs`}>{`${String(new Date(time).getHours()).padStart(2, "0")}:${String(new Date(time).getMinutes()).padStart(2, "0")}`}</span>
                   </p>)
-          })}
+          })
+        : (active || group) ?
+          <div className="h-full w-full flex justify-center items-center">
+            <p>Be the first to send a message</p>
+          </div>
+          :
+          <></>
+        }
+        
         </div>
         {(active || group) &&
         <Messenger sendMessage={handleMyMessage} />
@@ -111,24 +123,28 @@ const ChatContainer= (props:Props) => {
             {group && group.interests && <p className="my-5 flex flex-wrap">{JSON.parse(group.interests).map((el:string, i:number)=><span key={i} className="m-1 px-2 py-1 rounded-full bg-indigo-500 mx-1">{el}</span>)}</p>}
           </div>
           {group && context.user[0]?.id.toString() === group.groupowner.toString() && 
-            <div className="">
-              <h2>Delete Group</h2>
+            <div className="my-8 ">
+              
               {confirm ? 
+              <div>
+                <h2 className="text-center my-10">Delete group?</h2>
                 <div className="flex justify-evenly">
-                  <button onClick={()=>handleDeleteGroup(group)} type="button" className="bg-green-600 p-3 w-20 flex justify-center rounded-lg cursor-pointer outline-0">
+                  <button onClick={()=>handleDeleteGroup(group)} type="button" className="bg-green-600 mx-1 p-3 w-20 flex justify-center rounded-lg cursor-pointer outline-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check-lg" viewBox="0 0 16 16">
                       <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
                     </svg>
                   </button>
-                  <button onClick={()=>setConfirm(false)} type="button" className="bg-red-600 p-3 w-20 flex justify-center rounded-lg cursor-pointer outline-0">
+                  <button onClick={()=>setConfirm(false)} type="button" className="bg-red-600 mx-1 p-3 w-20 flex justify-center rounded-lg cursor-pointer outline-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16">
                       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
                     </svg>
                   </button>
                 </div>
+                </div>
               :
                 <div>
-                  <button type="button" className="" onClick={()=>setConfirm(true)}>Delete Group?</button>
+                  
+                  <button type="button" className="p-3 outline-0 rounded-full bg-red-500" onClick={()=>setConfirm(true)}>Delete Group?</button>
                 </div>
               }
             </div>}

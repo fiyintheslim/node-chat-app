@@ -30,14 +30,11 @@ const Login = () => {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(()=>{
-    me(context.user, router)
-  }, [])
-
-  useEffect(()=>{
-    if(context.user[0]){
+    const token = localStorage.getItem("token");
+    if(token){
       router.push("/app")
     }
-  }, [context.user[0]])
+  }, [])
   
   return (
     <div className="h-full flex align-center justify-around flex-col">

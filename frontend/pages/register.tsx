@@ -12,6 +12,21 @@ import {MyContext} from "../components/Context"
 import {user} from "../utilities/types"
 import toast from 'react-hot-toast'
 
+interface values {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  gender: string;
+}
+
+interface form{ 
+  username:string,
+  email:string,
+  password:string,
+  confirmPassword:string,
+  gender:string
+}
 
 const registerSchema = Yup.object().shape({
   username:Yup.string().required("Choose a username"),
@@ -25,7 +40,7 @@ const registerSchema = Yup.object().shape({
 
 const Register = () => {
   const router = useRouter()
-  const context = useContext(MyContext) as [{} | user, React.Dispatch<React.SetStateAction<{} | user>>]
+  const context = useContext(MyContext) as {user:[{} | user, React.Dispatch<React.SetStateAction<{} | user>>]}
 
   const [avatar, setAvatar] = useState<string | null>(null);
   const [pVisible, setPVisible] = useState(false);
@@ -34,13 +49,7 @@ const Register = () => {
   const [error, setError] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false)
 
-  interface form{ 
-    username:string,
-    email:string,
-    password:string,
-    confirmPassword:string,
-    gender:string
-  }
+  
 
   const handleAvatar = (e:React.ChangeEvent<HTMLInputElement>, av:string|null)=>{
     const avatar = e.target.files
@@ -62,6 +71,37 @@ const Register = () => {
     
   }
 
+  const handleSubmit = (values:values)=>{
+          setLoading(true)
+          const form = new FormData();
+          form.set("username", values.username);
+          form.set("password", values.password);
+          form.set("email", values.email);
+          form.set("avatar", avatar as string);
+          form.set("gender", values.gender)
+          if(!avatar){
+            toast.error("Choose profile picture")
+          }else{
+            signup(form)
+            .then(res=>{
+              
+              setLoading(false)
+              context.user[1](res.user)
+          
+              localStorage.setItem("token", res.token)
+              console.log("Complete register", res)
+              router.push("/app")
+              toast.success("Registered successfully.")
+          return res.data
+          }).catch((err:any)=>{
+              console.log("Register error", err)
+              
+              toast.error("Error signing up")
+          })
+          }
+          
+        }
+
   return (
     <div className="h-full flex align-center justify-around flex-col">
       <Header />
@@ -69,20 +109,7 @@ const Register = () => {
       <div className="flex flex-col-reverse justify-evenly items-center lg:flex-row">
         <Formik
         initialValues={{username:"", email:"", password:"", confirmPassword:"", gender:""}}
-        onSubmit={(values)=>{
-          
-          const form = new FormData();
-          form.set("username", values.username);
-          form.set("password", values.password);
-          form.set("email", values.email);
-          form.set("avatar", avatar as string);
-          if(!avatar){
-            toast.error("Choose profile picture")
-          }else{
-            signup(form, setLoading, context[1], setError, router)
-          }
-          
-        }}
+        onSubmit={(values)=>handleSubmit(values)}
         validationSchema={registerSchema}
         >
           {(props:FormikProps<form>) =>{

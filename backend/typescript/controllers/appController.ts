@@ -113,6 +113,15 @@ export const getMyGroups = async (req:Request, res:Response, next:NextFunction) 
     return res.status(200).json({success:true, myGroups:result.rows})
 }
 
+export const getMyCreatedGroups = async (req:Request, res:Response, next:NextFunction) => {
+    const id = res.locals.user.id;
+    const client = await postgresPool;
+
+    const result = await client.query("SELECT * FROM groups WHERE groupowner=$1", [id]);
+
+    return res.status(200).json({success:true, groups:result.rows})
+}
+
 export const joinGroup = async (req:Request, res:Response, next:NextFunction) => {
     const id = res.locals.user.id;
     const groupId = req.body.groupId;
@@ -155,12 +164,13 @@ export const deleteMyGroup = async(req:Request, res:Response, next:NextFunction)
     const groupid = req.query.groupid;
 
     const client = await postgresPool;
-    const isOwner = await client.query("SELECT groupowner, groupavatar_public_id  FROM groups WHERE groupid=$1", [groupid]);
-
-    if(!isOwner.rows.find((own:{groupowner:string})=>own === userId.toString())){
+    const owner = await client.query("SELECT groupowner, groupavatar_public_id  FROM groups WHERE groupid=$1", [groupid]);
+    const isOwner = owner.rows.find((own:{groupowner:string})=>own.groupowner === userId.toString())
+    console.log("owner", owner.rows, isOwner)
+    if(!isOwner){
         return next(new ErrorHandler("You don't own this group", 403))
     }
-    await cloudinary.v2.uploader.destroy(isOwner.rows[0].groupavatar_public_id)
+    await cloudinary.v2.uploader.destroy(owner.rows[0].groupavatar_public_id)
 
     await client.query("DELETE FROM groups WHERE groupid=$1", [groupid]);
     await client.query("DELETE FROM groups_participants WHERE groupid=$1", [groupid]);

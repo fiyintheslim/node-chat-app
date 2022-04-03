@@ -35,14 +35,14 @@ export const signUp = async (req:Request, res:Response, next:NextFunction)=>{
     console.log("after uploading")
     
    const hashed = await bcrypt.hash(user.password, 10)
-    const saved = await client.query("INSERT INTO users (username, email, password, avatar, avatar_public_id) VALUES($1, $2, $3, $4, $5) RETURNING id, username, email, avatar, avatar_public_id, role, socketSessionID", [user.username, user.email, hashed, upload.secure_url, upload.public_id]);
-    console.log(saved.rows[0])
+    const saved = await client.query("INSERT INTO users (username, email, password, avatar, avatar_public_id, gender) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, username, email, avatar, avatar_public_id, role, socketSessionID", [user.username, user.email, hashed, upload.secure_url, upload.public_id, user.gender]);
+    console.log(saved.rows)
     //send token
     
     const token = await send(saved.rows[0].id);
     console.log(token)
 
-    return res.status(200).cookie("token", token, {maxAge: parseInt(process.env.COOKIES_EXPIRES!) * 24 * 60 * 60 *1000, httpOnly: true}).json({success:true, message:"Registered successfully.", user:saved.rows[0], token})
+    return res.status(200).json({success:true, message:"Registered successfully.", user:saved.rows[0], token})
     
 }
 
@@ -180,6 +180,7 @@ export const deleteAccount = async (req:Request, res:Response, next:NextFunction
 
     const result = await client.query("DELETE FROM users WHERE id=$1 RETURNING avatar_public_id", [id]);
     const imgID = result.rows[0].avatar_public_id;
+    console.log("deleting cloudinary image", imgID)
     if(imgID){
         await cloudinary.v2.uploader.destroy(imgID)
     }
