@@ -42,7 +42,7 @@ const Profile = () => {
         <p className="text-2xl my-4 mx-3 font-bold">My Account</p>
         <div className=" shadow relative flex flex-col justify-center items-center p-3 m-3 rounded-xl bg-slate-200 md:flex-row  md:justify-start dark:bg-slate-800">
           <div className="w-60 h-60 rounded-full relative md:w-96 md:mr-10">
-            <a target="_blank" href={meContext.avatar} >
+            <a target="_blank" rel="noreferrer" href={meContext.avatar} >
               <Image src={meContext.avatar} layout="fill" className="rounded-full object-cover" />
             </a>
           </div>
@@ -79,7 +79,7 @@ const Profile = () => {
           {myGroups.length > 0 ?
           <div className="px-2 h-96 overflow-y-scroll relative bg-slate-300 rounded shadow-inner shadow-slate-200 grid justify-items-center md:grid-cols-4 2xl:grid-cols-6 dark:bg-slate-600">
             {myGroups.map((group:group)=>(
-              <div title={group.groupname} className="rounded-full p-3 w-56 h-56 relative m-2 flex justify-center items-center cursor-pointer shadow shadow-slate-500 dark:shadow-slate-800 ">
+              <div key={group.groupid} title={group.groupname} className="rounded-full p-3 w-56 h-56 relative m-2 flex justify-center items-center cursor-pointer shadow shadow-slate-500 dark:shadow-slate-800 ">
                 <div className="w-full h-full rounded-full bg-slate-800 opacity-25 absolute top-0 left-0 z-10"></div>
                 <Image src={group.groupavatar} layout="fill" className="object-cover rounded-full" />
                 <p className="z-20 relative text-lg font-bold text-slate-50 w-48 text-center overflow-hidden text-ellipsis">{group.groupname}</p>
