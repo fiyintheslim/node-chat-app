@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc -w typescript backend",
     "dev": "ts-node-dev --respawn ./backend/typescript/server.ts",
-    "start": "npm i && npm run ts-node ./backend/typescript/server.ts",
+    "start": "npm i && ts-node ./backend/typescript/server.ts",
     "setTables": "cd backend && cd typescript && cd config && ts-node setTables.ts"
   },
   "author": "Fiyin",
