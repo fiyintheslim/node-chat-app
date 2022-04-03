@@ -13,7 +13,7 @@ const Card = (props:Prop) => {
     
   return (
     <Link href={`/app/chats?id=${user.id}`} >
-        <div className="relative h-60 text-slate-100 m-1 block cursor-pointer rounded-xl shadow-lg">
+        <div className="relative h-60 text-slate-100 m-1 block cursor-pointer rounded-xl shadow shadow-slate-500 dark:shadow-slate-800">
             <Image src={user.avatar ? user.avatar : "/img/user.svg"} layout="fill" className="object-cover absolute left-0 top-0 w-full h-full z-0 rounded-xl "  />
             <div  className="z-10 opacity-40 bg-slate-900 dark:bg-slate-700 absolute left-0 top-0 w-full h-full rounded-xl "></div>
             <p className="z-20 inline absolute top-2 left-2 text-xl font-bold">{user.username}</p>

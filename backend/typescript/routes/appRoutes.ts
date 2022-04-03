@@ -10,6 +10,7 @@ import {
     getGroups,
     joinGroup,
     getMyGroups,
+    getMyCreatedGroups,
     getGroup,
     saveGroupMessage,
     getGroupMessages,
@@ -31,6 +32,7 @@ router.route("/create/group").post(isAuthenticated, createGroup);
 router.route("/groups").get(getGroups);
 router.route("/group/join").post(isAuthenticated, joinGroup);
 router.route("/groups/mine").get(isAuthenticated, getMyGroups);
+router.route("/groups/created").get(isAuthenticated, getMyCreatedGroups)
 router.route("/group").get(getGroup)
 router.route("/group/messages").post(getGroupMessages)
 router.route("/group/delete").get(isAuthenticated, deleteMyGroup);

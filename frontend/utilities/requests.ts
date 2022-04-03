@@ -7,6 +7,12 @@ import {user, error, message, chat, group} from "./types"
 
 
 
+export const trial = async ()=> {
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/trial`)
+
+    console.log(res.data)
+    return res.data
+}
 export const signup = async (data:FormData)=>{
     const config = {
         headers:{
@@ -142,12 +148,6 @@ export const getUser = async (id:number, setUser:React.Dispatch<React.SetStateAc
         console.log("Error in getUser", err)
     })
 }
-}
-
-export const trial = async ()=> {
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/trial`)
-
-    console.log(res.data)
 }
 
 export const saveSessionID = (session:string)=>{
@@ -366,6 +366,24 @@ export const getMyGroups = async () => {
             return res.data.myGroups
         } catch (error:any) {
             console.log("Problem loading my groups")
+        }
+    }
+}
+
+export const getMyCreatedGroups = async () => {
+    const token = localStorage.getItem("token");
+    if(token){
+        const config = {
+            headers:{
+                "Token":token,
+            }
+        }
+        try {
+            const res:AxiosResponse = await axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/groups/created`, config)
+            return res.data.groups
+        } catch (error:any) {
+            console.log("Error loading my created groups", error.response.data)
+            toast.error("Error loading my created groups")
         }
     }
 }
