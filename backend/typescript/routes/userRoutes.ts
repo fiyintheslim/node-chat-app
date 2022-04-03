@@ -12,7 +12,7 @@ router.route("/password/reset").post(requestPasswordReset);
 router.route("/password/reset/:id/:token").post(passwordReset);
 router.route("/me").get(isAuthenticated, me)
 router.route("/save/sessionID").post(isAuthenticated, saveSessionID)
-router.route("/trial").get(trial, me);
+router.route("/").get(trial);
 router.route("/update/description").post(isAuthenticated, updateDescription)
 router.route("/account/delete").get(isAuthenticated, deleteAccount)
 
