@@ -8,11 +8,13 @@ import styles from '../styles/Home.module.css'
 import axios from "axios"
 import style from "../styles/scss/home.module.scss"
 import Container from "../components/Container"
+import {trial} from "../utilities/requests"
 
 
 const Home: NextPage = () => {
   
   useEffect(()=>{
+    trial()
     console.log(process.env.NEXT_PUBLIC_SERVER)
   }, [])
   return (

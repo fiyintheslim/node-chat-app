@@ -8,7 +8,7 @@ import {user, error, message, chat, group} from "./types"
 
 
 export const trial = async ()=> {
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER}`)
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1`)
 
     console.log(res.data)
     return res.data
