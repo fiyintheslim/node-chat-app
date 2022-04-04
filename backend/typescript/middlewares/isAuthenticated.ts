@@ -11,7 +11,7 @@ const isAuthenticated = async (req:Request, res:Response, next:NextFunction)=>{
     const token = req.get("Token");
     
     const client = await postgresPool; 
-    client.connect();
+    
     if(!token){
         return next(new ErrorHandler("Login to access this resource", 403));
     }
@@ -30,9 +30,7 @@ const isAuthenticated = async (req:Request, res:Response, next:NextFunction)=>{
         console.log("JWT error");
         return next(new ErrorHandler("Invalid token", 403))
     }
-    finally{
-        client.release()
-    }
+    
     
 }
 
