@@ -1,12 +1,15 @@
 import {Request, Response, NextFunction} from "express";
 import bcrypt = require("bcrypt");
 import ErrorHandler from "../utilities/registerError";
-import {postgresPool} from "../app";
+//import {postgresPool} from "../app";
 import {send, verify} from "../utilities/tokens"
 import sendResetMail from "../utilities/mailer"
 import crypto = require("crypto");
 import cloudinary = require("cloudinary")
+import postgres from "../config/postgresSetup"
 
+
+const postgresPool = postgres()
 
 
 export const signUp = async (req:Request, res:Response, next:NextFunction)=>{
@@ -16,6 +19,7 @@ export const signUp = async (req:Request, res:Response, next:NextFunction)=>{
         return next(new ErrorHandler("Incomplete data", 400))
     }
     const client = await postgresPool
+    await client.connect()
     //Check if email already exists
     const emailExists =await client.query("SELECT email FROM users WHERE email = $1", [user.email]);
     if(emailExists.rows[0]){
@@ -41,7 +45,7 @@ export const signUp = async (req:Request, res:Response, next:NextFunction)=>{
     
     const token = await send(saved.rows[0].id);
     console.log(token)
-
+    client.release();
     return res.status(200).json({success:true, message:"Registered successfully.", user:saved.rows[0], token})
     
 }
@@ -49,31 +53,38 @@ export const signUp = async (req:Request, res:Response, next:NextFunction)=>{
 export const login = async (req:Request, res:Response, next:NextFunction) =>{
     console.log("Login link clicked")
     const user = req.body;
+    console.log("user", user)
     
     if(!user.password || !user.detail){
         return next(new ErrorHandler("Incomplete data", 400))
     }
 
     const client = await postgresPool;
-    console.log("query postgres", client)
-    const gottenUser = await client.query("SELECT * FROM users WHERE email = $1 OR username = $1", [user.detail]);
-    console.log("after query")
-
-    if(!gottenUser.rows[0]){
-        return next(new ErrorHandler("User not found", 404))
-    }
-    const verifyPassword = await bcrypt.compare(user.password, gottenUser.rows[0].password);
-    if(!verifyPassword){
-        return next(new ErrorHandler("Wrong password", 403))
-    }
-    const trimmed = gottenUser.rows[0]
-    const token = await send(gottenUser.rows[0].id);
-    delete trimmed.password
-    delete trimmed.created_at
-    delete trimmed.password_reset_token
-    delete trimmed.password_reset_token_expires
+    await client.connect()
+    try{
+        console.log("query postgres", client)
+        const gottenUser = await client.query("SELECT * FROM users WHERE email = $1 OR username = $1", [user.detail]);
+        console.log("after query")
     
-    return res.status(200).cookie("token", token, {maxAge:parseInt(process.env.COOKIES_EXPIRES!) * 24 * 60 * 60 * 1000, httpOnly:true}).json({success:true, message:"Login successful.", user:trimmed, token})
+        if(!gottenUser.rows[0]){
+            return next(new ErrorHandler("User not found", 404))
+        }
+        const verifyPassword = await bcrypt.compare(user.password, gottenUser.rows[0].password);
+        if(!verifyPassword){
+            return next(new ErrorHandler("Wrong password", 403))
+        }
+        const trimmed = gottenUser.rows[0]
+        const token = await send(gottenUser.rows[0].id);
+        delete trimmed.password
+        delete trimmed.created_at
+        delete trimmed.password_reset_token
+        delete trimmed.password_reset_token_expires
+        
+        return res.status(200).cookie("token", token, {maxAge:parseInt(process.env.COOKIES_EXPIRES!) * 24 * 60 * 60 * 1000, httpOnly:true}).json({success:true, message:"Login successful.", user:trimmed, token})
+    }finally{
+        client.release()
+    }
+   
 }
 //logout
 export const logout = async (req:Request, res:Response, next:NextFunction) =>{
@@ -93,6 +104,7 @@ export const requestPasswordReset = async (req:Request, res:Response, next:NextF
     const email = req.body.email;
 
     const client = await postgresPool;
+    await client.connect()
 
     const user = await client.query("SELECT id, email, username FROM users WHERE email = $1", [email]);
     
@@ -107,7 +119,7 @@ export const requestPasswordReset = async (req:Request, res:Response, next:NextF
 
     const update = await client.query("UPDATE users SET password_reset_token=$1, password_reset_token_expires=$2", [hashedToken, resetTokenExpires])
     const url = `${req.protocol}://${req.hostname}:${process.env.PORT}/api/v1/password/reset/${user.rows[0].id}/${resetToken}`
-    
+    client.release()
     const sent = await sendResetMail(email, url, user.rows[0].username);
 
     return res.status(200).json({success:true, message:"Token sent, check your email.", resetToken})
@@ -120,6 +132,7 @@ export const passwordReset = async (req:Request, res:Response, next:NextFunction
     const password = req.body.password
     
     const client = await postgresPool;
+    await client.connect();
     const user = await client.query("SELECT password_reset_token, password_reset_token_expires FROM users WHERE id=$1", [id]);
 
     if(!user.rows[0].password_reset_token){
@@ -140,7 +153,7 @@ export const passwordReset = async (req:Request, res:Response, next:NextFunction
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await client.query("UPDATE users SET password=$1 WHERE id=$2", [hashedPassword, id]);
-
+    await client.release()
     return res.status(200).json({success:true, message:"password reset successful"})
 }
 //get profile details

@@ -45,7 +45,7 @@ export const login = (
         }
     }
 
-    axios.post("http://localhost:5000/api/v1/login", data, config)
+    axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/login`, data, config)
     .then((res:AxiosResponse<loginResponse>)=>{
         const data = res.data
         console.log(data.user)

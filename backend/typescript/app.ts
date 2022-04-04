@@ -23,7 +23,7 @@ app.use(cors())
 
 dotenv.config({path:path.join(__dirname, "/config/var.env")})
 
-export const postgresPool = postgres()
+//export const postgresPool = postgres()
 
 cloudinary.v2.config({
     cloud_name:process.env.CLOUDINARY_NAME,
