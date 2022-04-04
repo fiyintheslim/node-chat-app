@@ -179,7 +179,7 @@ export const saveSessionID = async (req:Request, res:Response, next:NextFunction
 export const updateDescription = async (req:Request, res:Response, next:NextFunction) => {
     const id = res.locals.user.id;
     const description = req.body.description
-    console.log("description", description)
+    
     const client = await postgresPool;
     
     
