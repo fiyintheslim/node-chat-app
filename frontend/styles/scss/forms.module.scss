@@ -3,3 +3,37 @@
 .form_image{
     image-rendering: pixelated;
 }
+.gender_radio {
+    display: none;
+
+}
+
+.radio_cont {
+    width: 50%;
+}
+
+
+
+.gender_label {
+    padding: 20px 25px;
+    background: rgb(206, 205, 205);
+    font-weight: 800;
+    width: 100%;
+    color: rgb(0, 0, 0);
+    border: 1px solid rgba(0, 0, 0, 0.2)
+}
+
+.gender_label_right {
+    border-top-right-radius: 47%;
+    border-bottom-right-radius: 47%
+}
+
+.gender_label_left {
+    border-top-left-radius: 47%;
+    border-bottom-left-radius: 47%;
+}
+
+.gender_radio:checked+label {
+    background: rgb(81, 55, 85);
+    color: white;
+}

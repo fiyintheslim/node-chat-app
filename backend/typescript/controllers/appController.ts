@@ -12,7 +12,7 @@ export const getUsers = async (req:Request, res:Response, next:NextFunction)=>{
     const token = req.get("token");
     const user = res.locals.user
     const client = await postgresPool
-    await client.connect()
+    
     
     const users = await client.query("SELECT id, username, email, avatar, role FROM users WHERE NOT id=$1", [user.id]) 
     return res.status(200).json({success:true, users:users.rows})
@@ -24,7 +24,7 @@ export const getUser = async (req:Request, res:Response, next:NextFunction) => {
     
     const userID = req.params.id
     const client = await postgresPool;
-    await client.connect()
+    
 
     const result = await client.query("SELECT id, username, email, role, gender, avatar, avatar_public_id, socketsessionid, description FROM users WHERE id=$1", [userID]);
 
@@ -57,9 +57,7 @@ export const getMessages = async (req:Request, res:Response, next:NextFunction) 
 
     const result = await client.query("SELECT senderid, content, time FROM messages WHERE (senderid=$1 AND receiverid=$2) OR (senderid=$2 AND receiverid=$1)", [senderID, receiver]);
     return res.status(200).json({success:true, messages:result.rows})
-}
-    
-    
+}    
 
 export const getChats = async (req:Request, res:Response, next:NextFunction) => {
     const id = res.locals.user.id;
@@ -117,7 +115,6 @@ export const createGroup = async (req:Request, res:Response, next:NextFunction) 
 export const getGroups = async (req:Request, res:Response, next:NextFunction) => {
 
     const client = await postgresPool;
-    await client.connect()
 
     const results = await client.query("SELECT groupid, groupname, groupavatar, groupowner, interests FROM groups");
     return res.status(200).json({sucess:true, groups:results.rows})

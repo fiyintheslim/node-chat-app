@@ -84,15 +84,15 @@ const Register = () => {
           }else{
             signup(form)
             .then(res=>{
-              
-              setLoading(false)
-              context.user[1](res.user)
-          
-              localStorage.setItem("token", res.token)
-              console.log("Complete register", res)
-              router.push("/app")
-              toast.success("Registered successfully.")
-          return res.data
+              if(res.token){
+                setLoading(false)
+                context.user[1](res.user)
+                console.log("token saving", res.token)
+                localStorage.setItem("token", res.token)
+                console.log("Complete register", res)
+                router.push("/app")
+                toast.success("Registered successfully.")
+            }
           }).catch((err:any)=>{
               console.log("Register error", err)
               
@@ -158,15 +158,15 @@ const Register = () => {
                 </div>
                 {touched.confirmPassword && errors.confirmPassword && <div className="error-msg">{errors.confirmPassword}</div>}
               </div>
-              <div className="flex flex-col">
+              <div className="flex justify-center my-6">
                 <div className="flex flex-row justify-evenly">
-                  <div className="">
-                    <label htmlFor="female" className="cursor-pointer">Female</label>
-                    <Field type="radio" name="gender" id="female" value="female" />
+                  <div className={`${style.radio_cont}`}>
+                    <Field type="radio" name="gender" id="female" value="female" className={`${style.gender_radio}`} />
+                    <label htmlFor="female" className={`${style.gender_label_left} ${style.gender_label} cursor-pointer`}>Female</label>
                   </div>
-                  <div className="">
-                    <label htmlFor="male" className="cursor-pointer">Male</label>
-                    <Field type="radio" name="gender" id="male" value="male" />
+                  <div className={`${style.radio_cont}`}>
+                    <Field type="radio" name="gender" id="male" value="male" className={`${style.gender_radio}`} />
+                    <label htmlFor="male" className={`${style.gender_label_right} ${style.gender_label} cursor-pointer`}>Male</label>
                   </div>
                 </div>
                 {touched.gender && errors.gender && <div className="error-msg">{errors.gender}</div>}
