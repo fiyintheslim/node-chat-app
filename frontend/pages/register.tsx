@@ -95,7 +95,7 @@ const Register = () => {
             }
           }).catch((err:any)=>{
               console.log("Register error", err)
-              
+              setLoading(false)
               toast.error("Error signing up")
           })
           }
