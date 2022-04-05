@@ -26,8 +26,8 @@ const isAuthenticated = async (req:Request, res:Response, next:NextFunction)=>{
         res.locals.user = user.rows[0]
 
         return next()
-    }catch(err){
-        console.log("JWT error");
+    }catch(err:any){
+        console.log("JWT error", err.response);
         return next(new ErrorHandler("Invalid token", 403))
     }
     

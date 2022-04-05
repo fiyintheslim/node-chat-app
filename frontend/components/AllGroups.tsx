@@ -29,7 +29,7 @@ const AllGroups = (props:Props) => {
     useEffect(()=>{
         getGroups()
         .then(res=>{
-            console.log("in All Groups", res)
+            
             setGroups(res)
         })
         

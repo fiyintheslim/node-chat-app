@@ -19,39 +19,34 @@ export const signUp = async (req:Request, res:Response, next:NextFunction)=>{
         return next(new ErrorHandler("Incomplete data", 400))
     }
     const client = await postgresPool
-    await client.connect()
-    try{
-        //Check if email already exists
-        const emailExists =await client.query("SELECT email FROM users WHERE email = $1", [user.email]);
-        if(emailExists.rows[0]){
-            return next(new ErrorHandler("Email already exists", 422))
-        }
-        //check if username already exists
-        const usernameExists = await client.query("SELECT username FROM users WHERE username = $1", [user.username]);
-        if(usernameExists.rows[0]){
-            return next(new ErrorHandler("Username already exists", 422))
-        }
-        const upload = await cloudinary.v2.uploader.upload(user.avatar, {
-            folder:"chat/avatars",
-            width:500,
-            heigth:500,
-            crop:"fill"
-        })
-        console.log("after uploading")
+    
+    //Check if email already exists
+    const emailExists =await client.query("SELECT email FROM users WHERE email = $1", [user.email]);
+    if(emailExists.rows[0]){
+        return next(new ErrorHandler("Email already exists", 422))
+    }
+    //check if username already exists
+    const usernameExists = await client.query("SELECT username FROM users WHERE username = $1", [user.username]);
+    if(usernameExists.rows[0]){
+        return next(new ErrorHandler("Username already exists", 422))
+    }
+    const upload = await cloudinary.v2.uploader.upload(user.avatar, {
+        folder:"chat/avatars",
+        width:500,
+        heigth:500,
+        crop:"fill"
+    })
+    console.log("after uploading")
         
     const hashed = await bcrypt.hash(user.password, 10)
-        const saved = await client.query("INSERT INTO users (username, email, password, avatar, avatar_public_id, gender) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, username, email, avatar, avatar_public_id, role, socketSessionID", [user.username, user.email, hashed, upload.secure_url, upload.public_id, user.gender]);
-        console.log(saved.rows)
-        //send token
-        
-        const token = await send(saved.rows[0].id);
-        console.log(token)
-        client.release();
-        return res.status(200).json({success:true, message:"Registered successfully.", user:saved.rows[0], token})
-    }finally{
-        client.release()
-    }
+    const saved = await client.query("INSERT INTO users (username, email, password, avatar, avatar_public_id, gender) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, username, email, avatar, avatar_public_id, role, socketSessionID", [user.username, user.email, hashed, upload.secure_url, upload.public_id, user.gender]);
+    console.log(saved.rows)
+    //send token
     
+    const token = await send(saved.rows[0].id);
+    console.log(token)
+    
+    return res.status(200).json({success:true, message:"Registered successfully.", user:saved.rows[0], token})
     
 }
 
@@ -118,7 +113,7 @@ export const requestPasswordReset = async (req:Request, res:Response, next:NextF
 
     const update = await client.query("UPDATE users SET password_reset_token=$1, password_reset_token_expires=$2", [hashedToken, resetTokenExpires])
     const url = `${req.protocol}://${req.hostname}:${process.env.PORT}/api/v1/password/reset/${user.rows[0].id}/${resetToken}`
-    client.release()
+    
     const sent = await sendResetMail(email, url, user.rows[0].username);
 
     return res.status(200).json({success:true, message:"Token sent, check your email.", resetToken})
@@ -152,7 +147,7 @@ export const passwordReset = async (req:Request, res:Response, next:NextFunction
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await client.query("UPDATE users SET password=$1 WHERE id=$2", [hashedPassword, id]);
-    await client.release()
+    
     return res.status(200).json({success:true, message:"password reset successful"})
 }
 //get profile details
