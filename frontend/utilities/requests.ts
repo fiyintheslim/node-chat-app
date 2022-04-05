@@ -19,16 +19,10 @@ export const signup = async (data:FormData)=>{
             "Content-Type":"multipart/form-data"
         }
     }
-    try {
+    
+    const res:AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/register`, data, config)
 
-        const res:AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/register`, data, config)
-    
-        return res.data
-    }catch (err:any){
-        return err.response
-    }
-    
-   
+    return res.data
 }
 
 export const login = (
@@ -310,13 +304,9 @@ export const createGroup = async (data:FormData) => {
                 "Content-Type":"multipart/formdata"
             }
         }
-        try{
-            const res:AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/create/group`, data, config)
-            return res;
-        }catch(err:any){
-            toast.error("Group creation failed")
-        }
         
+        const res:AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/create/group`, data, config)
+        return res;
         
     }
 }
@@ -331,26 +321,21 @@ export const joinGroup = async (data:FormData) => {
                 "Content-Type":"multipart/form-data"
             }
         }
-        try{
+        
             console.log("groupId", data)
         const res = await axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/group/join`, data, config)
 
         //.then((res:Axios))
-        }catch(err:any){
-            console.log(err.response)
-        }
+       return res.data
     }
 }
 
 export const getGroups = async () => {
-    try{
-        const res:AxiosResponse =  await axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/groups`)
-        console.log(res)
-        return res.data.groups
-    }catch(err:any){
-        console.log(err.response);
-        toast.error("Problem loading groups")
-    }
+    
+    const res:AxiosResponse =  await axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/groups`)
+    console.log(res)
+    return res.data.groups
+    
 }
 
 export const getMyGroups = async () => {

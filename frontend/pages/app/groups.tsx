@@ -14,6 +14,7 @@ import {
   deleteGroup} from "../../utilities/requests"
 import socket from "../../utilities/socket"
 import {group, message, user} from "../../utilities/types"
+import toast from "react-hot-toast"
 
 const Groups = () => {
   const context = useContext(MyContext) as {user: [undefined | user, React.Dispatch<React.SetStateAction<undefined | user>>]}
@@ -79,6 +80,10 @@ function receivingGroupMessage (activeGroup:group|undefined, data:any) {
       activeGroupRef.current = res.groupid
       setAllGroups(false)
       setShowGroups(false)
+    })
+    .catch(err=>{
+      console.log("error loading groups", err.response);
+      toast.error("Problem loading groups")
     })
   }
   const change = ()=> {

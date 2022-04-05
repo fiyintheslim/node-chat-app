@@ -91,6 +91,10 @@ const CreateGroup = (props:Props) => {
             toast.success("Group created successfully.")
             router.reload()
         })
+        .catch((err)=>{
+            console.log(err.response.data)
+            toast.error("Group creation failed")
+        })
         setModal(false)
     }
   return (

@@ -94,9 +94,9 @@ const Register = () => {
                 toast.success("Registered successfully.")
             }
           }).catch((err:any)=>{
-              console.log("Register error", err)
+              console.log("Register error", err.response)
               setLoading(false)
-              toast.error("Error signing up")
+              toast.error(err.response.data.error)
           })
           }
           

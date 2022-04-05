@@ -111,7 +111,7 @@ const ChatContainer= (props:Props) => {
         <div className="flex flex-col items-center p-2">
           <h2 className="font-bold text-2xl">{active ? "USER PROFILE" : "GROUP INFO"}</h2>
           <div className="relative w-48 h-48 m-2 border rounded-full">
-            <a target="_blank" href={(active && active.avatar) || (group && group.groupavatar)}>
+            <a target="_blank" rel="noreferrer" href={(active && active.avatar) || (group && group.groupavatar)}>
             <Image layout="fill" src={(active && active.avatar) || (group && group.groupavatar ) || "/img/user.svg"} className="rounded-full border object-cover" />
             </a>
           </div>
@@ -143,7 +143,6 @@ const ChatContainer= (props:Props) => {
                 </div>
               :
                 <div>
-                  
                   <button type="button" className="p-3 outline-0 rounded-full bg-red-500 shadow shadow-slate-500 dark:shadow-slate-800" onClick={()=>setConfirm(true)}>Delete Group?</button>
                 </div>
               }

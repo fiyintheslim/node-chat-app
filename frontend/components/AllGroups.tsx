@@ -51,6 +51,10 @@ const AllGroups = (props:Props) => {
             toast.success(`Joined ${chosenGroup?.groupname} successfully.`)
             loadMyGroups()
         })
+        .catch(err=>{
+            console.log(err.response)
+            toast.error("Problem joining group.")
+        })
         setJoinGroupModal(false)
     }
     

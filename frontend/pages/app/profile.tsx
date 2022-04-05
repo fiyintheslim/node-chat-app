@@ -10,6 +10,7 @@ import Modal from "../../components/Modal"
 import UpdateDescription from "../../components/updateDescription"
 import Warning from "../../components/Warning";
 import {me, getMyCreatedGroups} from "../../utilities/requests"
+import toast from "react-hot-toast"
 
 const Profile = () => {
   const router = useRouter();
@@ -26,6 +27,9 @@ const Profile = () => {
     getMyCreatedGroups()
     .then((res)=>{
       setMyGroups(res)
+    })
+    .catch(err=>{
+      toast.error("Problem while loading your groups.")
     })
   }, [loading, meContext])
 
