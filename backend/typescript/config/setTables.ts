@@ -36,7 +36,7 @@ const setTables = async () =>{
 
     await client.query(`
     CREATE TABLE IF NOT EXISTS groups(
-        id VARCHAR(255) NOT NULL PRIMARY KEY,
+        groupid VARCHAR(255) NOT NULL PRIMARY KEY,
         groupname VARCHAR(255) NOT NULL,
         groupowner VARCHAR(255) NOT NULL,
         interests TEXT,

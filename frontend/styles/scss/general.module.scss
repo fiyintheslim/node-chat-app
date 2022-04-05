@@ -34,14 +34,3 @@
 .mode_switch:checked + .mode_label:after{
     transform:translateX(40px);
 }
-.gender_radio {
-    display: none;
-}
-
-.gender_label {}
-
-.gender_label_right {}
-
-.gender_label_left {}
-
-.gender_radio:checked~.gender_label {}
