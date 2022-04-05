@@ -31,7 +31,7 @@ const setTables = async () =>{
         receiverID INTEGER,
         content TEXT NOT NULL,
         groupid VARCHAR(255),
-        time VARCHAR(255) NOT NULL,
+        time VARCHAR(255) NOT NULL
     )`)
 
     await client.query(`
@@ -50,7 +50,7 @@ const setTables = async () =>{
         participant VARCHAR(255),
         groupid VARCHAR(255)
     )`)
-        console.log("tables set")
+         console.log("tables set")
     await client.release();
 }
 //avatar_url VARCHAR(255) NOT NULL,
