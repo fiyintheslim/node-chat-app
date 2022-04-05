@@ -5,10 +5,11 @@ import ErrorHandler from "../utilities/registerError";
 import cloudinary = require("cloudinary")
 //import {postgresPool} from "../app"
 import postgres from "../config/postgresSetup"
+import catchAsyncErrors from "../utilities/catchAsyncErrors"
 
 const postgresPool = postgres()
 
-export const getUsers = async (req:Request, res:Response, next:NextFunction)=>{
+export const getUsers = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction)=>{
     const token = req.get("token");
     const user = res.locals.user
     const client = await postgresPool
@@ -17,9 +18,9 @@ export const getUsers = async (req:Request, res:Response, next:NextFunction)=>{
     return res.status(200).json({success:true, users:users.rows})
     
     
-}
+})
 
-export const getUser = async (req:Request, res:Response, next:NextFunction) => {
+export const getUser = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) => {
     
     const userID = req.params.id
     const client = await postgresPool;
@@ -32,9 +33,9 @@ export const getUser = async (req:Request, res:Response, next:NextFunction) => {
         user:result.rows[0]
     })  
 
-}
+})
 
-export const saveMessage = async (req:Request, res:Response, next:NextFunction)=>{
+export const saveMessage = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction)=>{
     const client = await postgresPool;
     
     const {senderID, receiverID, content, time} = req.body
@@ -46,9 +47,9 @@ export const saveMessage = async (req:Request, res:Response, next:NextFunction)=
         content
     })
 
-}
+})
 
-export const getMessages = async (req:Request, res:Response, next:NextFunction) => {
+export const getMessages = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) => {
     const receiver = req.query.receiver
     const senderID = res.locals.user.id;
 
@@ -56,9 +57,9 @@ export const getMessages = async (req:Request, res:Response, next:NextFunction) 
 
     const result = await client.query("SELECT senderid, content, time FROM messages WHERE (senderid=$1 AND receiverid=$2) OR (senderid=$2 AND receiverid=$1)", [senderID, receiver]);
     return res.status(200).json({success:true, messages:result.rows})
-}    
+}) 
 
-export const getChats = async (req:Request, res:Response, next:NextFunction) => {
+export const getChats = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) => {
     const id = res.locals.user.id;
     const client = await postgresPool;
   
@@ -72,9 +73,9 @@ export const getChats = async (req:Request, res:Response, next:NextFunction) => 
     return res.status(200).json({success:true, chats:result.rows})
     
     
-}
+})
 
-export const getActivities = async (req:Request, res:Response, next:NextFunction) => {
+export const getActivities = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) => {
     const id = res.locals.user.id;
     //const id = req.query.id
     
@@ -87,9 +88,9 @@ export const getActivities = async (req:Request, res:Response, next:NextFunction
     
     return res.status(200).json({success:true, stats:{all:all.rows[0].count, mine:messages.rows[0].count, sent:sent.rows[0].count, received:received.rows[0].count}})
     
-}
+})
 
-export const createGroup = async (req:Request, res:Response, next:NextFunction) => {
+export const createGroup = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) => {
     const id = res.locals.user.id
     const groupId = crypto.randomBytes(8).toString("hex");
     const {groupName, interests, avatar} = req.body;
@@ -109,18 +110,18 @@ export const createGroup = async (req:Request, res:Response, next:NextFunction) 
     return res.status(200).json({successs:true, message:"Group created successfully.", group:req.body, groupId})
     
     
-}
+})
 
-export const getGroups = async (req:Request, res:Response, next:NextFunction) => {
+export const getGroups = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) => {
 
     const client = await postgresPool;
 
     const results = await client.query("SELECT groupid, groupname, groupavatar, groupowner, interests FROM groups");
     return res.status(200).json({sucess:true, groups:results.rows})
     
-} 
+})
 
-export const getMyGroups = async (req:Request, res:Response, next:NextFunction) => {
+export const getMyGroups = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) => {
     const id = res.locals.user.id;
     const client = await postgresPool;
     
@@ -129,9 +130,9 @@ export const getMyGroups = async (req:Request, res:Response, next:NextFunction) 
     // SELECT groups.groupid, groups.groupname FROM groups INNER JOIN groups_participants ON groups_participants.groupid=groups.groupid WHERE groups_participants.participant=$1'
     return res.status(200).json({success:true, myGroups:result.rows})
     
-}
+})
 
-export const getMyCreatedGroups = async (req:Request, res:Response, next:NextFunction) => {
+export const getMyCreatedGroups = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) => {
     const id = res.locals.user.id;
     const client = await postgresPool;
     
@@ -139,9 +140,9 @@ export const getMyCreatedGroups = async (req:Request, res:Response, next:NextFun
 
     return res.status(200).json({success:true, groups:result.rows})  
     
-}
+})
 
-export const joinGroup = async (req:Request, res:Response, next:NextFunction) => {
+export const joinGroup = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) => {
     const id = res.locals.user.id;
     const groupId = req.body.groupId;
     
@@ -150,36 +151,36 @@ export const joinGroup = async (req:Request, res:Response, next:NextFunction) =>
     await client.query("INSERT INTO groups_participants (participant, groupid) VALUES ($1, $2)", [id, groupId]);
     return res.status(200).json({success:true, message:"Added to group successfully"});
    
-}
+})
 
-export const getGroup = async (req:Request, res:Response, next:NextFunction) => {
+export const getGroup = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) => {
     const groupid = req.query.groupid
     const client = await postgresPool;
     
     const result = await client.query("SELECT groupid, groupname, groupavatar, groupowner, interests FROM groups WHERE groupid=$1", [groupid]);
     return res.status(200).json({success:true, group:result.rows[0]})
     
-}
+})
 
-export const saveGroupMessage = async (req:Request, res:Response, next:NextFunction) => {
+export const saveGroupMessage = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) => {
     const {senderid, content, time, groupid} = req.body
     const client = await postgresPool;
     
     await client.query("INSERT INTO messages (senderid, groupid, content, time) VALUES ($1, $2, $3, $4)", [senderid, groupid, content, time])
     return res.status(200).json({success:true, content: req.body})
    
-}
+})
 
-export const getGroupMessages = async (req:Request, res:Response, next:NextFunction) => {
+export const getGroupMessages = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) => {
     const groupid = req.body.groupid
     const client = await postgresPool;
     
     const groupMessages = await client.query("SELECT messages.groupid, messages.content, messages.time, messages.senderid, users.username FROM messages INNER JOIN users ON users.id = messages.senderid WHERE groupid = $1", [groupid])
     return res.status(200).json({success:true, messages:groupMessages.rows}) 
     
-}
+})
 
-export const deleteMyGroup = async(req:Request, res:Response, next:NextFunction) => {
+export const deleteMyGroup = catchAsyncErrors(async(req:Request, res:Response, next:NextFunction) => {
     const userId = res.locals.user.id
     const groupid = req.query.groupid;
 
@@ -199,4 +200,4 @@ export const deleteMyGroup = async(req:Request, res:Response, next:NextFunction)
 
     return res.status(200).json({success:true, message:"Group deleted successfully"});
     
-}
+})

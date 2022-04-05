@@ -7,12 +7,13 @@ import sendResetMail from "../utilities/mailer"
 import crypto = require("crypto");
 import cloudinary = require("cloudinary")
 import postgres from "../config/postgresSetup"
+import catchAsyncErrors from "../utilities/catchAsyncErrors"
 
 
 const postgresPool = postgres()
 
 
-export const signUp = async (req:Request, res:Response, next:NextFunction)=>{
+export const signUp = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction)=>{
     const user = req.body;
     
     if(!user.password || !user.email || !user.password){
@@ -48,9 +49,9 @@ export const signUp = async (req:Request, res:Response, next:NextFunction)=>{
     
     return res.status(200).json({success:true, message:"Registered successfully.", user:saved.rows[0], token})
     
-}
+})
 
-export const login = async (req:Request, res:Response, next:NextFunction) =>{
+export const login = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) =>{
     console.log("Login link clicked")
     const user = req.body;
     console.log("user", user)
@@ -80,7 +81,7 @@ export const login = async (req:Request, res:Response, next:NextFunction) =>{
     
     return res.status(200).cookie("token", token, {maxAge:parseInt(process.env.COOKIES_EXPIRES!) * 24 * 60 * 60 * 1000, httpOnly:true}).json({success:true, message:"Login successful.", user:trimmed, token})
    
-}
+})
 //logout
 export const logout = async (req:Request, res:Response, next:NextFunction) =>{
     
@@ -94,7 +95,7 @@ export const logout = async (req:Request, res:Response, next:NextFunction) =>{
     return res.status(200).cookie("token", cookie, {maxAge:0, httpOnly:true}).json({successful:true, message:"Logged out successfully."})
 }
 //request password reset
-export const requestPasswordReset = async (req:Request, res:Response, next:NextFunction)=>{
+export const requestPasswordReset = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction)=>{
     
     const email = req.body.email;
 
@@ -118,9 +119,9 @@ export const requestPasswordReset = async (req:Request, res:Response, next:NextF
 
     return res.status(200).json({success:true, message:"Token sent, check your email.", resetToken})
 
-}
+})
 //reset password
-export const passwordReset = async (req:Request, res:Response, next:NextFunction) =>{
+export const passwordReset = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) =>{
     const resetToken = req.params.token;
     const id = req.params.id
     const password = req.body.password
@@ -149,18 +150,18 @@ export const passwordReset = async (req:Request, res:Response, next:NextFunction
     await client.query("UPDATE users SET password=$1 WHERE id=$2", [hashedPassword, id]);
     
     return res.status(200).json({success:true, message:"password reset successful"})
-}
+})
 //get profile details
-export const me = async (req:Request, res:Response, next:NextFunction) => {
+export const me = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) => {
     
     return res.status(200).json({success:true, user:res.locals.user})
-}
+})
 
-export const trial =async (req:Request, res:Response, next:NextFunction) =>{
+export const trial =catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) =>{
     return res.status(200).json({success:true, message:"endpoint working"})
-}
+})
 //saving socket session ID
-export const saveSessionID = async (req:Request, res:Response, next:NextFunction) => {
+export const saveSessionID = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) => {
     const sessionID = req.body.sessionID
     const id = res.locals.user.id
     
@@ -169,9 +170,9 @@ export const saveSessionID = async (req:Request, res:Response, next:NextFunction
     const result = await client.query("UPDATE users SET socketSessionID=$1 WHERE id=$2", [sessionID, id]);
     return res.status(200).json({success:true, message:"Socket session saved successfully"})
     
-}
+})
 //update profile dscription
-export const updateDescription = async (req:Request, res:Response, next:NextFunction) => {
+export const updateDescription = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) => {
     const id = res.locals.user.id;
     const description = req.body.description
     
@@ -181,9 +182,9 @@ export const updateDescription = async (req:Request, res:Response, next:NextFunc
     const result = await client.query("UPDATE users SET description=$1 WHERE id=$2", [description, id]);
     return res.status(200).json({success:true, message:"Profile description updated"})
     
-}
+})
 //delete account
-export const deleteAccount = async (req:Request, res:Response, next:NextFunction) => {
+export const deleteAccount = catchAsyncErrors(async (req:Request, res:Response, next:NextFunction) => {
     const id = res.locals.user.id;
 
     const client = await postgresPool;
@@ -196,4 +197,4 @@ export const deleteAccount = async (req:Request, res:Response, next:NextFunction
     }
     return res.status(200).json({success:true, message:"User account deleted"})
     
-}
+})
