@@ -7,6 +7,7 @@ dotenv.config({path:path.join(__dirname, "/var.env")})
 const setTables = async () =>{
     const pool = await postgres()
     const client = await pool.connect()
+    console.log("Setting tables")
     await client.query(`CREATE TABLE IF NOT EXISTS users(
         id SERIAL PRIMARY KEY,
         username VARCHAR(255) NOT NULL UNIQUE,
@@ -30,7 +31,7 @@ const setTables = async () =>{
         receiverID INTEGER,
         content TEXT NOT NULL,
         groupid VARCHAR(255),
-        time VARCAHR(255) NOT NULL,
+        time VARCHAR(255) NOT NULL,
     )`)
 
     await client.query(`
