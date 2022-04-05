@@ -91,11 +91,13 @@ export const me = (
             if(socket){
                 getMyGroups()
                 .then((res)=>{
-              
-                const groupIds= res.map((grp:group)=>grp.groupid);
-            
-                socket.emit("groups", groupIds)
+                    if(res){
+                        const groupIds= res.map((grp:group)=>grp.groupid);
+                    
+                        socket.emit("groups", groupIds)
+                    }
                 })
+            
             }
         })
         .catch ((err:AxiosError)=> {
@@ -167,7 +169,7 @@ export const saveSessionID = (session:string)=>{
         console.log("saving", token, data.get("sessionID"), config)
         axios.post(`${process.env.NEXT_PUBLIC_SERVER}/api/v1/save/sessionID`, data, config)
         .then((res:AxiosResponse)=>{
-            alert(`user session ${session} saved`)
+            console.log(`user session ${session} saved`)
         })
         .catch((err:AxiosError)=>{
             console.log("error saving sessionID", err.message)
