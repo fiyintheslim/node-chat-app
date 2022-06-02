@@ -37,7 +37,7 @@ const Login = () => {
   }, [])
   
   return (
-    <div className="h-full flex align-center justify-around flex-col">
+    <div className="h-full flex align-center justify-around flex-col pt-24 lg:pt-10">
       <Header />
       <h1 className="text-center text-3xl my-7 pl-2 lg:my-20 font-bold">Welcome back</h1>
       <div className="flex flex-col-reverse justify-evenly w-screen items-center lg:flex-row">

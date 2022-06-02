@@ -1,6 +1,6 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-// import socketClient from "socket.io-client"
+// import socketClient from "socket.io-client" 
 import React, {useEffect, useState, useRef, useContext} from "react"
 import toast, {Toaster} from "react-hot-toast"
 import Context from '../components/Context'

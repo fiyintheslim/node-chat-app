@@ -6,6 +6,9 @@
 .glass{
 position:relative;
 z-index:2;
+height: 100%;
+
+backdrop-filter: blur(10px);
 }
 .glass:before{
     content:"";
@@ -14,9 +17,15 @@ z-index:2;
     bottom:0;
     left:0;
     right:0;
-    z-index:1;
+    z-index:-1;
     background:rgba(255, 255, 255, 0.1);
     filter:blur(2px);
+    
+}
+.illustration{
+    width: 20rem;
+    height: 15rem;
+    position: relative;
 }
 .ill_bg{
     background:url("/img/landing.png");

@@ -104,7 +104,7 @@ const Register = () => {
         }
 
   return (
-    <div className="h-full flex align-center justify-around flex-col">
+    <div className="h-full flex align-center justify-around flex-col pt-24 lg:pt-10">
       <Header />
       <h1 className="text-center text-3xl my-3 lg:my-20 font-bold">Create Account</h1>
       <div className="flex flex-col-reverse justify-evenly items-center lg:flex-row">

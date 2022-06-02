@@ -15,7 +15,7 @@
 
 
 .gender_label {
-    padding: 20px 25px;
+    padding: 10px 35px;
     background: rgb(206, 205, 205);
     font-weight: 800;
     width: 100%;
@@ -24,16 +24,16 @@
 }
 
 .gender_label_right {
-    border-top-right-radius: 47%;
-    border-bottom-right-radius: 47%
+    border-top-right-radius: 7%;
+    border-bottom-right-radius: 7%
 }
 
 .gender_label_left {
-    border-top-left-radius: 47%;
-    border-bottom-left-radius: 47%;
+    border-top-left-radius: 7%;
+    border-bottom-left-radius: 7%;
 }
 
 .gender_radio:checked+label {
-    background: rgb(81, 55, 85);
+    background: #292b44;
     color: white;
 }
